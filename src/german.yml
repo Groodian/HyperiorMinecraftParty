@@ -1,0 +1,227 @@
+prefix: "&7[&eMinecraftParty&7] &r"
+no-permission: "&cDazu hast du keine Rechte!"
+
+join-message: "&a%player% &7ist dem Spiel beigetreten. &7[%current-players%/%max-players%]"
+quit-message: "&a%player% &7hat das Spiel verlassen. &7[%current-players%/%max-players%]"
+
+tablist-header: "[&6HYPERIOR.DE&r]\n&eMinecraftParty - %server-number%\n"
+tablist-footer: "\n&eMinecraftParty Statistiken\n&aPlatz &6%rank% &7| &aPunkte &6%points% &7| &aSiege &6%wins%"
+
+player-overview-item-name: "&e&lSpiel\u00FCbersicht &7(Rechtsklick)"
+player-overview-inventory-name: "Spiel\u00FCbersicht:"
+stats-item-name: "&a&lStatistiken &7(Rechtsklick)"
+
+premium-player-kicked-you: "&cDu wurdest gekickt um einem Premium Spieler Platz zu machen. Wenn du nicht mehr gekickt werden willst kaufe dir einen Rang."
+you-need-premium: "&cDie Runde ist bereits voll um trotzdem beitreten zu k\u00F6nnen ben\u00F6tigst du einen Rang."
+all-player-has-premium: "&cEs konnte kein Spieler gekickt werden da alle einen Rang haben."
+
+next-minigame: "&7Es wird gespielt..."
+
+the-winner-are: "&7Die Gewinner sind..."
+one-winner-subtitle: "&7hat das Spiel gewonnen!"
+multiple-winner-subtitle: "&7haben das Spiel gewonnen!"
+points-summary: "&7Spiel Zusammenfassung: &e+%points% &6MinecraftParty Punkte"
+
+points: "&e\u2730"
+
+new-record-message: "&aNeuer Rekord!"
+new-record-title: "&aNeuer Rekord!"
+
+game-start-in: "&7Das Spiel startet in &a%seconds% Sekunden&7."
+game-start-in-last-second: "&7Das Spiel startet in &aeiner Sekunde&7."
+game-started: "&7Das Spiel startet..."
+game-start-player-needed: "&7Zum Spielstart fehlen noch &e%players-needed% Spieler&7."
+game-start-one-player-needed: "&7Zum Spielstart fehlt noch &eein Spieler&7."
+
+server-restart-in: "&7Der Server startet in &a%seconds% Sekunden&7 neu."
+server-restart-in-last-second:  "&7Der Server startet in &aeiner Sekunde&7 neu."
+server-restarting: "&7Der Server startet nun neu..."
+
+Commands:
+  build:
+    enabled: "&aDu bist nun im Bau-Modus."
+    disabled: "&cDu bist nun nicht mehr im Bau-Modus."
+  start:
+    started: "&aDu hast die Runde gestartet."
+    already-started: "&cDas Spiel ist bereits gestartet."
+    need-more-player: "&cEs sind nicht gen\u00FCgent Spieler in der Runde."
+  stats:
+    this-take-a-moment: "&7Dies kann einen kurzen Moment dauern..."
+    you-never-played: "&cDu hast noch nie MarioParty gespielt."
+    this-player-does-not-exist: "&cDieser Spieler existiert nicht."
+    this-player-never-played: "&cDieser Spieler hat noch nie MarioParty gespielt."
+    usage: "&cBenutze: &6/stats [<Spieler>]"
+    inventory:
+      name: "Stats f\u00FCr &6%player%&r:"
+      items:
+        global:
+          name: "&e&lGlobal"
+          lores:
+            - ""
+            - "&8\u00BB &7Platz: &a%place%"
+            - "&8\u00BB &7Punkte: &a%points%"
+            - "&8\u00BB &7Spielzeit: &a%play-time%"
+            - "&8\u00BB &7Gespielte Spiele: &a%games-played%"
+            - "&8\u00BB &7Bendete Spiele: &a%games-played-till-end%"
+            - ""
+            - "&8\u00BB &7Erster: &a%times-first%"
+            - "&8\u00BB &7Zweiter: &a%times-second%"
+            - "&8\u00BB &7Dritter: &a%times-third%"
+            - "&8\u00BB &7Vierter: &a%times-fourth%"
+            - "&8\u00BB &7F\u00FCnfter: &a%times-fifth%"
+        minigames:
+          name: "&e&lMinigames"
+          lores:
+            - ""
+            - "&8\u00BB &7Gespielte Minispiele: &a%minigames-played%"
+            - ""
+            - "&8\u00BB &7Erster: &a%times-first%"
+            - "&8\u00BB &7Zweiter: &a%times-second%"
+            - "&8\u00BB &7Dritter: &a%times-third%"
+            - "&8\u00BB &7Vierter: &a%times-fourth%"
+            - "&8\u00BB &7F\u00FCnfter: &a%times-fifth%"
+        woolblock:
+          name: "&a&lWoolBlock"
+          lores: 
+            - "&8\u00BB &7Runden: &a%rounds%"
+        trafficlightrace:
+          name: "&a&lAmpelRennen"
+          lores: 
+            - "&8\u00BB &7Zeit: &a%time%"
+        gungame:
+          name: "&a&lGunGame"
+          lores: 
+            - "&8\u00BB &7Zeit: &a%time%"
+        jumpandrun:
+          name: "&a&lJumpAndRun"
+          lores: 
+            - "&8\u00BB &7Zeit (&e%all-maps%&7): &a%all-times%"
+        hotground:
+          name: "&a&lHei\u00DFerBoden"
+          lores: 
+            - "&8\u00BB &7Zeit: &a%time%"
+        colorbattle:
+          name: "&a&lFarbschlacht"
+          lores: 
+            - "&8\u00BB &7Bl\u00F6cke: &a%blocks%"
+      minute: " Minute"
+      minutes: " Minuten"
+      hour: " Stunde"
+      hours: " Stunden"
+Minigame:
+  start-title: "&a%name%"
+  start-subtitle: "&7startet in &a%seconds% Sekunden&7..."
+  start-title-last-second: "&a%name%"
+  start-subtitle-last-second: "&7startet in &aeiner Sekunde&7..."
+  started-title: "&aViel Gl\u00FCck"
+  started-subtitle: "&7Spiel startet..."
+  player-out-title: "&cDu bist ausgeschieden!"
+  game-info-header: "&7&m--------------------------------&r\n "
+  game-info-fooder: " \n&7&m--------------------------------&r"
+  teleport-player: "&7Alle Spieler werden Teleportiert..."
+
+Scoreboard:
+  title: "&lMINECRAFT PARTY"
+  minigame: "Minigame:"
+  minigame-name: "&a%name%"
+  records: "Rekorde:"
+  no-records: "&7Keine Rekorde"
+  ranking: "Ranking:"
+  ending-in: "Endet in:"
+  time: "&a%seconds% Sekunden"
+  players-remaining: "Spieler \u00FCbrig:"
+  players: "&a%player%/%max-players% Spieler"
+  lobby:
+    players: "Spieler: &a%players%/%max-players%"
+    waiting-for-players-line-1: "Warte auf &a%players-needed% &fweitere"
+    waiting-for-player-line-1: "Warte auf &aein &fweiteren"
+    waiting-for-players-line-2: "Spieler zum Start"
+    starting-in-line-1: "Warte &a%seconds% Sekunden"
+    starting-in-line-2: "auf weitere Spieler"
+
+ColorBattle:
+  name: "Farbschlacht"
+  game-info: "&a&l%name%\n&7Gewinne indem du die\n&7meisten Bl\u00F6cke einer Farbe hast."
+  color-gun-name: "&6&lBogen"
+  
+GunGame:
+  name: "GunGame"
+  game-info: "&a&l%name%\n&7Du erh\u00E4lst du pro Kill einen Punkt,\n&7aber dir wird f\u00FCr jeden Tod einer abgezogen."
+  items:
+    - "&6&lHolzschwert"
+    - "&6&lGoldschwert"
+    - "&6&lSteinschwert"
+    - "&6&lEisenschwert"
+    - "&6&lDiamantschwert"
+    - "&6&lBogen"
+    - "&6&lHolzaxt"
+  arrow: "&6&lPfeil"
+  death-message-killed: "&7%killed% wurde von %killer% get\u00F6tet."
+  death-message-died: "&7%killed% ist gestorben."
+  almost-won: "&e%player% &7braucht noch einen Kill zum Sieg."
+  
+HotGround:
+  name: "Hei\u00DFerBoden"
+  game-info: "&a&l%name%\n&7Falle nicht nach unten, denn\n&7der Boden unter dir verschwindet."
+  player-out: "&7%player% ist heruntergefallen."
+  
+Breakout:
+  name: "Ausbruch"
+  game-info: "&a&l%name%\n&7Benutze die richtigen Werkzeuge, und\n&7sei der erste Ausbrecher."
+  winner-message-1: "&61# %player% &aist ausgebrochen."
+  winner-message-2: "&72# %player% &aist ausgebrochen."
+  winner-message-3: "&c3# %player% &aist ausgebrochen."
+  winner-message-4: "&c4# %player% &aist ausgebrochen."
+  winner-message-5: "&c5# %player% &aist ausgebrochen."
+  tools:
+    - "&6&lSpitzhacke"
+    - "&6&lSchaufel"
+    - "&6&lAxt"
+  
+JumpAndRun:
+  name: "JumpAndRun"
+  game-info: "&a&l%name%\n&7Meistere den Parkour, und\n&7erreiche als erster das Ziel."
+  map: "&7Karte: &e%map%"
+  checkpoint-reached: "&aCheckpoint %checkpoint%/%max-checkpoints% erreicht."
+  winner-message-1: "&61# %player% &ahat das Ziel erreicht."
+  winner-message-2: "&72# %player% &ahat das Ziel erreicht."
+  winner-message-3: "&c3# %player% &ahat das Ziel erreicht."
+  winner-message-4: "&c4# %player% &ahat das Ziel erreicht."
+  winner-message-5: "&c5# %player% &ahat das Ziel erreicht."
+  
+TrafficLightRace:
+  name: "AmpelRennen"
+  game-info: "&a&l%name%\n&7Laufe bei Gr\u00FCn, und\n&7erreiche als erster das Ziel."
+  winner-message-1: "&61# %player% &ahat das Ziel erreicht."
+  winner-message-2: "&72# %player% &ahat das Ziel erreicht."
+  winner-message-3: "&c3# %player% &ahat das Ziel erreicht."
+  winner-message-4: "&c4# %player% &ahat das Ziel erreicht."
+  winner-message-5: "&c5# %player% &ahat das Ziel erreicht."
+  run: "&a&lWeiter"
+  attention: "&6&lVorsicht"
+  stop: "&c&lStop"
+  
+WoolBlock:
+  name: "WoolBlock"
+  game-info: "&a&l%name%\n&7Begib dich so schnell wie m\u00F6glich\n&7auf die angezeigte Farbe."
+  player-out: "&7%player% ist ins Wasser gefallen."
+  orange: "&6&lOrange"
+  light-blue: "&b&lHellblau"
+  yellow: "&e&lGelb"
+  green: "&a&lGr\u00FCn"
+  pink: "&d&lRosa"
+  blue: "&9&lBlau"
+  red: "&c&lRot"
+  
+PlayerHider:
+  item-hide: "&cSpieler verstecken"
+  item-show: "&aSpieler anzeigen"
+  message-hide: "&cAlle Spieler wurden versteckt."
+  message-show: "&aDu siehst nun wieder alle Spieler."
+  
+Top10:
+  line-1: "&a#&a&l%place%"
+  line-2: "%player%"
+  line-3: "Punkte: %points%"
+  line-4: "Siege: %wins%"
+  no-player: "Kein Spieler"

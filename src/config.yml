@@ -1,0 +1,133 @@
+# MinecraftParty
+# Have you any issues with this resource contact the Author on Discord: Groodian#8330
+
+# Config version do not change
+config-version: 1
+
+##
+# Database setup
+##
+MySQL:
+  hostname: "localhost"
+  port: 3306
+  database: "minecraftparty"
+  username: "username"
+  password: "password"
+  
+##
+# Language settings. Set to english if you want to use english.yml or german if you want to use german.yml
+##
+language: "english"
+
+##
+# Fallback Server. On this server you get moved if the round is finished or you get kicked from a premium player
+##
+fallback-server: "Lobby-1"
+
+##
+# Scoreboard settings
+##
+Scoreboard:
+  # Scoreboard animation, no color codes are used
+  animation: false
+  # Delay in ticks (20 ticks equals 1 second)
+  delay: 1
+  # Delay between animation (1 equals the delay above)
+  delay-between-animation: 100
+
+## 
+# Color battle settings
+##
+ColorBattle:
+  # Game duration in seconds
+  time: 45
+  # Color gun material (A list of all materials can be found here: https://helpch.at/docs/1.8/org/bukkit/Material.html)
+  color-gun-material: "BOW"
+  # Map resetting, set to false if the server gets copied
+  reset: true
+  
+##
+# Gun game settings
+##
+GunGame:
+  # Game duration in seconds
+  time: 180
+  # Items sorted for each level beginning with level 0
+  items:
+    # Material type name, a list of all materials can be found here: https://helpch.at/docs/1.8/org/bukkit/Material.html
+    - "WOOD_SWORD"
+    - "GOLD_SWORD"
+    - "STONE_SWORD"
+    - "IRON_SWORD"
+    - "DIAMOND_SWORD"
+    - "BOW"
+    - "WOOD_AXE"
+  # If the material is a bow you get this amount of arrows
+  arrow-amount: 12
+  # Health you get after a kill. Set to 0 to disable or 20 for full live
+  hp-get-after-kill: 10
+  # Number of respawn points
+  respawn-points: 8
+  
+##
+# Hot ground settings
+##
+HotGround:
+  # Map resetting, set to false if the server gets copied
+  reset: true
+  # If map resetting is true choose the radius of the generated platforms
+  radius: 25
+  # If map resetting is true choose the material of the generated platforms (A list of all materials can be found here: https://helpch.at/docs/1.8/org/bukkit/Material.html)
+  material: "NETHERRACK"
+  
+##
+# Breakout settings
+##
+Breakout:
+  # Game duration in seconds
+  time: 90
+  # Map resetting, set to false if the server gets copied. Set to true if you want to get an random pattern
+  reset: true
+  # If map resetting is true choose the depth of the generated blocks
+  depth: 35
+  # If map resetting is true choose the materials of the generated blocks
+  materials:
+    # Material type name, a list of all materials can be found here: https://helpch.at/docs/1.8/org/bukkit/Material.html
+    - "STONE"
+    - "DIRT"
+    - "WOOD"
+  tools:
+    # Material type name, a list of all materials can be found here: https://helpch.at/docs/1.8/org/bukkit/Material.html
+    - "STONE_PICKAXE"
+    - "STONE_SPADE"
+    - "STONE_AXE"
+  
+##
+# Jump and Run settings
+##
+JumpAndRun:
+  # Game duration in seconds
+  time: 120
+  
+##
+# Traffic light race settings
+##
+TrafficLightRace:
+  # Game duration in seconds
+  time: 60
+  
+##
+# Wool block settings
+##
+WoolBlock:
+  # Time between rounds in ticks (20 ticks equals 1 second)
+  time-between-rounds: 70
+  # Time to get on the right block (20 ticks equals 1 second)
+  remove-start-time: 80
+  # This time gets every round subtracted from the remove start time (20 ticks equals 1 second)
+  time-gets-faster-every-round: 4
+  # Min value of the remove time (20 ticks equals 1 second)
+  min-remove-time: 30
+  # Map resetting, set to false if the server gets copied
+  reset: true
+  
