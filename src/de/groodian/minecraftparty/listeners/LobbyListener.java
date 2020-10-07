@@ -102,8 +102,7 @@ public class LobbyListener implements Listener {
 		player.getInventory().setItem(0, skull);
 		player.getInventory().setItem(7, new ItemBuilder(Material.FIREWORK_CHARGE).setName("§cKein Gadget ausgewählt!").build());
 		player.getInventory().setItem(8, new ItemBuilder(Material.CHEST).setName("§6§lTrails §7(Rechtsklick)").build());
-		e.setJoinMessage(Main.PREFIX + Messages.get("join-message").replace("%player%", player.getDisplayName())
-				.replace("%current-players%", ((plugin.getPlayers().size() > Main.MAX_PLAYERS) ? Main.MAX_PLAYERS : plugin.getPlayers().size()) + "").replace("%max-players%", Main.MAX_PLAYERS + ""));
+		e.setJoinMessage(Main.PREFIX + Messages.get("join-message").replace("%player%", player.getDisplayName()).replace("%current-players%", ((plugin.getPlayers().size() > Main.MAX_PLAYERS) ? Main.MAX_PLAYERS : plugin.getPlayers().size()) + "").replace("%max-players%", Main.MAX_PLAYERS + ""));
 		player.teleport(plugin.getLocationManager().LOBBY);
 
 		LobbyState lobbyState = (LobbyState) plugin.getGameStateManager().getCurrentGameState();
@@ -132,8 +131,7 @@ public class LobbyListener implements Listener {
 			return;
 		Player player = e.getPlayer();
 		plugin.getPlayers().remove(player);
-		e.setQuitMessage(
-				Main.PREFIX + Messages.get("quit-message").replace("%player%", player.getDisplayName()).replace("%current-players%", plugin.getPlayers().size() + "").replace("%max-players%", Main.MAX_PLAYERS + ""));
+		e.setQuitMessage(Main.PREFIX + Messages.get("quit-message").replace("%player%", player.getDisplayName()).replace("%current-players%", plugin.getPlayers().size() + "").replace("%max-players%", Main.MAX_PLAYERS + ""));
 
 		LobbyState lobbyState = (LobbyState) plugin.getGameStateManager().getCurrentGameState();
 		LobbyCountdown countdown = lobbyState.getCountdown();

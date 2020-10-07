@@ -59,12 +59,12 @@ public class LocationManager {
 	public LocationManager() {
 		try {
 			// locations
-			this.fileLocations = new File("plugins/MinecraftParty_by_Groodian/data", "locations.yml");
+			this.fileLocations = new File("plugins/HyperiorMinecraftParty_by_Groodian/data", "locations.yml");
 			this.configLocations = YamlConfiguration.loadConfiguration(fileLocations);
 			configLocations.save(fileLocations);
 
 			// jump and runs
-			this.fileJumpAndRuns = new File("plugins/MinecraftParty_by_Groodian/data", "jumpandruns.yml");
+			this.fileJumpAndRuns = new File("plugins/HyperiorMinecraftParty_by_Groodian/data", "jumpandruns.yml");
 			this.configJumpAndRuns = YamlConfiguration.loadConfiguration(fileJumpAndRuns);
 			configJumpAndRuns.save(fileJumpAndRuns);
 

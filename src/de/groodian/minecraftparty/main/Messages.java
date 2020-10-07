@@ -18,13 +18,13 @@ public class Messages {
 	public static void loadConfigs(Main plugin) {
 		try {
 			// german
-			File germanFile = new File("plugins/MinecraftParty_by_Groodian/messages", "german.yml");
+			File germanFile = new File("plugins/HyperiorMinecraftParty_by_Groodian/messages", "german.yml");
 			FileConfiguration germanConfig = YamlConfiguration.loadConfiguration(germanFile);
 			germanConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("german.yml"))));
 			germanConfig.options().copyDefaults(true);
 			germanConfig.save(germanFile);
 			// english
-			File englishFile = new File("plugins/MinecraftParty_by_Groodian/messages", "english.yml");
+			File englishFile = new File("plugins/HyperiorMinecraftParty_by_Groodian/messages", "english.yml");
 			FileConfiguration englishConfig = YamlConfiguration.loadConfiguration(englishFile);
 			englishConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource("english.yml"))));
 			englishConfig.options().copyDefaults(true);
@@ -32,12 +32,12 @@ public class Messages {
 
 			String language = MainConfig.getString("language");
 			if (language.equalsIgnoreCase("english")) {
-				config = YamlConfiguration.loadConfiguration(new File("plugins/MinecraftParty_by_Groodian/messages", "english.yml"));
+				config = YamlConfiguration.loadConfiguration(new File("plugins/HyperiorMinecraftParty_by_Groodian/messages", "english.yml"));
 			} else if (language.equalsIgnoreCase("german")) {
-				config = YamlConfiguration.loadConfiguration(new File("plugins/MinecraftParty_by_Groodian/messages", "german.yml"));
+				config = YamlConfiguration.loadConfiguration(new File("plugins/HyperiorMinecraftParty_by_Groodian/messages", "german.yml"));
 			} else {
 				Bukkit.getConsoleSender().sendMessage(Main.PREFIX_CONSOLE + "§cUnknown language, using English instead!");
-				config = YamlConfiguration.loadConfiguration(new File("plugins/MinecraftParty_by_Groodian/messages", "english.yml"));
+				config = YamlConfiguration.loadConfiguration(new File("plugins/HyperiorMinecraftParty_by_Groodian/messages", "english.yml"));
 			}
 
 			Main.PREFIX = get("prefix");
