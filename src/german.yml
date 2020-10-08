@@ -34,7 +34,7 @@ game-start-player-needed: "&7Zum Spielstart fehlen noch &e%players-needed% Spiel
 game-start-one-player-needed: "&7Zum Spielstart fehlt noch &eein Spieler&7."
 
 server-restart-in: "&7Der Server startet in &a%seconds% Sekunden&7 neu."
-server-restart-in-last-second:  "&7Der Server startet in &aeiner Sekunde&7 neu."
+server-restart-in-last-second: "&7Der Server startet in &aeiner Sekunde&7 neu."
 server-restarting: "&7Der Server startet nun neu..."
 
 Commands:
@@ -82,28 +82,32 @@ Commands:
             - "&8\u00BB &7F\u00FCnfter: &a%times-fifth%"
         woolblock:
           name: "&a&lWoolBlock"
-          lores: 
+          lores:
             - "&8\u00BB &7Runden: &a%rounds%"
         trafficlightrace:
           name: "&a&lAmpelRennen"
-          lores: 
+          lores:
             - "&8\u00BB &7Zeit: &a%time%"
         gungame:
           name: "&a&lGunGame"
-          lores: 
+          lores:
             - "&8\u00BB &7Zeit: &a%time%"
         jumpandrun:
           name: "&a&lJumpAndRun"
-          lores: 
+          lores:
             - "&8\u00BB &7Zeit (&e%all-maps%&7): &a%all-times%"
         hotground:
           name: "&a&lHei\u00DFerBoden"
-          lores: 
+          lores:
             - "&8\u00BB &7Zeit: &a%time%"
         colorbattle:
           name: "&a&lFarbschlacht"
-          lores: 
+          lores:
             - "&8\u00BB &7Bl\u00F6cke: &a%blocks%"
+        breakout:
+          name: "&a&lAusbruch"
+          lores:
+            - "&8\u00BB &7Zeit: &a%time%"
       minute: " Minute"
       minutes: " Minuten"
       hour: " Stunde"
@@ -143,7 +147,7 @@ ColorBattle:
   name: "Farbschlacht"
   game-info: "&a&l%name%\n&7Gewinne indem du die\n&7meisten Bl\u00F6cke einer Farbe hast."
   color-gun-name: "&6&lBogen"
-  
+
 GunGame:
   name: "GunGame"
   game-info: "&a&l%name%\n&7Du erh\u00E4lst du pro Kill einen Punkt,\n&7aber dir wird f\u00FCr jeden Tod einer abgezogen."
@@ -159,12 +163,12 @@ GunGame:
   death-message-killed: "&7%killed% wurde von %killer% get\u00F6tet."
   death-message-died: "&7%killed% ist gestorben."
   almost-won: "&e%player% &7braucht noch einen Kill zum Sieg."
-  
+
 HotGround:
   name: "Hei\u00DFerBoden"
   game-info: "&a&l%name%\n&7Falle nicht nach unten, denn\n&7der Boden unter dir verschwindet."
   player-out: "&7%player% ist heruntergefallen."
-  
+
 Breakout:
   name: "Ausbruch"
   game-info: "&a&l%name%\n&7Benutze die richtigen Werkzeuge, und\n&7sei der erste Ausbrecher."
@@ -177,7 +181,7 @@ Breakout:
     - "&6&lSpitzhacke"
     - "&6&lSchaufel"
     - "&6&lAxt"
-  
+
 JumpAndRun:
   name: "JumpAndRun"
   game-info: "&a&l%name%\n&7Meistere den Parkour, und\n&7erreiche als erster das Ziel."
@@ -188,7 +192,7 @@ JumpAndRun:
   winner-message-3: "&c3# %player% &ahat das Ziel erreicht."
   winner-message-4: "&c4# %player% &ahat das Ziel erreicht."
   winner-message-5: "&c5# %player% &ahat das Ziel erreicht."
-  
+
 TrafficLightRace:
   name: "AmpelRennen"
   game-info: "&a&l%name%\n&7Laufe bei Gr\u00FCn, und\n&7erreiche als erster das Ziel."
@@ -200,7 +204,7 @@ TrafficLightRace:
   run: "&a&lWeiter"
   attention: "&6&lVorsicht"
   stop: "&c&lStop"
-  
+
 WoolBlock:
   name: "WoolBlock"
   game-info: "&a&l%name%\n&7Begib dich so schnell wie m\u00F6glich\n&7auf die angezeigte Farbe."
@@ -212,13 +216,13 @@ WoolBlock:
   pink: "&d&lRosa"
   blue: "&9&lBlau"
   red: "&c&lRot"
-  
+
 PlayerHider:
   item-hide: "&cSpieler verstecken"
   item-show: "&aSpieler anzeigen"
   message-hide: "&cAlle Spieler wurden versteckt."
   message-show: "&aDu siehst nun wieder alle Spieler."
-  
+
 Top10:
   line-1: "&a#&a&l%place%"
   line-2: "%player%"

@@ -1,16 +1,16 @@
 name: HyperiorMinecraftParty_by_Groodian
 main: de.groodian.minecraftparty.main.Main
 author: Groodian
-version: 4.3
+version: 4.4
 
-depend: [HyperiorCore_by_Groodian]
+depend: [ HyperiorCore_by_Groodian ]
 
 commands:
-   mpsetup:
-      description: Setting up the game
-   start:
-      description: Starting the game
-   build:
-      description: Build mode
-   stats:
-      description: Stats
+  mpsetup:
+    description: Setting up the game
+  start:
+    description: Starting the game
+  build:
+    description: Build mode
+  stats:
+    description: Stats

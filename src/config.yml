@@ -13,7 +13,7 @@ MySQL:
   database: "minecraftparty"
   username: "username"
   password: "password"
-  
+
 ##
 # Language settings. Set to english if you want to use english.yml or german if you want to use german.yml
 ##
@@ -45,7 +45,7 @@ ColorBattle:
   color-gun-material: "BOW"
   # Map resetting, set to false if the server gets copied
   reset: true
-  
+
 ##
 # Gun game settings
 ##
@@ -68,7 +68,7 @@ GunGame:
   hp-get-after-kill: 10
   # Number of respawn points
   respawn-points: 8
-  
+
 ##
 # Hot ground settings
 ##
@@ -79,7 +79,7 @@ HotGround:
   radius: 25
   # If map resetting is true choose the material of the generated platforms (A list of all materials can be found here: https://helpch.at/docs/1.8/org/bukkit/Material.html)
   material: "NETHERRACK"
-  
+
 ##
 # Breakout settings
 ##
@@ -101,21 +101,21 @@ Breakout:
     - "STONE_PICKAXE"
     - "STONE_SPADE"
     - "STONE_AXE"
-  
+
 ##
 # Jump and Run settings
 ##
 JumpAndRun:
   # Game duration in seconds
   time: 120
-  
+
 ##
 # Traffic light race settings
 ##
 TrafficLightRace:
   # Game duration in seconds
   time: 60
-  
+
 ##
 # Wool block settings
 ##
