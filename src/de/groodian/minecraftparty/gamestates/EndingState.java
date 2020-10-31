@@ -1,5 +1,6 @@
 package de.groodian.minecraftparty.gamestates;
 
+import de.groodian.cosmetics.HyperiorCosmetic;
 import de.groodian.hyperiorcore.boards.Title;
 import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.hyperiorcore.util.HSound;
@@ -67,7 +68,7 @@ public class EndingState implements GameState {
             @Override
             public void run() {
 
-                de.groodian.cosmetics.main.Main.setIsEnabled(true);
+                HyperiorCosmetic.enable();
 
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     player.teleport(plugin.getLocationManager().LOBBY);

@@ -1,5 +1,6 @@
 package de.groodian.minecraftparty.gamestates;
 
+import de.groodian.cosmetics.HyperiorCosmetic;
 import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.minecraftparty.countdowns.LobbyCountdown;
 import de.groodian.minecraftparty.main.Main;
@@ -26,14 +27,15 @@ public class LobbyState implements GameState {
 
     @Override
     public void stop() {
+        HyperiorCosmetic.disable();
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.getInventory().clear();
+            player.getOpenInventory().close();
             plugin.getGameOverview().giveItem(player);
             HyperiorCore.getSB().unregisterScoreboard(player);
         }
         countdown.stop();
-
-        de.groodian.cosmetics.main.Main.setIsEnabled(false);
 
         Bukkit.getConsoleSender().sendMessage(Main.PREFIX_CONSOLE + "§cLOBBY STATE STOPPED!");
     }

@@ -1,6 +1,5 @@
 package de.groodian.minecraftparty.listeners;
 
-import de.groodian.cosmetics.trails.GUI;
 import de.groodian.hyperiorcore.boards.Tablist;
 import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.hyperiorcore.util.Task;
@@ -260,9 +259,7 @@ public class MainListener implements Listener {
             if (e.getPlayer().getItemInHand() != null) {
                 if (e.getPlayer().getItemInHand().getItemMeta() != null) {
                     if (e.getPlayer().getItemInHand().getItemMeta().getDisplayName() != null) {
-                        if (e.getPlayer().getItemInHand().getItemMeta().getDisplayName().equals("§6§lTrails §7(Rechtsklick)")) {
-                            GUI.openGUI(e.getPlayer());
-                        } else if (e.getPlayer().getItemInHand().getItemMeta().getDisplayName().equals(Messages.get("stats-item-name"))) {
+                        if (e.getPlayer().getItemInHand().getItemMeta().getDisplayName().equals(Messages.get("stats-item-name"))) {
                             new StatsGUI(plugin).open(e.getPlayer(), e.getPlayer().getName());
                         } else if (e.getPlayer().getItemInHand().getItemMeta().getDisplayName().equals(Messages.get("player-overview-item-name"))) {
                             plugin.getGameOverview().open(e.getPlayer());

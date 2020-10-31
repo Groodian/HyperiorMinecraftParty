@@ -2,7 +2,6 @@ package de.groodian.minecraftparty.listeners;
 
 import de.groodian.hyperiorcore.boards.Tablist;
 import de.groodian.hyperiorcore.main.HyperiorCore;
-import de.groodian.hyperiorcore.util.ItemBuilder;
 import de.groodian.hyperiorcore.util.Task;
 import de.groodian.minecraftparty.countdowns.LobbyCountdown;
 import de.groodian.minecraftparty.gamestates.LobbyState;
@@ -114,8 +113,6 @@ public class LobbyListener implements Listener {
         meta.setDisplayName(Messages.get("stats-item-name"));
         skull.setItemMeta(meta);
         player.getInventory().setItem(0, skull);
-        player.getInventory().setItem(7, new ItemBuilder(Material.FIREWORK_CHARGE).setName("§cKein Gadget ausgewählt!").build());
-        player.getInventory().setItem(8, new ItemBuilder(Material.CHEST).setName("§6§lTrails §7(Rechtsklick)").build());
         e.setJoinMessage(Main.PREFIX + Messages.get("join-message").replace("%player%", player.getDisplayName()).replace("%current-players%", ((plugin.getPlayers().size() > Main.MAX_PLAYERS) ? Main.MAX_PLAYERS : plugin.getPlayers().size()) + "").replace("%max-players%", Main.MAX_PLAYERS + ""));
         player.teleport(plugin.getLocationManager().LOBBY);
 

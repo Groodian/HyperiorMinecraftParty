@@ -79,7 +79,7 @@ public class ColorBattleState extends MiniGame {
                 snowballs.remove(snowball);
                 return;
             } else {
-                new Particle(EnumParticle.FLAME, snowball.getLocation(), true, 0, 0, 0, 0, 1, 0).sendAll();
+                new Particle(EnumParticle.FLAME).send(snowball.getLocation());
             }
         }
     }
