@@ -53,10 +53,10 @@ public class LobbyCountdown extends Countdown {
                 case 0:
                     Bukkit.broadcastMessage(Main.PREFIX + Messages.get("game-started"));
                     playSound(Sound.LEVEL_UP);
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        plugin.getStats().gamePlayed(player);
+                    for (Player player : plugin.getPlayers()) {
                         player.setExp(0);
                     }
+                    plugin.getStats().gamePlayed();
                     plugin.setStartTime(System.currentTimeMillis());
                     plugin.getGameStateManager().setRandomGameState();
                     break;

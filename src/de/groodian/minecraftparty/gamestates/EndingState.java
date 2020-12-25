@@ -16,9 +16,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -26,13 +28,6 @@ public class EndingState implements GameState {
 
     private EndingCountdown endingCountdown;
     private Main plugin;
-
-    private Map<Player, Integer> sorted = new HashMap<>();
-    private Map<Player, Integer> first = new HashMap<>();
-    private Map<Player, Integer> second = new HashMap<>();
-    private Map<Player, Integer> third = new HashMap<>();
-    private Map<Player, Integer> fourth = new HashMap<>();
-    private Map<Player, Integer> fifth = new HashMap<>();
 
     private int taskID = 0;
     private int count = 0;
@@ -49,10 +44,7 @@ public class EndingState implements GameState {
         // must be done before the delay, because if a player disconnects while the
         // delay he gets no play time and game ended, but he need to get it because the
         // game is ended. He gets not removed from the stars map. (look in MainListener)
-        for (Player player : plugin.getPlayers()) {
-            plugin.getStats().gameEnded(player);
-            plugin.getStats().playTime(player);
-        }
+        plugin.getStats().gameEnded();
 
         new BukkitRunnable() {
             @Override
@@ -77,136 +69,73 @@ public class EndingState implements GameState {
 
                 new HSound(Sound.ENDERDRAGON_WINGS).play();
 
-                sorted = plugin.getStars().entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+                // SORT PLAYERS START
+                Map<Player, Integer> sorted = plugin.getStars().entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+
+                Map<Player, Integer> forDatabase = new HashMap<>();
+
+                List<List<Player>> winner = new ArrayList<>();
+                List<Player> playersAtTheSamePlace = new ArrayList<>();
+
                 int temp = sorted.entrySet().iterator().next().getValue();
                 int place = 1;
-                String row = "";
-                String output;
-                String preoutput = "";
 
                 for (Map.Entry<Player, Integer> current : sorted.entrySet()) {
                     if (!(current.getValue() == temp)) {
-                        place++;
                         temp = current.getValue();
+                        winner.add(playersAtTheSamePlace);
+                        playersAtTheSamePlace = new ArrayList<>();
+                        place++;
                     }
-                    switch (place) {
-                        case 1:
-                            first.put(current.getKey(), current.getValue());
-                            break;
-                        case 2:
-                            second.put(current.getKey(), current.getValue());
-                            break;
-                        case 3:
-                            third.put(current.getKey(), current.getValue());
-                            break;
-                        case 4:
-                            fourth.put(current.getKey(), current.getValue());
-                            break;
-                        case 5:
-                            fifth.put(current.getKey(), current.getValue());
-                            break;
-                        default:
-                            break;
-                    }
+                    playersAtTheSamePlace.add(current.getKey());
+                    forDatabase.put(current.getKey(), place);
                 }
+                // SORT PLAYERS END
 
-                for (Map.Entry<Player, Integer> current : first.entrySet()) {
-                    if (row.equals("")) {
-                        row = "§a" + current.getKey().getName();
+                // TITLE START
+                if (winner.size() > 0) {
+                    List<Player> firstPlace = winner.get(0);
+                    StringBuilder title = new StringBuilder();
+
+                    for (Player player : firstPlace) {
+                        if (title.length() == 0) {
+                            title.append("§a").append(player.getName());
+                        } else {
+                            title.append("§7, §a").append(player.getName());
+                        }
+                    }
+
+                    if (firstPlace.size() == 1) {
+                        new Title(20, 60, 20, title.toString(), Messages.get("one-winner-subtitle")).send();
                     } else {
-                        row = row + "§7, §a" + current.getKey().getName();
+                        new Title(20, 60, 20, title.toString(), Messages.get("multiple-winner-subtitle")).send();
                     }
                 }
+                // TITLE END
 
-                if (first.size() == 1) {
-                    new Title(20, 60, 20, row, Messages.get("one-winner-subtitle")).send();
-                } else {
-                    new Title(20, 60, 20, row, Messages.get("multiple-winner-subtitle")).send();
-                }
+                // MESSAGE START
+                StringBuilder preOutput = new StringBuilder();
 
-                row = "";
-                for (Map.Entry<Player, Integer> current : first.entrySet()) {
-                    if (row.equals("")) {
-                        row = "§a§l" + 1 + "§a# §7§l>> §6" + current.getKey().getName();
-                    } else {
-                        row = row + "§7, §6" + current.getKey().getName();
+                place = 1;
+
+                for (List<Player> current : winner) {
+                    StringBuilder row = new StringBuilder();
+                    for (Player player : current) {
+                        if (row.length() == 0) {
+                            row.append("§a§l").append(place).append("§a# §7§l>> ").append(getColor(place)).append(player.getName());
+                        } else {
+                            row.append("§7, ").append(getColor(place)).append(player.getName());
+                        }
                     }
-                    plugin.getStats().gameFirst(current.getKey());
+                    row.append(" §7- §e").append(plugin.getStars().get(current.get(0))).append(Messages.get("points"));
+                    preOutput.append(row).append("\n");
+                    place++;
                 }
-                if (row.equals("")) {
-                    row = "§a§l" + 1 + "§a# §7§l>> §8-------";
-                } else {
-                    row += " §7- §e" + first.entrySet().iterator().next().getValue() + Messages.get("points");
-                }
-                preoutput += row + "\n";
 
-                row = "";
-                for (Map.Entry<Player, Integer> current : second.entrySet()) {
-                    if (row.equals("")) {
-                        row = "§a§l" + 2 + "§a# §7§l>> §7" + current.getKey().getName();
-                    } else {
-                        row = row + "§7, §7" + current.getKey().getName();
-                    }
-                    plugin.getStats().gameSecond(current.getKey());
-                }
-                if (row.equals("")) {
-                    row = "§a§l" + 2 + "§a# §7§l>> §8-------";
-                } else {
-                    row += " §7- §e" + second.entrySet().iterator().next().getValue() + Messages.get("points");
-                }
-                preoutput += row + "\n";
+                Bukkit.broadcastMessage("§7§m--------------------------------§r\n \n" + preOutput + "\n \n§7§m--------------------------------§r");
+                // MESSAGE END
 
-                row = "";
-                for (Map.Entry<Player, Integer> current : third.entrySet()) {
-                    if (row.equals("")) {
-                        row = "§a§l" + 3 + "§a# §7§l>> §c" + current.getKey().getName();
-                    } else {
-                        row = row + "§7, §c" + current.getKey().getName();
-                    }
-                    plugin.getStats().gameThird(current.getKey());
-                }
-                if (row.equals("")) {
-                    row = "§a§l" + 3 + "§a# §7§l>> §8-------";
-                } else {
-                    row += " §7- §e" + third.entrySet().iterator().next().getValue() + Messages.get("points");
-                }
-                preoutput += row + "\n";
-
-                row = "";
-                for (Map.Entry<Player, Integer> current : fourth.entrySet()) {
-                    if (row.equals("")) {
-                        row = "§a§l" + 4 + "§a# §7§l>> §c" + current.getKey().getName();
-                    } else {
-                        row = row + "§7, §c" + current.getKey().getName();
-                    }
-                    plugin.getStats().gameFourth(current.getKey());
-                }
-                if (row.equals("")) {
-                    row = "§a§l" + 4 + "§a# §7§l>> §8-------";
-                } else {
-                    row += " §7- §e" + fourth.entrySet().iterator().next().getValue() + Messages.get("points");
-                }
-                preoutput += row + "\n";
-
-                row = "";
-                for (Map.Entry<Player, Integer> current : fifth.entrySet()) {
-                    if (row.equals("")) {
-                        row = "§a§l" + 5 + "§a# §7§l>> §c" + current.getKey().getName();
-                    } else {
-                        row = row + "§7, §c" + current.getKey().getName();
-                    }
-                    plugin.getStats().gameFifth(current.getKey());
-                }
-                if (row.equals("")) {
-                    row = "§a§l" + 5 + "§a# §7§l>> §8-------";
-                } else {
-                    row += " §7- §e" + fifth.entrySet().iterator().next().getValue() + Messages.get("points");
-                }
-                preoutput += row + "\n";
-
-                output = "§7§m--------------------------------§r\n \n" + preoutput + "\n \n§7§m--------------------------------§r";
-                Bukkit.broadcastMessage(output);
-
+                plugin.getStats().gameFinished(forDatabase);
                 plugin.getStats().finish();
 
                 taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
@@ -244,6 +173,17 @@ public class EndingState implements GameState {
         }
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.shutdown(), 40);
         Bukkit.getConsoleSender().sendMessage(Main.PREFIX_CONSOLE + "§cENDING STATE STOPPED!");
+    }
+
+    private String getColor(int place) {
+        switch (place) {
+            case 1:
+                return "§6";
+            case 2:
+                return "§7";
+            default:
+                return "§c";
+        }
     }
 
 }

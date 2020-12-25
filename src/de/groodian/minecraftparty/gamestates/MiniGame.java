@@ -230,9 +230,7 @@ public abstract class MiniGame implements GameState {
                         break;
                     case 0:
                         new Title(0, 20, 10, Messages.get("Minigame.started-title"), Messages.get("Minigame.started-subtitle")).send();
-                        for (Player player : plugin.getPlayers()) {
-                            plugin.getStats().miniGamePlayed(player);
-                        }
+                        plugin.getStats().miniGamePlayed();
                         new HSound(Sound.LEVEL_UP).play();
                         startTime = System.currentTimeMillis();
                         started = true;
@@ -384,10 +382,13 @@ public abstract class MiniGame implements GameState {
         String preOutput = "";
         String row = "";
 
+        Map<Player, Integer> forDatabase = new HashMap<>();
+
         for (Player player : winner) {
             preOutput += "§a§l" + place + "§a# §7§l>> " + getColor(place) + winner.get(place - 1).getName() + "§e +" + (6 - place) + Messages.get("points") + "\n";
 
-            savePoints(player, place);
+            addStars(player, place);
+            forDatabase.put(player, place);
 
             place++;
             if (place == 6) {
@@ -427,7 +428,8 @@ public abstract class MiniGame implements GameState {
                         row += "§7, " + getColor(place) + current.getKey().getName();
                     }
 
-                    savePoints(current.getKey(), place);
+                    addStars(current.getKey(), place);
+                    forDatabase.put(current.getKey(), place);
 
                     previous = current.getValue();
                 }
@@ -439,6 +441,8 @@ public abstract class MiniGame implements GameState {
             }
 
         }
+
+        plugin.getStats().miniGameFinished(forDatabase);
 
         new HSound(Sound.LEVEL_UP).play();
         String outPut = "§7§m--------------------------------§r\n \n" + preOutput + "\n \n§7§m--------------------------------§r";
@@ -457,55 +461,13 @@ public abstract class MiniGame implements GameState {
         }
     }
 
-    private void savePoints(Player player, int place) {
-        boolean hasPoints = false;
+    private void addStars(Player player, int place) {
+        int points = 6 - place;
         if (plugin.getStars().containsKey(player)) {
-            hasPoints = true;
+            plugin.getStars().put(player, plugin.getStars().get(player) + points);
+        } else {
+            plugin.getStars().put(player, points);
         }
-
-        switch (place) {
-            case 1:
-                plugin.getStats().miniGameFirst(player);
-                if (hasPoints) {
-                    plugin.getStars().put(player, plugin.getStars().get(player) + 5);
-                } else {
-                    plugin.getStars().put(player, 5);
-                }
-                break;
-            case 2:
-                plugin.getStats().miniGameSecond(player);
-                if (hasPoints) {
-                    plugin.getStars().put(player, plugin.getStars().get(player) + 4);
-                } else {
-                    plugin.getStars().put(player, 4);
-                }
-                break;
-            case 3:
-                plugin.getStats().miniGameThird(player);
-                if (hasPoints) {
-                    plugin.getStars().put(player, plugin.getStars().get(player) + 3);
-                } else {
-                    plugin.getStars().put(player, 3);
-                }
-                break;
-            case 4:
-                plugin.getStats().miniGameFourth(player);
-                if (hasPoints) {
-                    plugin.getStars().put(player, plugin.getStars().get(player) + 2);
-                } else {
-                    plugin.getStars().put(player, 2);
-                }
-                break;
-            case 5:
-                plugin.getStats().miniGameFifth(player);
-                if (hasPoints) {
-                    plugin.getStars().put(player, plugin.getStars().get(player) + 1);
-                } else {
-                    plugin.getStars().put(player, 1);
-                }
-                break;
-        }
-
     }
 
     protected void addWinner(Player player) {

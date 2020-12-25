@@ -2,6 +2,7 @@ package de.groodian.minecraftparty.main;
 
 import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.hyperiorcore.util.MySQL;
+import de.groodian.hyperiorcore.util.MySQLConnection;
 import de.groodian.minecraftparty.commands.BuildCommand;
 import de.groodian.minecraftparty.commands.SetupCommand;
 import de.groodian.minecraftparty.commands.StartCommand;
@@ -98,23 +99,33 @@ public class Main extends JavaPlugin {
 
         try {
 
-            PreparedStatement ps01 = minecraftPartyMySQL.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS woolblock INT(100)");
-            PreparedStatement ps02 = minecraftPartyMySQL.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS trafficlightrace INT(100)");
-            PreparedStatement ps03 = minecraftPartyMySQL.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS hotground INT(100)");
-            PreparedStatement ps04 = minecraftPartyMySQL.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS gungame INT(100)");
-            PreparedStatement ps05 = minecraftPartyMySQL.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS colorbattle INT(100)");
-            PreparedStatement ps06 = minecraftPartyMySQL.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS breakout INT(100)");
+            MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
+            PreparedStatement ps01 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS woolblock INT(100)");
+            PreparedStatement ps02 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS trafficlightrace INT(100)");
+            PreparedStatement ps03 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS hotground INT(100)");
+            PreparedStatement ps04 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS gungame INT(100)");
+            PreparedStatement ps05 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS colorbattle INT(100)");
+            PreparedStatement ps06 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS breakout INT(100)");
             ps01.executeUpdate();
+            ps01.close();
             ps02.executeUpdate();
+            ps02.close();
             ps03.executeUpdate();
+            ps03.close();
             ps04.executeUpdate();
+            ps04.close();
             ps05.executeUpdate();
+            ps05.close();
             ps06.executeUpdate();
+            ps06.close();
 
             for (JumpAndRunLocations jumpAndRun : locationManager.JUMPANDRUN_LOCATIONS) {
-                PreparedStatement ps = minecraftPartyMySQL.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS jumpandrun" + jumpAndRun.getName() + " INT(100)");
+                PreparedStatement ps = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS jumpandrun" + jumpAndRun.getName() + " INT(100)");
                 ps.executeUpdate();
+                ps.close();
             }
+
+            connection.finish();
 
         } catch (SQLException e) {
             e.printStackTrace();

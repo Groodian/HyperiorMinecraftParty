@@ -2,6 +2,7 @@ package de.groodian.minecraftparty.stats;
 
 import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.hyperiorcore.util.MySQL;
+import de.groodian.hyperiorcore.util.MySQLConnection;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.Messages;
 import org.bukkit.entity.Player;
@@ -28,113 +29,132 @@ public class Stats {
     /**
      * This method can be executed sync
      */
-    public void playTime(Player player) {
-        add(player, "playtime", plugin.getPlayTime());
-        addPoints(player, (int) plugin.getPlayTime() / 3000); // 20 points per minute
+    public void playTime(final Player player) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                add(player, "playtime", plugin.getPlayTime());
+                addPoints(player, (int) plugin.getPlayTime() / 3000); // 20 points per minute
+            }
+        }.runTaskAsynchronously(plugin);
     }
 
     /**
      * This method can be executed sync
      */
-    public void miniGamePlayed(Player player) {
-        add(player, "minigamesplayed", 1);
-        addPoints(player, 15);
+    public void miniGamePlayed() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : plugin.getPlayers()) {
+                    add(player, "minigamesplayed", 1);
+                    addPoints(player, 15);
+                }
+            }
+        }.runTaskAsynchronously(plugin);
     }
 
     /**
      * This method can be executed sync
      */
-    public void gamePlayed(Player player) {
-        add(player, "gamesplayed", 1);
-        addPoints(player, 30);
+    public void gamePlayed() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : plugin.getPlayers()) {
+                    add(player, "gamesplayed", 1);
+                    addPoints(player, 30);
+                }
+            }
+        }.runTaskAsynchronously(plugin);
     }
 
     /**
      * This method can be executed sync
      */
-    public void gameEnded(Player player) {
-        add(player, "gamesended", 1);
-        addPoints(player, 150);
+    public void gameEnded() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : plugin.getPlayers()) {
+                    add(player, "gamesended", 1);
+                    add(player, "playtime", plugin.getPlayTime());
+                    addPoints(player, ((int) plugin.getPlayTime() / 3000) + 150); // 20 points per minute + 150 for game ended
+                }
+            }
+        }.runTaskAsynchronously(plugin);
     }
 
     /**
      * This method can be executed sync
      */
-    public void gameFirst(Player player) {
-        add(player, "gamesfirst", 1);
-        addPoints(player, 500);
+    public void gameFinished(Map<Player, Integer> winners) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Map.Entry<Player, Integer> winner : winners.entrySet()) {
+                    Player player = winner.getKey();
+                    switch (winner.getValue()) {
+                        case 1:
+                            add(player, "gamesfirst", 1);
+                            addPoints(player, 500);
+                            break;
+                        case 2:
+                            add(player, "gamessecond", 1);
+                            addPoints(player, 400);
+                            break;
+                        case 3:
+                            add(player, "gamesthird", 1);
+                            addPoints(player, 350);
+                            break;
+                        case 4:
+                            add(player, "gamesfourth", 1);
+                            addPoints(player, 300);
+                            break;
+                        case 5:
+                            add(player, "gamesfifth", 1);
+                            addPoints(player, 250);
+                            break;
+                    }
+                }
+            }
+        }.runTaskAsynchronously(plugin);
     }
 
     /**
      * This method can be executed sync
      */
-    public void gameSecond(Player player) {
-        add(player, "gamessecond", 1);
-        addPoints(player, 400);
-    }
-
-    /**
-     * This method can be executed sync
-     */
-    public void gameThird(Player player) {
-        add(player, "gamesthird", 1);
-        addPoints(player, 350);
-    }
-
-    /**
-     * This method can be executed sync
-     */
-    public void gameFourth(Player player) {
-        add(player, "gamesfourth", 1);
-        addPoints(player, 300);
-    }
-
-    /**
-     * This method can be executed sync
-     */
-    public void gameFifth(Player player) {
-        add(player, "gamesfifth", 1);
-        addPoints(player, 250);
-    }
-
-    /**
-     * This method can be executed sync
-     */
-    public void miniGameFirst(Player player) {
-        add(player, "minigamesfirst", 1);
-        addPoints(player, 50);
-    }
-
-    /**
-     * This method can be executed sync
-     */
-    public void miniGameSecond(Player player) {
-        add(player, "minigamessecond", 1);
-        addPoints(player, 40);
-    }
-
-    /**
-     * This method can be executed sync
-     */
-    public void miniGameThird(Player player) {
-        add(player, "minigamesthird", 1);
-        addPoints(player, 35);
-    }
-
-    /**
-     * This method can be executed sync
-     */
-    public void miniGameFourth(Player player) {
-        add(player, "minigamesfourth", 1);
-        addPoints(player, 30);
-    }
-
-    /**
-     * This method can be executed sync
-     */
-    public void miniGameFifth(Player player) {
-        add(player, "minigamesfifth", 1);
-        addPoints(player, 25);
+    public void miniGameFinished(Map<Player, Integer> winners) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Map.Entry<Player, Integer> winner : winners.entrySet()) {
+                    Player player = winner.getKey();
+                    switch (winner.getValue()) {
+                        case 1:
+                            add(player, "minigamesfirst", 1);
+                            addPoints(player, 50);
+                            break;
+                        case 2:
+                            add(player, "minigamessecond", 1);
+                            addPoints(player, 40);
+                            break;
+                        case 3:
+                            add(player, "minigamesthird", 1);
+                            addPoints(player, 35);
+                            break;
+                        case 4:
+                            add(player, "minigamesfourth", 1);
+                            addPoints(player, 30);
+                            break;
+                        case 5:
+                            add(player, "minigamesfifth", 1);
+                            addPoints(player, 25);
+                            break;
+                    }
+                }
+            }
+        }.runTaskAsynchronously(plugin);
     }
 
     /**
@@ -266,10 +286,14 @@ public class Stats {
     public boolean isUserExists(String uuid) {
         uuid = uuid.replaceAll("-", "");
         try {
-            PreparedStatement ps = minecraftPartyMySQL.getConnection().prepareStatement("SELECT playername FROM stats WHERE UUID = ?");
+            MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
+            PreparedStatement ps = connection.getConnection().prepareStatement("SELECT playername FROM stats WHERE UUID = ?");
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
-            return rs.next();
+            boolean userExists = rs.next();
+            ps.close();
+            connection.finish();
+            return userExists;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -286,56 +310,63 @@ public class Stats {
     }
 
     private void add(final Player player, final String statistic, final long amount) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (!isUserExists(player.getUniqueId().toString().replaceAll("-", ""))) {
-                    try {
-                        PreparedStatement ps = minecraftPartyMySQL.getConnection().prepareStatement("INSERT INTO stats (UUID, playername, points, playtime, minigamesplayed, gamesplayed, gamesended, gamesfirst, gamessecond, gamesthird, gamesfourth, gamesfifth, minigamesfirst, minigamessecond, minigamesthird, minigamesfourth, minigamesfifth) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                        ps.setString(1, player.getUniqueId().toString().replaceAll("-", ""));
-                        ps.setString(2, player.getName());
-                        ps.setLong(3, 0);
-                        ps.setLong(4, 0);
-                        ps.setLong(5, 0);
-                        ps.setLong(6, 0);
-                        ps.setLong(7, 0);
-                        ps.setLong(8, 0);
-                        ps.setLong(9, 0);
-                        ps.setLong(10, 0);
-                        ps.setLong(11, 0);
-                        ps.setLong(12, 0);
-                        ps.setLong(13, 0);
-                        ps.setLong(14, 0);
-                        ps.setLong(15, 0);
-                        ps.setLong(16, 0);
-                        ps.setLong(17, 0);
-                        ps.executeUpdate();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    PreparedStatement ps = minecraftPartyMySQL.getConnection().prepareStatement("UPDATE stats SET " + statistic + " = ?, playername = ? WHERE UUID = ?");
-                    ps.setLong(1, (amount + get(player.getUniqueId().toString().replaceAll("-", ""), statistic)));
-                    ps.setString(2, player.getName());
-                    ps.setString(3, player.getUniqueId().toString().replaceAll("-", ""));
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+        if (!isUserExists(player.getUniqueId().toString().replaceAll("-", ""))) {
+            try {
+                MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
+                PreparedStatement ps = connection.getConnection().prepareStatement("INSERT INTO stats (UUID, playername, points, playtime, minigamesplayed, gamesplayed, gamesended, gamesfirst, gamessecond, gamesthird, gamesfourth, gamesfifth, minigamesfirst, minigamessecond, minigamesthird, minigamesfourth, minigamesfifth) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                ps.setString(1, player.getUniqueId().toString().replaceAll("-", ""));
+                ps.setString(2, player.getName());
+                ps.setLong(3, 0);
+                ps.setLong(4, 0);
+                ps.setLong(5, 0);
+                ps.setLong(6, 0);
+                ps.setLong(7, 0);
+                ps.setLong(8, 0);
+                ps.setLong(9, 0);
+                ps.setLong(10, 0);
+                ps.setLong(11, 0);
+                ps.setLong(12, 0);
+                ps.setLong(13, 0);
+                ps.setLong(14, 0);
+                ps.setLong(15, 0);
+                ps.setLong(16, 0);
+                ps.setLong(17, 0);
+                ps.executeUpdate();
+                ps.close();
+                connection.finish();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        }.runTaskAsynchronously(plugin);
+        }
+        try {
+            long databaseValue = get(player.getUniqueId().toString().replaceAll("-", ""), statistic);
+            MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
+            PreparedStatement ps = connection.getConnection().prepareStatement("UPDATE stats SET " + statistic + " = ?, playername = ? WHERE UUID = ?");
+            ps.setLong(1, (amount + databaseValue));
+            ps.setString(2, player.getName());
+            ps.setString(3, player.getUniqueId().toString().replaceAll("-", ""));
+            ps.executeUpdate();
+            ps.close();
+            connection.finish();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private long get(String uuid, String statistic) {
         uuid = uuid.replaceAll("-", "");
         try {
-            PreparedStatement ps = minecraftPartyMySQL.getConnection().prepareStatement("SELECT " + statistic + " FROM stats WHERE UUID = ?");
+            MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
+            PreparedStatement ps = connection.getConnection().prepareStatement("SELECT " + statistic + " FROM stats WHERE UUID = ?");
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                return rs.getLong(statistic);
+            long returnLong = 0;
+            if (rs.next()) {
+                returnLong = rs.getLong(statistic);
             }
+            ps.close();
+            connection.finish();
+            return returnLong;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -344,16 +375,20 @@ public class Stats {
 
     private int getRank(String uuid, String statistic) {
         uuid = uuid.replaceAll("-", "");
-        int temp = 0;
         try {
-            PreparedStatement ps = minecraftPartyMySQL.getConnection().prepareStatement("SELECT * FROM stats ORDER BY " + statistic + " DESC");
+            MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
+            PreparedStatement ps = connection.getConnection().prepareStatement("SELECT * FROM stats ORDER BY " + statistic + " DESC");
             ResultSet rs = ps.executeQuery();
+            int rank = 0;
             while (rs.next()) {
-                temp++;
+                rank++;
                 if (rs.getString("UUID").equals(uuid)) {
-                    return temp;
+                    break;
                 }
             }
+            ps.close();
+            connection.finish();
+            return rank;
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -4,6 +4,7 @@ import de.groodian.hyperiorcore.boards.Title;
 import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.hyperiorcore.util.HSound;
 import de.groodian.hyperiorcore.util.MySQL;
+import de.groodian.hyperiorcore.util.MySQLConnection;
 import de.groodian.hyperiorcore.util.Task;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.Messages;
@@ -51,22 +52,28 @@ public class Record {
 
                 if (isUserExists(player)) {
                     try {
-                        PreparedStatement ps = minecraftPartyMySQL.getConnection().prepareStatement("UPDATE records SET " + game + " = ?, playername = ? WHERE UUID = ?");
+                        MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
+                        PreparedStatement ps = connection.getConnection().prepareStatement("UPDATE records SET " + game + " = ?, playername = ? WHERE UUID = ?");
                         ps.setLong(1, record);
                         ps.setString(2, player.getName());
                         ps.setString(3, player.getUniqueId().toString().replaceAll("-", ""));
                         ps.executeUpdate();
+                        ps.close();
+                        connection.finish();
                         cache.add(true);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 } else {
                     try {
-                        PreparedStatement ps = minecraftPartyMySQL.getConnection().prepareStatement("INSERT INTO records (UUID,playername," + game + ") VALUES (?,?,?)");
+                        MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
+                        PreparedStatement ps = connection.getConnection().prepareStatement("INSERT INTO records (UUID,playername," + game + ") VALUES (?,?,?)");
                         ps.setString(1, player.getUniqueId().toString().replaceAll("-", ""));
                         ps.setString(2, player.getName());
                         ps.setLong(3, record);
                         ps.executeUpdate();
+                        ps.close();
+                        connection.finish();
                         cache.add(true);
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -95,17 +102,20 @@ public class Record {
     public int getRecord(String uuid, String game) {
         uuid = uuid.replaceAll("-", "");
         try {
-            PreparedStatement ps = minecraftPartyMySQL.getConnection().prepareStatement("SELECT " + game + " FROM records WHERE UUID = ?");
+            MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
+            PreparedStatement ps = connection.getConnection().prepareStatement("SELECT " + game + " FROM records WHERE UUID = ?");
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
+            int record = -1;
+            if (rs.next()) {
                 int temp = rs.getInt(game);
-                if (temp == 0) {
-                    return -1;
-                } else {
-                    return temp;
+                if (temp != 0) {
+                    record = temp;
                 }
             }
+            ps.close();
+            connection.finish();
+            return record;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -114,10 +124,14 @@ public class Record {
 
     private boolean isUserExists(Player player) {
         try {
-            PreparedStatement ps = minecraftPartyMySQL.getConnection().prepareStatement("SELECT playername FROM records WHERE UUID = ?");
+            MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
+            PreparedStatement ps = connection.getConnection().prepareStatement("SELECT playername FROM records WHERE UUID = ?");
             ps.setString(1, player.getUniqueId().toString().replaceAll("-", ""));
             ResultSet rs = ps.executeQuery();
-            return rs.next();
+            boolean userExists = rs.next();
+            ps.close();
+            connection.finish();
+            return userExists;
         } catch (SQLException e) {
             e.printStackTrace();
         }

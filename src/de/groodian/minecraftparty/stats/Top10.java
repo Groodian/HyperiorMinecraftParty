@@ -1,6 +1,7 @@
 package de.groodian.minecraftparty.stats;
 
 import de.groodian.hyperiorcore.main.HyperiorCore;
+import de.groodian.hyperiorcore.util.MySQLConnection;
 import de.groodian.hyperiorcore.util.UUIDFetcher;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.Messages;
@@ -41,13 +42,16 @@ public class Top10 {
         z = top10Loc.getZ();
 
         try {
-            PreparedStatement ps = HyperiorCore.getMySQLManager().getMinecraftPartyMySQL().getConnection().prepareStatement("SELECT UUID FROM stats ORDER BY points DESC LIMIT 10");
+            MySQLConnection connection = HyperiorCore.getMySQLManager().getMinecraftPartyMySQL().getMySQLConnection();
+            PreparedStatement ps = connection.getConnection().prepareStatement("SELECT UUID FROM stats ORDER BY points DESC LIMIT 10");
             ResultSet rs = ps.executeQuery();
             int rank = 0;
             while (rs.next()) {
                 rank++;
                 top10.put(rank, rs.getString("UUID"));
             }
+            ps.close();
+            connection.finish();
         } catch (SQLException e) {
             e.printStackTrace();
         }
