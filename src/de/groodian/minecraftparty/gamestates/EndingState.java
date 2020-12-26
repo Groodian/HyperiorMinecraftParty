@@ -90,6 +90,7 @@ public class EndingState implements GameState {
                     playersAtTheSamePlace.add(current.getKey());
                     forDatabase.put(current.getKey(), place);
                 }
+                winner.add(playersAtTheSamePlace);
                 // SORT PLAYERS END
 
                 // TITLE START

@@ -30,131 +30,101 @@ public class Stats {
      * This method can be executed sync
      */
     public void playTime(final Player player) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                add(player, "playtime", plugin.getPlayTime());
-                addPoints(player, (int) plugin.getPlayTime() / 3000); // 20 points per minute
-            }
-        }.runTaskAsynchronously(plugin);
+        add(player, "playtime", plugin.getPlayTime());
+        addPoints(player, (int) plugin.getPlayTime() / 3000); // 20 points per minute
     }
 
     /**
      * This method can be executed sync
      */
     public void miniGamePlayed() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : plugin.getPlayers()) {
-                    add(player, "minigamesplayed", 1);
-                    addPoints(player, 15);
-                }
-            }
-        }.runTaskAsynchronously(plugin);
+        for (Player player : plugin.getPlayers()) {
+            add(player, "minigamesplayed", 1);
+            addPoints(player, 15);
+        }
     }
 
     /**
      * This method can be executed sync
      */
     public void gamePlayed() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : plugin.getPlayers()) {
-                    add(player, "gamesplayed", 1);
-                    addPoints(player, 30);
-                }
-            }
-        }.runTaskAsynchronously(plugin);
+        for (Player player : plugin.getPlayers()) {
+            add(player, "gamesplayed", 1);
+            addPoints(player, 30);
+        }
     }
 
     /**
      * This method can be executed sync
      */
     public void gameEnded() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : plugin.getPlayers()) {
-                    add(player, "gamesended", 1);
-                    add(player, "playtime", plugin.getPlayTime());
-                    addPoints(player, ((int) plugin.getPlayTime() / 3000) + 150); // 20 points per minute + 150 for game ended
-                }
-            }
-        }.runTaskAsynchronously(plugin);
+        for (Player player : plugin.getPlayers()) {
+            add(player, "gamesended", 1);
+            add(player, "playtime", plugin.getPlayTime());
+            addPoints(player, ((int) plugin.getPlayTime() / 3000) + 150); // 20 points per minute + 150 for game ended
+        }
     }
 
     /**
      * This method can be executed sync
      */
     public void gameFinished(Map<Player, Integer> winners) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Map.Entry<Player, Integer> winner : winners.entrySet()) {
-                    Player player = winner.getKey();
-                    switch (winner.getValue()) {
-                        case 1:
-                            add(player, "gamesfirst", 1);
-                            addPoints(player, 500);
-                            break;
-                        case 2:
-                            add(player, "gamessecond", 1);
-                            addPoints(player, 400);
-                            break;
-                        case 3:
-                            add(player, "gamesthird", 1);
-                            addPoints(player, 350);
-                            break;
-                        case 4:
-                            add(player, "gamesfourth", 1);
-                            addPoints(player, 300);
-                            break;
-                        case 5:
-                            add(player, "gamesfifth", 1);
-                            addPoints(player, 250);
-                            break;
-                    }
-                }
+        for (Map.Entry<Player, Integer> winner : winners.entrySet()) {
+            Player player = winner.getKey();
+            switch (winner.getValue()) {
+                case 1:
+                    add(player, "gamesfirst", 1);
+                    addPoints(player, 500);
+                    break;
+                case 2:
+                    add(player, "gamessecond", 1);
+                    addPoints(player, 400);
+                    break;
+                case 3:
+                    add(player, "gamesthird", 1);
+                    addPoints(player, 350);
+                    break;
+                case 4:
+                    add(player, "gamesfourth", 1);
+                    addPoints(player, 300);
+                    break;
+                case 5:
+                    add(player, "gamesfifth", 1);
+                    addPoints(player, 250);
+                    break;
             }
-        }.runTaskAsynchronously(plugin);
+        }
     }
 
     /**
      * This method can be executed sync
      */
     public void miniGameFinished(Map<Player, Integer> winners) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Map.Entry<Player, Integer> winner : winners.entrySet()) {
-                    Player player = winner.getKey();
-                    switch (winner.getValue()) {
-                        case 1:
-                            add(player, "minigamesfirst", 1);
-                            addPoints(player, 50);
-                            break;
-                        case 2:
-                            add(player, "minigamessecond", 1);
-                            addPoints(player, 40);
-                            break;
-                        case 3:
-                            add(player, "minigamesthird", 1);
-                            addPoints(player, 35);
-                            break;
-                        case 4:
-                            add(player, "minigamesfourth", 1);
-                            addPoints(player, 30);
-                            break;
-                        case 5:
-                            add(player, "minigamesfifth", 1);
-                            addPoints(player, 25);
-                            break;
-                    }
-                }
+        for (Map.Entry<Player, Integer> winner : winners.entrySet()) {
+            Player player = winner.getKey();
+            switch (winner.getValue()) {
+                case 1:
+                    add(player, "minigamesfirst", 1);
+                    addPoints(player, 50);
+                    break;
+                case 2:
+                    add(player, "minigamessecond", 1);
+                    addPoints(player, 40);
+                    break;
+                case 3:
+                    add(player, "minigamesthird", 1);
+                    addPoints(player, 35);
+                    break;
+                case 4:
+                    add(player, "minigamesfourth", 1);
+                    addPoints(player, 30);
+                    break;
+                case 5:
+                    add(player, "minigamesfifth", 1);
+                    addPoints(player, 25);
+                    break;
             }
-        }.runTaskAsynchronously(plugin);
+        }
     }
 
     /**
@@ -310,47 +280,62 @@ public class Stats {
     }
 
     private void add(final Player player, final String statistic, final long amount) {
-        if (!isUserExists(player.getUniqueId().toString().replaceAll("-", ""))) {
-            try {
-                MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
-                PreparedStatement ps = connection.getConnection().prepareStatement("INSERT INTO stats (UUID, playername, points, playtime, minigamesplayed, gamesplayed, gamesended, gamesfirst, gamessecond, gamesthird, gamesfourth, gamesfifth, minigamesfirst, minigamessecond, minigamesthird, minigamesfourth, minigamesfifth) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                ps.setString(1, player.getUniqueId().toString().replaceAll("-", ""));
-                ps.setString(2, player.getName());
-                ps.setLong(3, 0);
-                ps.setLong(4, 0);
-                ps.setLong(5, 0);
-                ps.setLong(6, 0);
-                ps.setLong(7, 0);
-                ps.setLong(8, 0);
-                ps.setLong(9, 0);
-                ps.setLong(10, 0);
-                ps.setLong(11, 0);
-                ps.setLong(12, 0);
-                ps.setLong(13, 0);
-                ps.setLong(14, 0);
-                ps.setLong(15, 0);
-                ps.setLong(16, 0);
-                ps.setLong(17, 0);
-                ps.executeUpdate();
-                ps.close();
-                connection.finish();
-            } catch (SQLException e) {
-                e.printStackTrace();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    String uuid = player.getUniqueId().toString().replaceAll("-", "");
+
+                    // Check if the user exists with the same database connection because,
+                    // if two threads add data at the same time the user get twice inserted (like above add points and something else at the same time)
+                    MySQLConnection connection01 = minecraftPartyMySQL.getMySQLConnection();
+                    PreparedStatement ps01 = connection01.getConnection().prepareStatement("SELECT playername FROM stats WHERE UUID = ?");
+                    ps01.setString(1, uuid);
+                    ResultSet rs = ps01.executeQuery();
+                    boolean userExists = rs.next();
+                    ps01.close();
+
+                    if (!userExists) {
+                        PreparedStatement ps02 = connection01.getConnection().prepareStatement("INSERT INTO stats (UUID, playername, points, playtime, minigamesplayed, gamesplayed, gamesended, gamesfirst, gamessecond, gamesthird, gamesfourth, gamesfifth, minigamesfirst, minigamessecond, minigamesthird, minigamesfourth, minigamesfifth) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+                        ps02.setString(1, uuid);
+                        ps02.setString(2, player.getName());
+                        ps02.setLong(3, 0);
+                        ps02.setLong(4, 0);
+                        ps02.setLong(5, 0);
+                        ps02.setLong(6, 0);
+                        ps02.setLong(7, 0);
+                        ps02.setLong(8, 0);
+                        ps02.setLong(9, 0);
+                        ps02.setLong(10, 0);
+                        ps02.setLong(11, 0);
+                        ps02.setLong(12, 0);
+                        ps02.setLong(13, 0);
+                        ps02.setLong(14, 0);
+                        ps02.setLong(15, 0);
+                        ps02.setLong(16, 0);
+                        ps02.setLong(17, 0);
+                        ps02.executeUpdate();
+                        ps02.close();
+                    }
+
+                    // Finish connection to get data in the next step
+                    connection01.finish();
+
+                    long databaseValue = get(uuid, statistic);
+                    MySQLConnection connection02 = minecraftPartyMySQL.getMySQLConnection();
+                    PreparedStatement ps = connection02.getConnection().prepareStatement("UPDATE stats SET " + statistic + " = ?, playername = ? WHERE UUID = ?");
+                    ps.setLong(1, (amount + databaseValue));
+                    ps.setString(2, player.getName());
+                    ps.setString(3, uuid);
+                    ps.executeUpdate();
+                    ps.close();
+                    connection02.finish();
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
-        }
-        try {
-            long databaseValue = get(player.getUniqueId().toString().replaceAll("-", ""), statistic);
-            MySQLConnection connection = minecraftPartyMySQL.getMySQLConnection();
-            PreparedStatement ps = connection.getConnection().prepareStatement("UPDATE stats SET " + statistic + " = ?, playername = ? WHERE UUID = ?");
-            ps.setLong(1, (amount + databaseValue));
-            ps.setString(2, player.getName());
-            ps.setString(3, player.getUniqueId().toString().replaceAll("-", ""));
-            ps.executeUpdate();
-            ps.close();
-            connection.finish();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        }.runTaskAsynchronously(plugin);
     }
 
     private long get(String uuid, String statistic) {
