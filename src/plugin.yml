@@ -1,7 +1,7 @@
 name: HyperiorMinecraftParty_by_Groodian
 main: de.groodian.minecraftparty.main.Main
 author: Groodian
-version: 4.4.2
+version: 4.4.3
 
 depend: [ HyperiorCore_by_Groodian ]
 

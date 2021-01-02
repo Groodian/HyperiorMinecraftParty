@@ -123,7 +123,7 @@ public class MainListener implements Listener {
             }
         };
 
-        HyperiorCore.getPrefix().getSpectators().add(player);
+        HyperiorCore.getPrefix().addSpectator(player);
         HyperiorCore.getPrefix().setPrefix(player);
         HyperiorCore.getPrefix().setListName(player);
         player.setExp(0);
