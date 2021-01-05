@@ -12,6 +12,7 @@ public enum GameStates {
     GUNGAME_STATE,
     COLORBATTLE_STATE,
     BREAKOUT_STATE,
+    MASTERBUILDERS_STATE,
     ENDING_STATE;
 
     private static SecureRandom random = new SecureRandom();

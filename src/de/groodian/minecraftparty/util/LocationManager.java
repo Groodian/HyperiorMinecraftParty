@@ -55,6 +55,10 @@ public class LocationManager {
     public List<Location> BREAKOUT_PLAYERS;
     public Location BREAKOUT_SPECTATOR;
 
+    // Master Builders
+    public List<Location> MASTERBUILDERS_PLAYER;
+    public Location MASTERBUILDERS_PICTURES;
+
     public LocationManager() {
         try {
             // locations
@@ -106,6 +110,10 @@ public class LocationManager {
         // Breakout
         BREAKOUT_PLAYERS = loadLocations("BreakoutPlayer", Main.MAX_PLAYERS);
         BREAKOUT_SPECTATOR = loadLocation("BreakoutSpectator");
+
+        // Breakout
+        BREAKOUT_PLAYERS = loadLocations("MasterBuildersPlayer", Main.MAX_PLAYERS);
+        BREAKOUT_SPECTATOR = loadLocation("MasterBuildersPictures");
 
         return missingLocations == null;
 

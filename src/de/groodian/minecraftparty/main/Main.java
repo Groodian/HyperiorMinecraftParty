@@ -134,7 +134,7 @@ public class Main extends JavaPlugin {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         gameStateManager = new GameStateManager(this);
-        gameStateManager.setGameState(GameStates.LOBBY_STATE);
+        gameStateManager.setGameState(GameStates.MASTERBUILDERS_STATE);
 
         record = new Record(this);
         stats = new Stats(this);
@@ -170,7 +170,9 @@ public class Main extends JavaPlugin {
     public void onDisable() {
         Bukkit.getConsoleSender().sendMessage(PREFIX_CONSOLE + "§cStopping plugin...");
 
-        client.stop();
+        if(client != null) {
+            client.stop();
+        }
 
         Bukkit.getConsoleSender().sendMessage(PREFIX_CONSOLE + "§cStopped!");
     }

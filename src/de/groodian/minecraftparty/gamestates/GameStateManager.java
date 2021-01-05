@@ -29,6 +29,7 @@ public class GameStateManager {
         gameStates.put(GameStates.GUNGAME_STATE, new GunGameState("GunGame", plugin));
         gameStates.put(GameStates.COLORBATTLE_STATE, new ColorBattleState("ColorBattle", plugin));
         gameStates.put(GameStates.BREAKOUT_STATE, new BreakoutState("Breakout", plugin));
+        gameStates.put(GameStates.MASTERBUILDERS_STATE, new MasterBuildersState("MasterBuilders", plugin));
         gameStates.put(GameStates.ENDING_STATE, new EndingState(plugin));
     }
 

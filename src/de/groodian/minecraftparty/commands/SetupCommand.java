@@ -23,6 +23,7 @@ public class SetupCommand implements CommandExecutor {
                     "\n§6/mpsetup gungame §7- Setting up gun game" +
                     "\n§6/mpsetup colorbattle §7- Setting up color battle" +
                     "\n§6/mpsetup breakout §7- Setting up breakout" +
+                    "\n§6/mpsetup masterbuilders §7- Setting up master builders" +
                     "\n§6/mpsetup top10 §7- Set the top ten location" +
                     "\n " +
                     "\n§aMinecraftParty by Groodian" +
@@ -247,6 +248,44 @@ public class SetupCommand implements CommandExecutor {
                             }
                         } else {
                             player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup breakout <player/spectator>");
+                        }
+                    }
+
+                    // master builders
+                    else if (args[0].equalsIgnoreCase("masterbuilders")) {
+                        if (args.length >= 2) {
+                            if (args[1].equalsIgnoreCase("player")) {
+                                if (args.length == 3) {
+                                    if (args[2].chars().allMatch(Character::isDigit)) {
+                                        int number = Integer.parseInt(args[2]);
+                                        if (number <= Main.MAX_PLAYERS) {
+                                            if (number > 0) {
+                                                plugin.getLocationManager().saveLocation("MasterBuildersPlayer" + number, player.getLocation());
+                                                player.sendMessage(Main.PREFIX + "§aMasterBuildersPlayer" + number + "-Location was set.");
+                                            } else {
+                                                player.sendMessage(Main.PREFIX + "§cThe number is less than or equal to zero.");
+                                            }
+                                        } else {
+                                            player.sendMessage(Main.PREFIX + "§cThe number is higher as the defined number of max players. Max value is " + Main.MAX_PLAYERS + ".");
+                                        }
+                                    } else {
+                                        player.sendMessage(Main.PREFIX + "§cThe parameter 1-" + Main.MAX_PLAYERS + " has to be a number.");
+                                    }
+                                } else {
+                                    player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup masterbuilders player <1-" + Main.MAX_PLAYERS + ">");
+                                }
+                            } else if (args[1].equalsIgnoreCase("pictures")) {
+                                if (args.length == 2) {
+                                    plugin.getLocationManager().saveLocation("MasterBuilderPictures", player.getLocation());
+                                    player.sendMessage(Main.PREFIX + "§aMasterBuilderPictures-Location was set. §7(§cFrom this point is takes 5x5x1 pictures in positive x and y direction! And multiple pictures in positive z direction with 1 block space between pictures!§7)");
+                                } else {
+                                    player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup masterbuilders pictures §7(§cFrom this point is takes 5x5x1 pictures in positive x and y direction! And multiple pictures in positive z direction with 1 block space between pictures!§7)");
+                                }
+                            } else {
+                                player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup masterbuilders <player/pictures>");
+                            }
+                        } else {
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup masterbuilders <player/pictures>");
                         }
                     }
 
