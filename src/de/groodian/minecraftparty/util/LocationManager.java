@@ -112,8 +112,8 @@ public class LocationManager {
         BREAKOUT_SPECTATOR = loadLocation("BreakoutSpectator");
 
         // Breakout
-        BREAKOUT_PLAYERS = loadLocations("MasterBuildersPlayer", Main.MAX_PLAYERS);
-        BREAKOUT_SPECTATOR = loadLocation("MasterBuildersPictures");
+        MASTERBUILDERS_PLAYER = loadLocations("MasterBuildersPlayer", Main.MAX_PLAYERS);
+        MASTERBUILDERS_PICTURES = loadLocation("MasterBuildersPictures");
 
         return missingLocations == null;
 

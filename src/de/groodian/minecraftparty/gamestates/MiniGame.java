@@ -9,6 +9,7 @@ import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
 import de.groodian.minecraftparty.main.Messages;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -47,6 +48,9 @@ public abstract class MiniGame implements GameState {
 
     // private stuff
     private Map<Player, Integer> records;
+    private Map<Player, Location> playerToTeleport;
+    private int teleportCounter;
+    private BukkitTask teleportTask;
     private BukkitTask countdownTask;
     private int secondsCountdown;
     private BukkitTask scoreboardGameTask;
@@ -71,6 +75,9 @@ public abstract class MiniGame implements GameState {
         this.diePlayers = new ArrayList<>();
         this.started = false;
         this.records = new HashMap<>();
+        this.playerToTeleport = new HashMap<>();
+        this.teleportCounter = 0;
+        this.teleportTask = null;
         this.countdownTask = null;
         this.secondsCountdown = 6;
         this.scoreboardGameTask = null;
@@ -138,7 +145,7 @@ public abstract class MiniGame implements GameState {
                             firstMiniGame = false;
                         }
                         scoreboardRecords();
-                        countdown();
+                        teleportPlayers();
                     }
                 };
 
@@ -220,8 +227,7 @@ public abstract class MiniGame implements GameState {
                     case 4:
                     case 3:
                     case 2:
-                        new Title(0, 30, 0, Messages.get("Minigame.start-title").replace("%name%", Messages.get(name + ".name")), Messages.get("Minigame.start-subtitle").replaceAll("%seconds%", "" + secondsCountdown))
-                                .send();
+                        new Title(0, 30, 0, Messages.get("Minigame.start-title").replace("%name%", Messages.get(name + ".name")), Messages.get("Minigame.start-subtitle").replaceAll("%seconds%", "" + secondsCountdown)).send();
                         new HSound(Sound.NOTE_STICKS).play();
                         break;
                     case 1:
@@ -243,6 +249,24 @@ public abstract class MiniGame implements GameState {
             }
         }.runTaskTimer(plugin, 0, 20);
 
+    }
+
+    private void teleportPlayers() {
+        List<Player> players = new ArrayList<>(playerToTeleport.keySet());
+
+        teleportTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (teleportCounter < players.size()) {
+                    Player player = players.get(teleportCounter);
+                    player.teleport(playerToTeleport.get(player));
+                    teleportCounter++;
+                } else {
+                    teleportTask.cancel();
+                    countdown();
+                }
+            }
+        }.runTaskTimer(plugin, 0, 40);
     }
 
     private void scoreboardGame() {
@@ -491,6 +515,10 @@ public abstract class MiniGame implements GameState {
         diePlayers.add(player);
         Bukkit.broadcastMessage(Main.PREFIX + Messages.get(name + ".player-out").replace("%player%", player.getName()));
         new Title(10, 20, 20, "", Messages.get("Minigame.player-out-title")).sendTo(player);
+    }
+
+    protected void addPlayerToTeleport(Player player, Location location) {
+        playerToTeleport.put(player, location);
     }
 
     private <K, V extends Comparable<? super V>> Map<K, V> sortMapByValue(Map<K, V> map, boolean order) {

@@ -29,7 +29,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -45,6 +50,9 @@ public class Main extends JavaPlugin {
     public static final String PREFIX_CONSOLE = "§7[§eMinecraftParty§7] §r";
     public static final int MIN_PLAYERS = 2, MAX_PLAYERS = 12;
 
+    private Main plugin;
+    private BukkitTask stopTask;
+    private int stopCounter;
     private LocationManager locationManager;
     private GameStateManager gameStateManager;
     private Record record;
@@ -64,6 +72,8 @@ public class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         Bukkit.getConsoleSender().sendMessage(PREFIX_CONSOLE + "§aLoading plugin...");
+
+        plugin = this;
 
         boolean setupMode = false;
 
@@ -94,6 +104,8 @@ public class Main extends JavaPlugin {
         build = new ArrayList<>();
         toRemove = new ArrayList<>();
         stars = new HashMap<>();
+        stopTask = null;
+        stopCounter = 0;
 
         MySQL minecraftPartyMySQL = HyperiorCore.getMySQLManager().getMinecraftPartyMySQL();
 
@@ -170,11 +182,37 @@ public class Main extends JavaPlugin {
     public void onDisable() {
         Bukkit.getConsoleSender().sendMessage(PREFIX_CONSOLE + "§cStopping plugin...");
 
-        if(client != null) {
+        if (client != null) {
             client.stop();
         }
 
         Bukkit.getConsoleSender().sendMessage(PREFIX_CONSOLE + "§cStopped!");
+    }
+
+    public void stopServer() {
+        stopTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (Bukkit.getOnlinePlayers().isEmpty()) {
+                    stopTask.cancel();
+                    Bukkit.shutdown();
+                } else {
+                    // Only takes one player, and if (for some strange reason) no player left just do nothing
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        ByteArrayOutputStream b = new ByteArrayOutputStream();
+                        DataOutputStream out = new DataOutputStream(b);
+                        try {
+                            out.writeUTF("Connect");
+                            out.writeUTF(MainConfig.getString("fallback-server"));
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        player.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
+                        break;
+                    }
+                }
+            }
+        }.runTaskTimer(this, 10, 10);
     }
 
     public LocationManager getLocationManager() {

@@ -217,6 +217,10 @@ WoolBlock:
   blue: "&9&lBlau"
   red: "&c&lRot"
 
+MasterBuilders:
+  name: "MasterBuilders"
+  game-info: "&a&l%name%\n&7Baue das gezeigte Bild so\n&7schnell wie möglich hinter dir nach."
+
 PlayerHider:
   item-hide: "&cSpieler verstecken"
   item-show: "&aSpieler anzeigen"

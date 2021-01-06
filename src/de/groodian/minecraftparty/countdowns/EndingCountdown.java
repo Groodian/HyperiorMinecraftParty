@@ -32,7 +32,6 @@ public class EndingCountdown extends Countdown {
                     break;
                 default:
                     break;
-
             }
             seconds--;
         }, 0, 20);
@@ -40,7 +39,7 @@ public class EndingCountdown extends Countdown {
 
     @Override
     public void stop() {
-        Bukkit.getScheduler().cancelAllTasks();
+        Bukkit.getScheduler().cancelTask(taskID);
         plugin.getGameStateManager().stopCurrentGameState();
     }
 

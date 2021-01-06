@@ -6,16 +6,13 @@ import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.hyperiorcore.util.HSound;
 import de.groodian.minecraftparty.countdowns.EndingCountdown;
 import de.groodian.minecraftparty.main.Main;
-import de.groodian.minecraftparty.main.MainConfig;
 import de.groodian.minecraftparty.main.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,8 +26,9 @@ public class EndingState implements GameState {
     private EndingCountdown endingCountdown;
     private Main plugin;
 
-    private int taskID = 0;
-    private int count = 0;
+    private BukkitTask teleportTask = null;
+    private BukkitTask soundTask = null;
+    private int soundCounter = 0;
 
     public EndingState(Main plugin) {
         endingCountdown = new EndingCountdown(plugin);
@@ -56,19 +54,34 @@ public class EndingState implements GameState {
             }
         }.runTaskLater(plugin, 35);
 
+        List<Player> playersTeleported = new ArrayList<>();
+
+        teleportTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (!playersTeleported.contains(player)) {
+                        player.teleport(plugin.getLocationManager().LOBBY);
+                        plugin.getTeleportFix().doFor(player);
+                        HyperiorCore.getSB().unregisterScoreboard(player);
+                        return;
+                    }
+                }
+                teleportTask.cancel();
+                afterAllTeleported();
+            }
+        }.runTaskTimer(plugin, 0, 40);
+
+    }
+
+    private void afterAllTeleported() {
         new BukkitRunnable() {
             @Override
             public void run() {
 
                 HyperiorCosmetic.enable();
 
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    player.teleport(plugin.getLocationManager().LOBBY);
-                    plugin.getTeleportFix().doFor(player);
-                    HyperiorCore.getSB().unregisterScoreboard(player);
-                }
-
-                new HSound(Sound.ENDERDRAGON_WINGS).play();
+                playSound();
 
                 // SORT PLAYERS START
                 Map<Player, Integer> sorted = plugin.getStars().entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
@@ -140,40 +153,30 @@ public class EndingState implements GameState {
                 plugin.getStats().gameFinished(forDatabase);
                 plugin.getStats().finish();
 
-                taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-                    new HSound(Sound.LEVEL_UP).play();
-                    count++;
-                    if (count >= 2) {
-                        Bukkit.getScheduler().cancelTask(taskID);
-                    }
-                }, 10, 2);
-
                 endingCountdown.start();
 
             }
         }.runTaskLater(plugin, 70);
+    }
 
+    private void playSound() {
+        new HSound(Sound.ENDERDRAGON_WINGS).play();
+
+        soundTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                new HSound(Sound.LEVEL_UP).play();
+                soundCounter++;
+                if (soundCounter > 3) {
+                    soundTask.cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 10, 2);
     }
 
     @Override
     public void stop() {
-        for (Player all : Bukkit.getOnlinePlayers()) {
-            ByteArrayOutputStream b = new ByteArrayOutputStream();
-            DataOutputStream out = new DataOutputStream(b);
-            try {
-                out.writeUTF("Connect");
-                out.writeUTF(MainConfig.getString("fallback-server"));
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-            all.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> Bukkit.shutdown(), 40);
+        plugin.stopServer();
         Bukkit.getConsoleSender().sendMessage(Main.PREFIX_CONSOLE + "§cENDING STATE STOPPED!");
     }
 

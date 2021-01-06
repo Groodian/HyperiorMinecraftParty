@@ -120,6 +120,8 @@ TrafficLightRace:
 # Master Builders settings
 ##
 MasterBuilders:
+  # Map resetting, set to false if the server gets copied
+  reset: true
   # Picture size
   size: 5
 

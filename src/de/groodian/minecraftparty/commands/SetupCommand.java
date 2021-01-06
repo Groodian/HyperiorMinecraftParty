@@ -13,23 +13,23 @@ public class SetupCommand implements CommandExecutor {
     private Main plugin;
 
     private String USAGE =
-            "Â§7Â§m=============Â§r Â§6MinecraftParty Â§7Â§m=============Â§r" +
+            "§7§m=============§r §6MinecraftParty §7§m=============§r" +
                     "\n " +
-                    "\nÂ§6/mpsetup lobby Â§7- Set the lobby location" +
-                    "\nÂ§6/mpsetup woolblock Â§7- Setting up wool block" +
-                    "\nÂ§6/mpsetup jumpandrun Â§7- Setting up jump and run" +
-                    "\nÂ§6/mpsetup trafficlightrace Â§7- Setting up traffic light race" +
-                    "\nÂ§6/mpsetup hotground Â§7- Setting up hot ground" +
-                    "\nÂ§6/mpsetup gungame Â§7- Setting up gun game" +
-                    "\nÂ§6/mpsetup colorbattle Â§7- Setting up color battle" +
-                    "\nÂ§6/mpsetup breakout Â§7- Setting up breakout" +
-                    "\nÂ§6/mpsetup masterbuilders Â§7- Setting up master builders" +
-                    "\nÂ§6/mpsetup top10 Â§7- Set the top ten location" +
+                    "\n§6/mpsetup lobby §7- Set the lobby location" +
+                    "\n§6/mpsetup woolblock §7- Setting up wool block" +
+                    "\n§6/mpsetup jumpandrun §7- Setting up jump and run" +
+                    "\n§6/mpsetup trafficlightrace §7- Setting up traffic light race" +
+                    "\n§6/mpsetup hotground §7- Setting up hot ground" +
+                    "\n§6/mpsetup gungame §7- Setting up gun game" +
+                    "\n§6/mpsetup colorbattle §7- Setting up color battle" +
+                    "\n§6/mpsetup breakout §7- Setting up breakout" +
+                    "\n§6/mpsetup masterbuilders §7- Setting up master builders" +
+                    "\n§6/mpsetup top10 §7- Set the top ten location" +
                     "\n " +
-                    "\nÂ§aMinecraftParty by Groodian" +
-                    "\nÂ§aVersion: " + Main.VERSION +
+                    "\n§aMinecraftParty by Groodian" +
+                    "\n§aVersion: " + Main.VERSION +
                     "\n " +
-                    "\nÂ§7Â§m=============Â§r Â§6MinecraftParty Â§7Â§m=============Â§r";
+                    "\n§7§m=============§r §6MinecraftParty §7§m=============§r";
 
     public SetupCommand(Main plugin) {
         this.plugin = plugin;
@@ -48,9 +48,9 @@ public class SetupCommand implements CommandExecutor {
                     if (args[0].equalsIgnoreCase("lobby")) {
                         if (args.length == 1) {
                             plugin.getLocationManager().saveLocation("Lobby", player.getLocation());
-                            player.sendMessage(Main.PREFIX + "Â§aLobby-Location was set.");
+                            player.sendMessage(Main.PREFIX + "§aLobby-Location was set.");
                         } else
-                            player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup lobby");
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup lobby");
                     }
 
                     // woolblock
@@ -58,17 +58,17 @@ public class SetupCommand implements CommandExecutor {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("start")) {
                                 plugin.getLocationManager().saveLocation("WoolBlockStart", player.getLocation());
-                                player.sendMessage(Main.PREFIX + "Â§aWoolBlockStart-Location was set.");
+                                player.sendMessage(Main.PREFIX + "§aWoolBlockStart-Location was set.");
                             } else if (args[1].equalsIgnoreCase("field")) {
                                 plugin.getLocationManager().saveLocation("WoolBlockField", player.getLocation());
-                                player.sendMessage(Main.PREFIX + "Â§aWoolBlockField-Location was set.");
+                                player.sendMessage(Main.PREFIX + "§aWoolBlockField-Location was set.");
                             } else if (args[1].equalsIgnoreCase("spectator")) {
                                 plugin.getLocationManager().saveLocation("WoolBlockSpectator", player.getLocation());
-                                player.sendMessage(Main.PREFIX + "Â§aWoolBlockSpectator-Location was set.");
+                                player.sendMessage(Main.PREFIX + "§aWoolBlockSpectator-Location was set.");
                             } else
-                                player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup woolblock <start/field/spectator>");
+                                player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup woolblock <start/field/spectator>");
                         } else
-                            player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup woolblock <start/field/spectator>");
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup woolblock <start/field/spectator>");
                     }
 
                     // jumpandrun
@@ -79,26 +79,26 @@ public class SetupCommand implements CommandExecutor {
                                     if (!plugin.getLocationManager().existsJumpAndRun(args[2])) {
                                         if (args[3].chars().allMatch(Character::isDigit)) {
                                             plugin.getLocationManager().createJumpAndRun(args[2], Integer.parseInt(args[3]));
-                                            player.sendMessage(Main.PREFIX + "Â§aThe Jump and Run " + args[2] + " was successfully created.");
+                                            player.sendMessage(Main.PREFIX + "§aThe Jump and Run " + args[2] + " was successfully created.");
                                         } else {
-                                            player.sendMessage(Main.PREFIX + "Â§cThe parameter checkpoints has to be a number.");
+                                            player.sendMessage(Main.PREFIX + "§cThe parameter checkpoints has to be a number.");
                                         }
                                     } else {
-                                        player.sendMessage(Main.PREFIX + "Â§cThe Jump and Run " + args[2] + " already exists.");
+                                        player.sendMessage(Main.PREFIX + "§cThe Jump and Run " + args[2] + " already exists.");
                                     }
                                 } else {
-                                    player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup jumpandrun create <name> <checkpoints>");
+                                    player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup jumpandrun create <name> <checkpoints>");
                                 }
                             } else if (args[1].equalsIgnoreCase("start")) {
                                 if (args.length == 3) {
                                     if (plugin.getLocationManager().existsJumpAndRun(args[2])) {
                                         plugin.getLocationManager().saveLocation("JumpAndRun." + args[2] + ".start", player.getLocation());
-                                        player.sendMessage(Main.PREFIX + "Â§aJumpAndRun." + args[2] + ".start-Location was set.");
+                                        player.sendMessage(Main.PREFIX + "§aJumpAndRun." + args[2] + ".start-Location was set.");
                                     } else {
-                                        player.sendMessage(Main.PREFIX + "Â§cThe Jump and Run " + args[2] + " not exists.");
+                                        player.sendMessage(Main.PREFIX + "§cThe Jump and Run " + args[2] + " not exists.");
                                     }
                                 } else {
-                                    player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup jumpandrun start <name>");
+                                    player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup jumpandrun start <name>");
                                 }
                             } else if (args[1].equalsIgnoreCase("checkpoint")) {
                                 if (args.length == 4) {
@@ -108,38 +108,38 @@ public class SetupCommand implements CommandExecutor {
                                             if (number <= plugin.getLocationManager().getJumpAndRunCheckpoints(args[3])) {
                                                 if (number > 0) {
                                                     plugin.getLocationManager().saveLocation("JumpAndRun." + args[3] + ".checkpoints." + number, player.getLocation());
-                                                    player.sendMessage(Main.PREFIX + "Â§aJumpAndRun." + args[3] + ".checkpoints." + number + "-Location was set.");
+                                                    player.sendMessage(Main.PREFIX + "§aJumpAndRun." + args[3] + ".checkpoints." + number + "-Location was set.");
                                                 } else {
-                                                    player.sendMessage(Main.PREFIX + "Â§cThe number is less than or equal to zero.");
+                                                    player.sendMessage(Main.PREFIX + "§cThe number is less than or equal to zero.");
                                                 }
                                             } else {
-                                                player.sendMessage(Main.PREFIX + "Â§cThe number is higher as the defined number of checkpoints.");
+                                                player.sendMessage(Main.PREFIX + "§cThe number is higher as the defined number of checkpoints.");
                                             }
                                         } else {
-                                            player.sendMessage(Main.PREFIX + "Â§cThe parameter number has to be a number.");
+                                            player.sendMessage(Main.PREFIX + "§cThe parameter number has to be a number.");
                                         }
                                     } else {
-                                        player.sendMessage(Main.PREFIX + "Â§cThe Jump and Run " + args[3] + " not exists.");
+                                        player.sendMessage(Main.PREFIX + "§cThe Jump and Run " + args[3] + " not exists.");
                                     }
                                 } else {
-                                    player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup jumpandrun checkpoint <number> <name>");
+                                    player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup jumpandrun checkpoint <number> <name>");
                                 }
                             } else if (args[1].equalsIgnoreCase("win")) {
                                 if (args.length == 3) {
                                     if (plugin.getLocationManager().existsJumpAndRun(args[2])) {
                                         plugin.getLocationManager().saveLocation("JumpAndRun." + args[2] + ".win", player.getLocation());
-                                        player.sendMessage(Main.PREFIX + "Â§aJumpAndRun." + args[2] + ".win-Location was set.");
+                                        player.sendMessage(Main.PREFIX + "§aJumpAndRun." + args[2] + ".win-Location was set.");
                                     } else {
-                                        player.sendMessage(Main.PREFIX + "Â§cThe Jump and Run " + args[2] + " not exists.");
+                                        player.sendMessage(Main.PREFIX + "§cThe Jump and Run " + args[2] + " not exists.");
                                     }
                                 } else {
-                                    player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup jumpandrun win <name>");
+                                    player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup jumpandrun win <name>");
                                 }
                             } else {
-                                player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup jumpandrun <create/start/checkpoint/win>");
+                                player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup jumpandrun <create/start/checkpoint/win>");
                             }
                         } else {
-                            player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup jumpandrun <create/start/checkpoint/win>");
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup jumpandrun <create/start/checkpoint/win>");
                         }
                     }
 
@@ -148,15 +148,15 @@ public class SetupCommand implements CommandExecutor {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("start")) {
                                 plugin.getLocationManager().saveLocation("TrafficLightRaceStart", player.getLocation());
-                                player.sendMessage(Main.PREFIX + "Â§aTrafficLightRaceStart-Location was set. Â§7(Â§cMust be a straight street in negative x direction!Â§7)");
+                                player.sendMessage(Main.PREFIX + "§aTrafficLightRaceStart-Location was set. §7(§cMust be a straight street in negative x direction!§7)");
                             } else if (args[1].equalsIgnoreCase("win")) {
                                 plugin.getLocationManager().saveLocation("TrafficLightRaceWin", player.getLocation());
-                                player.sendMessage(Main.PREFIX + "Â§aTrafficLightRaceWin-Location was set. Â§7(Â§cMust be a straight street in negative x direction!Â§7)");
+                                player.sendMessage(Main.PREFIX + "§aTrafficLightRaceWin-Location was set. §7(§cMust be a straight street in negative x direction!§7)");
                             } else {
-                                player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup trafficlightrace <start/win> Â§7(Â§cMust be a straight street in negative x direction!Â§7)");
+                                player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup trafficlightrace <start/win> §7(§cMust be a straight street in negative x direction!§7)");
                             }
                         } else {
-                            player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup trafficlightrace <start/win> Â§7(Â§cMust be a straight street in negative x direction!Â§7)");
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup trafficlightrace <start/win> §7(§cMust be a straight street in negative x direction!§7)");
                         }
                     }
 
@@ -164,9 +164,9 @@ public class SetupCommand implements CommandExecutor {
                     else if (args[0].equalsIgnoreCase("hotground")) {
                         if (args.length == 1) {
                             plugin.getLocationManager().saveLocation("HotGround", player.getLocation());
-                            player.sendMessage(Main.PREFIX + "Â§aHotGround-Location was set.");
+                            player.sendMessage(Main.PREFIX + "§aHotGround-Location was set.");
                         } else {
-                            player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup hotground");
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup hotground");
                         }
                     }
 
@@ -178,18 +178,18 @@ public class SetupCommand implements CommandExecutor {
                                 if (number <= MainConfig.getInt("GunGame.respawn-points")) {
                                     if (number > 0) {
                                         plugin.getLocationManager().saveLocation("GunGame" + number, player.getLocation());
-                                        player.sendMessage(Main.PREFIX + "Â§aGunGame" + number + "-Location was set.");
+                                        player.sendMessage(Main.PREFIX + "§aGunGame" + number + "-Location was set.");
                                     } else {
-                                        player.sendMessage(Main.PREFIX + "Â§cThe number is less than or equal to zero.");
+                                        player.sendMessage(Main.PREFIX + "§cThe number is less than or equal to zero.");
                                     }
                                 } else {
-                                    player.sendMessage(Main.PREFIX + "Â§cThe number is higher as the defined number of respawn points. Max value is " + MainConfig.getInt("GunGame.respawn-points") + ".");
+                                    player.sendMessage(Main.PREFIX + "§cThe number is higher as the defined number of respawn points. Max value is " + MainConfig.getInt("GunGame.respawn-points") + ".");
                                 }
                             } else {
-                                player.sendMessage(Main.PREFIX + "Â§cThe parameter 1-" + MainConfig.getInt("GunGame.respawn-points") + " has to be a number.");
+                                player.sendMessage(Main.PREFIX + "§cThe parameter 1-" + MainConfig.getInt("GunGame.respawn-points") + " has to be a number.");
                             }
                         } else {
-                            player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup gungame <1-" + MainConfig.getInt("GunGame.respawn-points") + ">");
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup gungame <1-" + MainConfig.getInt("GunGame.respawn-points") + ">");
                         }
                     }
 
@@ -198,18 +198,18 @@ public class SetupCommand implements CommandExecutor {
                         if (args.length == 2) {
                             if (args[1].equalsIgnoreCase("start")) {
                                 plugin.getLocationManager().saveLocation("ColorBattleStart", player.getLocation());
-                                player.sendMessage(Main.PREFIX + "Â§aColorBattleStart-Location was set.");
+                                player.sendMessage(Main.PREFIX + "§aColorBattleStart-Location was set.");
                             } else if (args[1].equalsIgnoreCase("location1")) {
                                 plugin.getLocationManager().saveLocation("ColorBattleLocation1", player.getLocation());
-                                player.sendMessage(Main.PREFIX + "Â§aColorBattleLocation1-Location was set.");
+                                player.sendMessage(Main.PREFIX + "§aColorBattleLocation1-Location was set.");
                             } else if (args[1].equalsIgnoreCase("location2")) {
                                 plugin.getLocationManager().saveLocation("ColorBattleLocation2", player.getLocation());
-                                player.sendMessage(Main.PREFIX + "Â§aColorBattleLocation2-Location was set.");
+                                player.sendMessage(Main.PREFIX + "§aColorBattleLocation2-Location was set.");
                             } else {
-                                player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup colorbattle <start/location1/location2>");
+                                player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup colorbattle <start/location1/location2>");
                             }
                         } else {
-                            player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup colorbattle <start/location1/location2>");
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup colorbattle <start/location1/location2>");
                         }
                     }
 
@@ -223,31 +223,31 @@ public class SetupCommand implements CommandExecutor {
                                         if (number <= Main.MAX_PLAYERS) {
                                             if (number > 0) {
                                                 plugin.getLocationManager().saveLocation("BreakoutPlayer" + number, player.getLocation());
-                                                player.sendMessage(Main.PREFIX + "Â§aBreakoutPlayer" + number + "-Location was set.");
+                                                player.sendMessage(Main.PREFIX + "§aBreakoutPlayer" + number + "-Location was set.");
                                             } else {
-                                                player.sendMessage(Main.PREFIX + "Â§cThe number is less than or equal to zero.");
+                                                player.sendMessage(Main.PREFIX + "§cThe number is less than or equal to zero.");
                                             }
                                         } else {
-                                            player.sendMessage(Main.PREFIX + "Â§cThe number is higher as the defined number of max players. Max value is " + Main.MAX_PLAYERS + ".");
+                                            player.sendMessage(Main.PREFIX + "§cThe number is higher as the defined number of max players. Max value is " + Main.MAX_PLAYERS + ".");
                                         }
                                     } else {
-                                        player.sendMessage(Main.PREFIX + "Â§cThe parameter 1-" + Main.MAX_PLAYERS + " has to be a number.");
+                                        player.sendMessage(Main.PREFIX + "§cThe parameter 1-" + Main.MAX_PLAYERS + " has to be a number.");
                                     }
                                 } else {
-                                    player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup breakout player <1-" + Main.MAX_PLAYERS + ">");
+                                    player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup breakout player <1-" + Main.MAX_PLAYERS + ">");
                                 }
                             } else if (args[1].equalsIgnoreCase("spectator")) {
                                 if (args.length == 2) {
                                     plugin.getLocationManager().saveLocation("BreakoutSpectator", player.getLocation());
-                                    player.sendMessage(Main.PREFIX + "Â§aBreakoutSpectator-Location was set.");
+                                    player.sendMessage(Main.PREFIX + "§aBreakoutSpectator-Location was set.");
                                 } else {
-                                    player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup breakout spectator");
+                                    player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup breakout spectator");
                                 }
                             } else {
-                                player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup breakout <player/spectator>");
+                                player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup breakout <player/spectator>");
                             }
                         } else {
-                            player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup breakout <player/spectator>");
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup breakout <player/spectator>");
                         }
                     }
 
@@ -261,31 +261,31 @@ public class SetupCommand implements CommandExecutor {
                                         if (number <= Main.MAX_PLAYERS) {
                                             if (number > 0) {
                                                 plugin.getLocationManager().saveLocation("MasterBuildersPlayer" + number, player.getLocation());
-                                                player.sendMessage(Main.PREFIX + "Â§aMasterBuildersPlayer" + number + "-Location was set.");
+                                                player.sendMessage(Main.PREFIX + "§aMasterBuildersPlayer" + number + "-Location was set.");
                                             } else {
-                                                player.sendMessage(Main.PREFIX + "Â§cThe number is less than or equal to zero.");
+                                                player.sendMessage(Main.PREFIX + "§cThe number is less than or equal to zero.");
                                             }
                                         } else {
-                                            player.sendMessage(Main.PREFIX + "Â§cThe number is higher as the defined number of max players. Max value is " + Main.MAX_PLAYERS + ".");
+                                            player.sendMessage(Main.PREFIX + "§cThe number is higher as the defined number of max players. Max value is " + Main.MAX_PLAYERS + ".");
                                         }
                                     } else {
-                                        player.sendMessage(Main.PREFIX + "Â§cThe parameter 1-" + Main.MAX_PLAYERS + " has to be a number.");
+                                        player.sendMessage(Main.PREFIX + "§cThe parameter 1-" + Main.MAX_PLAYERS + " has to be a number.");
                                     }
                                 } else {
-                                    player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup masterbuilders player <1-" + Main.MAX_PLAYERS + ">");
+                                    player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup masterbuilders player <1-" + Main.MAX_PLAYERS + ">");
                                 }
                             } else if (args[1].equalsIgnoreCase("pictures")) {
                                 if (args.length == 2) {
-                                    plugin.getLocationManager().saveLocation("MasterBuilderPictures", player.getLocation());
-                                    player.sendMessage(Main.PREFIX + "Â§aMasterBuilderPictures-Location was set. Â§7(Â§cFrom this point is takes 5x5x1 pictures in positive x and y direction! And multiple pictures in positive z direction with 1 block space between pictures!Â§7)");
+                                    plugin.getLocationManager().saveLocation("MasterBuildersPictures", player.getLocation());
+                                    player.sendMessage(Main.PREFIX + "§aMasterBuilderPictures-Location was set. §7(§cFrom this point is takes 5x5x1 pictures in positive x and y direction! And multiple pictures in positive z direction with 1 block space between pictures!§7)");
                                 } else {
-                                    player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup masterbuilders pictures Â§7(Â§cFrom this point is takes 5x5x1 pictures in positive x and y direction! And multiple pictures in positive z direction with 1 block space between pictures!Â§7)");
+                                    player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup masterbuilders pictures §7(§cFrom this point is takes 5x5x1 pictures in positive x and y direction! And multiple pictures in positive z direction with 1 block space between pictures!§7)");
                                 }
                             } else {
-                                player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup masterbuilders <player/pictures>");
+                                player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup masterbuilders <player/pictures>");
                             }
                         } else {
-                            player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup masterbuilders <player/pictures>");
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup masterbuilders <player/pictures>");
                         }
                     }
 
@@ -293,9 +293,9 @@ public class SetupCommand implements CommandExecutor {
                     else if (args[0].equalsIgnoreCase("top10")) {
                         if (args.length == 1) {
                             plugin.getLocationManager().saveLocation("Top10", player.getLocation());
-                            player.sendMessage(Main.PREFIX + "Â§aTop10-Location was set.");
+                            player.sendMessage(Main.PREFIX + "§aTop10-Location was set.");
                         } else {
-                            player.sendMessage(Main.PREFIX + "Â§cUsage: Â§6/mpsetup top10");
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup top10");
                         }
                     }
 

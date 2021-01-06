@@ -37,10 +37,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
 public class MainListener implements Listener {
 
     private Main plugin;
@@ -54,40 +50,27 @@ public class MainListener implements Listener {
         if (plugin.getGameStateManager().getCurrentGameState() instanceof LobbyState)
             return;
         Player player = e.getPlayer();
+
         if (!(plugin.getGameStateManager().getCurrentGameState() instanceof EndingState)) {
             if (plugin.getPlayers().contains(player)) {
                 plugin.getStats().playTime(player);
             }
         }
+
         if (plugin.getPlayers().contains(player)) {
             plugin.getPlayers().remove(player);
-            e.setQuitMessage(Main.PREFIX
-                    + Messages.get("quit-message").replace("%player%", player.getDisplayName()).replace("%current-players%", plugin.getPlayers().size() + "").replace("%max-players%", Main.MAX_PLAYERS + ""));
+            e.setQuitMessage(Main.PREFIX + Messages.get("quit-message").replace("%player%", player.getDisplayName()).replace("%current-players%", plugin.getPlayers().size() + "").replace("%max-players%", Main.MAX_PLAYERS + ""));
         } else {
             e.setQuitMessage(null);
         }
+
         plugin.getToRemove().add(player);
+        plugin.getClient().sendUpdate();
+
         if (plugin.getPlayers().size() == 0) {
-            for (Player all : Bukkit.getOnlinePlayers()) {
-                ByteArrayOutputStream b = new ByteArrayOutputStream();
-                DataOutputStream out = new DataOutputStream(b);
-                try {
-                    out.writeUTF("Connect");
-                    out.writeUTF(MainConfig.getString("fallback-server"));
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                all.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
-            }
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-                @Override
-                public void run() {
-                    Bukkit.shutdown();
-                }
-            }, 40);
+            plugin.stopServer();
         }
 
-        plugin.getClient().sendUpdate();
     }
 
     @EventHandler
