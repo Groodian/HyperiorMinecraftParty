@@ -15,6 +15,7 @@ import de.groodian.minecraftparty.listeners.ColorBattleListener;
 import de.groodian.minecraftparty.listeners.GunGameListener;
 import de.groodian.minecraftparty.listeners.LobbyListener;
 import de.groodian.minecraftparty.listeners.MainListener;
+import de.groodian.minecraftparty.listeners.MasterBuilderListener;
 import de.groodian.minecraftparty.network.MinecraftPartyClient;
 import de.groodian.minecraftparty.playerhider.PlayerHideListener;
 import de.groodian.minecraftparty.playerhider.PlayerHider;
@@ -118,6 +119,7 @@ public class Main extends JavaPlugin {
             PreparedStatement ps04 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS gungame INT(100)");
             PreparedStatement ps05 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS colorbattle INT(100)");
             PreparedStatement ps06 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS breakout INT(100)");
+            PreparedStatement ps07 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS masterbuilders INT(100)");
             ps01.executeUpdate();
             ps01.close();
             ps02.executeUpdate();
@@ -130,6 +132,8 @@ public class Main extends JavaPlugin {
             ps05.close();
             ps06.executeUpdate();
             ps06.close();
+            ps07.executeUpdate();
+            ps07.close();
 
             for (JumpAndRunLocations jumpAndRun : locationManager.JUMPANDRUN_LOCATIONS) {
                 PreparedStatement ps = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS jumpandrun" + jumpAndRun.getName() + " INT(100)");
@@ -146,7 +150,7 @@ public class Main extends JavaPlugin {
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         gameStateManager = new GameStateManager(this);
-        gameStateManager.setGameState(GameStates.MASTERBUILDERS_STATE);
+        gameStateManager.setGameState(GameStates.LOBBY_STATE);
 
         record = new Record(this);
         stats = new Stats(this);
@@ -177,6 +181,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new GunGameListener(this), this);
         pluginManager.registerEvents(new ColorBattleListener(this), this);
         pluginManager.registerEvents(new BreakoutListener(this), this);
+        pluginManager.registerEvents(new MasterBuilderListener(this), this);
     }
 
     public void onDisable() {
@@ -190,15 +195,14 @@ public class Main extends JavaPlugin {
     }
 
     public void stopServer() {
+        List<Player> playersDisconnecting = new ArrayList<>();
+
         stopTask = new BukkitRunnable() {
             @Override
             public void run() {
-                if (Bukkit.getOnlinePlayers().isEmpty()) {
-                    stopTask.cancel();
-                    Bukkit.shutdown();
-                } else {
-                    // Only takes one player, and if (for some strange reason) no player left just do nothing
-                    for (Player player : Bukkit.getOnlinePlayers()) {
+
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (!playersDisconnecting.contains(player)) {
                         ByteArrayOutputStream b = new ByteArrayOutputStream();
                         DataOutputStream out = new DataOutputStream(b);
                         try {
@@ -208,11 +212,15 @@ public class Main extends JavaPlugin {
                             e1.printStackTrace();
                         }
                         player.sendPluginMessage(plugin, "BungeeCord", b.toByteArray());
-                        break;
+                        playersDisconnecting.add(player);
+                        return;
                     }
                 }
+                stopTask.cancel();
+                Bukkit.shutdown();
+
             }
-        }.runTaskTimer(this, 10, 10);
+        }.runTaskTimer(this, 10, 5);
     }
 
     public LocationManager getLocationManager() {

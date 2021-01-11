@@ -8,6 +8,7 @@ import de.groodian.minecraftparty.gamestates.BreakoutState;
 import de.groodian.minecraftparty.gamestates.EndingState;
 import de.groodian.minecraftparty.gamestates.GunGameState;
 import de.groodian.minecraftparty.gamestates.LobbyState;
+import de.groodian.minecraftparty.gamestates.MasterBuildersState;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
 import de.groodian.minecraftparty.main.Messages;
@@ -32,6 +33,7 @@ import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
@@ -164,6 +166,8 @@ public class MainListener implements Listener {
     public void handlePlayerBuild(BlockPlaceEvent e) {
         if (plugin.getBuild().contains(e.getPlayer()))
             return;
+        if (plugin.getGameStateManager().getCurrentGameState() instanceof MasterBuildersState)
+            return;
         e.setCancelled(true);
     }
 
@@ -173,11 +177,20 @@ public class MainListener implements Listener {
             return;
         if (plugin.getGameStateManager().getCurrentGameState() instanceof BreakoutState)
             return;
+        if (plugin.getGameStateManager().getCurrentGameState() instanceof MasterBuildersState)
+            return;
         e.setCancelled(true);
     }
 
     @EventHandler
     public void handlePlayerDropItem(PlayerDropItemEvent e) {
+        if (plugin.getBuild().contains(e.getPlayer()))
+            return;
+        e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void handlePlayerItemPickup(PlayerPickupItemEvent e) {
         if (plugin.getBuild().contains(e.getPlayer()))
             return;
         e.setCancelled(true);
@@ -208,6 +221,8 @@ public class MainListener implements Listener {
         }
 
         if (plugin.getBuild().contains(player))
+            return;
+        if (plugin.getGameStateManager().getCurrentGameState() instanceof MasterBuildersState)
             return;
 
         e.setCancelled(true);
@@ -256,6 +271,8 @@ public class MainListener implements Listener {
         if (plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState)
             return;
         if (plugin.getGameStateManager().getCurrentGameState() instanceof BreakoutState)
+            return;
+        if (plugin.getGameStateManager().getCurrentGameState() instanceof MasterBuildersState)
             return;
         e.setCancelled(true);
     }

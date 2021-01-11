@@ -51,112 +51,106 @@ public class EndingState implements GameState {
                 Bukkit.broadcastMessage(Main.PREFIX + Messages.get("the-winner-are"));
                 new HSound(Sound.FIREWORK_LAUNCH).play();
 
+                List<Player> playersTeleported = new ArrayList<>();
+
+                teleportTask = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            if (!playersTeleported.contains(player)) {
+                                player.teleport(plugin.getLocationManager().LOBBY);
+                                plugin.getTeleportFix().doFor(player);
+                                playersTeleported.add(player);
+                                HyperiorCore.getSB().unregisterScoreboard(player);
+                                return;
+                            }
+                        }
+                        teleportTask.cancel();
+                        afterAllTeleported();
+                    }
+                }.runTaskTimer(plugin, 0, 5);
+
             }
         }.runTaskLater(plugin, 35);
-
-        List<Player> playersTeleported = new ArrayList<>();
-
-        teleportTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (!playersTeleported.contains(player)) {
-                        player.teleport(plugin.getLocationManager().LOBBY);
-                        plugin.getTeleportFix().doFor(player);
-                        HyperiorCore.getSB().unregisterScoreboard(player);
-                        return;
-                    }
-                }
-                teleportTask.cancel();
-                afterAllTeleported();
-            }
-        }.runTaskTimer(plugin, 0, 40);
 
     }
 
     private void afterAllTeleported() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
+        HyperiorCosmetic.enable();
 
-                HyperiorCosmetic.enable();
+        playSound();
 
-                playSound();
+        // SORT PLAYERS START
+        Map<Player, Integer> sorted = plugin.getStars().entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
 
-                // SORT PLAYERS START
-                Map<Player, Integer> sorted = plugin.getStars().entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2, LinkedHashMap::new));
+        Map<Player, Integer> forDatabase = new HashMap<>();
 
-                Map<Player, Integer> forDatabase = new HashMap<>();
+        List<List<Player>> winner = new ArrayList<>();
+        List<Player> playersAtTheSamePlace = new ArrayList<>();
 
-                List<List<Player>> winner = new ArrayList<>();
-                List<Player> playersAtTheSamePlace = new ArrayList<>();
+        int temp = sorted.entrySet().iterator().next().getValue();
+        int place = 1;
 
-                int temp = sorted.entrySet().iterator().next().getValue();
-                int place = 1;
-
-                for (Map.Entry<Player, Integer> current : sorted.entrySet()) {
-                    if (!(current.getValue() == temp)) {
-                        temp = current.getValue();
-                        winner.add(playersAtTheSamePlace);
-                        playersAtTheSamePlace = new ArrayList<>();
-                        place++;
-                    }
-                    playersAtTheSamePlace.add(current.getKey());
-                    forDatabase.put(current.getKey(), place);
-                }
+        for (Map.Entry<Player, Integer> current : sorted.entrySet()) {
+            if (!(current.getValue() == temp)) {
+                temp = current.getValue();
                 winner.add(playersAtTheSamePlace);
-                // SORT PLAYERS END
-
-                // TITLE START
-                if (winner.size() > 0) {
-                    List<Player> firstPlace = winner.get(0);
-                    StringBuilder title = new StringBuilder();
-
-                    for (Player player : firstPlace) {
-                        if (title.length() == 0) {
-                            title.append("§a").append(player.getName());
-                        } else {
-                            title.append("§7, §a").append(player.getName());
-                        }
-                    }
-
-                    if (firstPlace.size() == 1) {
-                        new Title(20, 60, 20, title.toString(), Messages.get("one-winner-subtitle")).send();
-                    } else {
-                        new Title(20, 60, 20, title.toString(), Messages.get("multiple-winner-subtitle")).send();
-                    }
-                }
-                // TITLE END
-
-                // MESSAGE START
-                StringBuilder preOutput = new StringBuilder();
-
-                place = 1;
-
-                for (List<Player> current : winner) {
-                    StringBuilder row = new StringBuilder();
-                    for (Player player : current) {
-                        if (row.length() == 0) {
-                            row.append("§a§l").append(place).append("§a# §7§l>> ").append(getColor(place)).append(player.getName());
-                        } else {
-                            row.append("§7, ").append(getColor(place)).append(player.getName());
-                        }
-                    }
-                    row.append(" §7- §e").append(plugin.getStars().get(current.get(0))).append(Messages.get("points"));
-                    preOutput.append(row).append("\n");
-                    place++;
-                }
-
-                Bukkit.broadcastMessage("§7§m--------------------------------§r\n \n" + preOutput + "\n \n§7§m--------------------------------§r");
-                // MESSAGE END
-
-                plugin.getStats().gameFinished(forDatabase);
-                plugin.getStats().finish();
-
-                endingCountdown.start();
-
+                playersAtTheSamePlace = new ArrayList<>();
+                place++;
             }
-        }.runTaskLater(plugin, 70);
+            playersAtTheSamePlace.add(current.getKey());
+            forDatabase.put(current.getKey(), place);
+        }
+        winner.add(playersAtTheSamePlace);
+        // SORT PLAYERS END
+
+        // TITLE START
+        if (winner.size() > 0) {
+            List<Player> firstPlace = winner.get(0);
+            StringBuilder title = new StringBuilder();
+
+            for (Player player : firstPlace) {
+                if (title.length() == 0) {
+                    title.append("§a").append(player.getName());
+                } else {
+                    title.append("§7, §a").append(player.getName());
+                }
+            }
+
+            if (firstPlace.size() == 1) {
+                new Title(20, 60, 20, title.toString(), Messages.get("one-winner-subtitle")).send();
+            } else {
+                new Title(20, 60, 20, title.toString(), Messages.get("multiple-winner-subtitle")).send();
+            }
+        }
+        // TITLE END
+
+        // MESSAGE START
+        StringBuilder preOutput = new StringBuilder();
+
+        place = 1;
+
+        for (List<Player> current : winner) {
+            StringBuilder row = new StringBuilder();
+            for (Player player : current) {
+                if (row.length() == 0) {
+                    row.append("§a§l").append(place).append("§a# §7§l>> ").append(getColor(place)).append(player.getName());
+                } else {
+                    row.append("§7, ").append(getColor(place)).append(player.getName());
+                }
+            }
+            row.append(" §7- §e").append(plugin.getStars().get(current.get(0))).append(Messages.get("points"));
+            preOutput.append(row).append("\n");
+            place++;
+        }
+
+        Bukkit.broadcastMessage("§7§m--------------------------------§r\n \n" + preOutput + "\n \n§7§m--------------------------------§r");
+        // MESSAGE END
+
+        plugin.getStats().gameFinished(forDatabase);
+        plugin.getStats().finish();
+
+        endingCountdown.start();
     }
 
     private void playSound() {
@@ -171,7 +165,7 @@ public class EndingState implements GameState {
                     soundTask.cancel();
                 }
             }
-        }.runTaskTimer(plugin, 10, 2);
+        }.runTaskTimer(plugin, 4, 2);
     }
 
     @Override

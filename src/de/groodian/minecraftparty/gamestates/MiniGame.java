@@ -266,7 +266,7 @@ public abstract class MiniGame implements GameState {
                     countdown();
                 }
             }
-        }.runTaskTimer(plugin, 0, 40);
+        }.runTaskTimer(plugin, 0, 5);
     }
 
     private void scoreboardGame() {

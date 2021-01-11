@@ -122,6 +122,8 @@ TrafficLightRace:
 MasterBuilders:
   # Map resetting, set to false if the server gets copied
   reset: true
+  # Game duration in seconds
+  time: 180
   # Picture size
   size: 5
 

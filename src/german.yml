@@ -108,6 +108,10 @@ Commands:
           name: "&a&lAusbruch"
           lores:
             - "&8\u00BB &7Zeit: &a%time%"
+        masterbuilders:
+          name: "&a&lMasterBuilders"
+          lores:
+            - "&8\u00BB &7Punkte: &a%points%"
       minute: " Minute"
       minutes: " Minuten"
       hour: " Stunde"
@@ -220,6 +224,8 @@ WoolBlock:
 MasterBuilders:
   name: "MasterBuilders"
   game-info: "&a&l%name%\n&7Baue das gezeigte Bild so\n&7schnell wie möglich hinter dir nach."
+  winner-message: "&6%player% &ahat das Bild als erster nachgebaut. &7(Runde %round%/%max-rounds%)"
+  round-info: "&6+%points% Punkte &7(%percentage%%)"
 
 PlayerHider:
   item-hide: "&cSpieler verstecken"
