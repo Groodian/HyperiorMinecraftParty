@@ -55,10 +55,10 @@ GunGame:
   # Items sorted for each level beginning with level 0
   items:
     # Material type name, a list of all materials can be found here: https://helpch.at/docs/1.8/org/bukkit/Material.html
+    - "STONE_SWORD"
+    - "IRON_AXE"
     - "WOOD_SWORD"
     - "GOLD_SWORD"
-    - "STONE_SWORD"
-    - "IRON_SWORD"
     - "STONE_AXE"
     - "BOW"
     - "WOOD_AXE"
@@ -132,13 +132,13 @@ MasterBuilders:
 ##
 WoolBlock:
   # Time between rounds in ticks (20 ticks equals 1 second)
-  time-between-rounds: 70
+  time-between-rounds: 60
   # Time to get on the right block (20 ticks equals 1 second)
   remove-start-time: 80
   # This time gets every round subtracted from the remove start time (20 ticks equals 1 second)
   time-gets-faster-every-round: 4
   # Min value of the remove time (20 ticks equals 1 second)
-  min-remove-time: 25
+  min-remove-time: 20
   # Map resetting, set to false if the server gets copied
   reset: true
   

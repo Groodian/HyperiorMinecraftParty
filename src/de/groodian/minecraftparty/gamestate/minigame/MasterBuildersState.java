@@ -70,13 +70,15 @@ public class MasterBuildersState extends MiniGame {
         Collections.shuffle(availablePicturePositions);
 
         count = 0;
-        for (Player player : plugin.getPlayers()) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
             Location loc = plugin.getLocationManager().MASTERBUILDERS_PLAYER.get(count);
-            playerPictureLoc.put(player, loc);
-            addPlayerToTeleport(player, loc);
-            player.setGameMode(GameMode.CREATIVE);
-            ranking.put(player, 0);
-            count++;
+            addPlayerToTeleport(player, loc.clone().add(0, 1, 0));
+            if (plugin.getPlayers().contains(player)) {
+                playerPictureLoc.put(player, loc);
+                player.setGameMode(GameMode.CREATIVE);
+                ranking.put(player, 0);
+                count++;
+            }
         }
     }
 
