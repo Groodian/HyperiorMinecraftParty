@@ -8,14 +8,19 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class LocationManager {
+
+    private Main plugin;
 
     private File fileLocations;
     private FileConfiguration configLocations;
@@ -55,11 +60,16 @@ public class LocationManager {
     public List<Location> BREAKOUT_PLAYERS;
     public Location BREAKOUT_SPECTATOR;
 
-    // Master Builders
+    // MasterBuilders
     public List<Location> MASTERBUILDERS_PLAYER;
     public Location MASTERBUILDERS_PICTURES;
 
-    public LocationManager() {
+    // KingOfTheHill
+    public List<Location> KINGOFTHEHILL;
+
+    public LocationManager(Main plugin) {
+        this.plugin = plugin;
+
         try {
             // locations
             this.fileLocations = new File("plugins/HyperiorMinecraftParty_by_Groodian/data", "locations.yml");
@@ -111,9 +121,12 @@ public class LocationManager {
         BREAKOUT_PLAYERS = loadLocations("BreakoutPlayer", Main.MAX_PLAYERS);
         BREAKOUT_SPECTATOR = loadLocation("BreakoutSpectator");
 
-        // Breakout
+        // MasterBuilders
         MASTERBUILDERS_PLAYER = loadLocations("MasterBuildersPlayer", Main.MAX_PLAYERS);
         MASTERBUILDERS_PICTURES = loadLocation("MasterBuildersPictures");
+
+        // KingOfTheHill
+        KINGOFTHEHILL = loadLocations("KingOfTheHill", MainConfig.getInt("KingOfTheHill.respawn-points"));
 
         return missingLocations == null;
 
@@ -199,6 +212,30 @@ public class LocationManager {
 
     public String getMissingLocations() {
         return missingLocations;
+    }
+
+    public Location getRespawnLocation(List<Location> respawnLocations) {
+
+        Collections.shuffle(respawnLocations);
+
+        Map<Location, Double> minDistances = new HashMap<>();
+
+        for (Location respawnLocation : respawnLocations) {
+            double minDistance = Double.MAX_VALUE;
+            for (Player player : plugin.getPlayers()) {
+                double distance = respawnLocation.distance(player.getLocation());
+                if (distance < minDistance) {
+                    minDistance = distance;
+                }
+            }
+            minDistances.put(respawnLocation, minDistance);
+
+            if (minDistance > 20) {
+                return respawnLocation;
+            }
+        }
+
+        return Collections.max(minDistances.entrySet(), Map.Entry.comparingByValue()).getKey();
     }
 
 }

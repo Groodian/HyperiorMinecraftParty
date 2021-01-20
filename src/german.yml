@@ -112,6 +112,10 @@ Commands:
           name: "&a&lMasterBuilders"
           lores:
             - "&8\u00BB &7Punkte: &a%points%"
+        kingofthehill:
+          name: "&a&lKingOfTheHill"
+          lores:
+            - "&8\u00BB &7Punkte: &a%points%"
       minute: " Minute"
       minutes: " Minuten"
       hour: " Stunde"
@@ -224,9 +228,14 @@ WoolBlock:
 
 MasterBuilders:
   name: "MasterBuilders"
-  game-info: "&a&l%name%\n&7Baue das gezeigte Bild so\n&7schnell wie möglich hinter dir nach."
+  game-info: "&a&l%name%\n&7Baue das gezeigte Bild so\n&7schnell wie m\u00F6glich hinter dir nach."
   winner-message: "&6%player% &ahat das Bild als erster nachgebaut. &7(Runde %round%/%max-rounds%)"
   round-info: "&6+%points% Punkte &7(%percentage%%)"
+
+KingOfTheHill:
+  name: "KingOfTheHill"
+  game-info: "&a&l%name%\n&7Stehe auf Gold- oder Eisenbl\u00F6cken, \n&7und habe am Ende die meisten Punkte."
+  item: "&6&lMagischer Stab"
 
 PlayerHider:
   item-hide: "&cSpieler verstecken"

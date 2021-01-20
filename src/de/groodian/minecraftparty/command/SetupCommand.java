@@ -24,6 +24,7 @@ public class SetupCommand implements CommandExecutor {
                     "\n§6/mpsetup colorbattle §7- Setting up color battle" +
                     "\n§6/mpsetup breakout §7- Setting up breakout" +
                     "\n§6/mpsetup masterbuilders §7- Setting up master builders" +
+                    "\n§6/mpsetup kingofthehill §7- Setting up king of the hill" +
                     "\n§6/mpsetup top10 §7- Set the top ten location" +
                     "\n " +
                     "\n§aMinecraftParty by Groodian" +
@@ -103,21 +104,7 @@ public class SetupCommand implements CommandExecutor {
                             } else if (args[1].equalsIgnoreCase("checkpoint")) {
                                 if (args.length == 4) {
                                     if (plugin.getLocationManager().existsJumpAndRun(args[3])) {
-                                        if (args[2].chars().allMatch(Character::isDigit)) {
-                                            int number = Integer.parseInt(args[2]);
-                                            if (number <= plugin.getLocationManager().getJumpAndRunCheckpoints(args[3])) {
-                                                if (number > 0) {
-                                                    plugin.getLocationManager().saveLocation("JumpAndRun." + args[3] + ".checkpoints." + number, player.getLocation());
-                                                    player.sendMessage(Main.PREFIX + "§aJumpAndRun." + args[3] + ".checkpoints." + number + "-Location was set.");
-                                                } else {
-                                                    player.sendMessage(Main.PREFIX + "§cThe number is less than or equal to zero.");
-                                                }
-                                            } else {
-                                                player.sendMessage(Main.PREFIX + "§cThe number is higher as the defined number of checkpoints.");
-                                            }
-                                        } else {
-                                            player.sendMessage(Main.PREFIX + "§cThe parameter number has to be a number.");
-                                        }
+                                        loadNumber(player, "JumpAndRun." + args[3] + ".checkpoints.", args[2], plugin.getLocationManager().getJumpAndRunCheckpoints(args[3]));
                                     } else {
                                         player.sendMessage(Main.PREFIX + "§cThe Jump and Run " + args[3] + " not exists.");
                                     }
@@ -173,21 +160,7 @@ public class SetupCommand implements CommandExecutor {
                     // gungame
                     else if (args[0].equalsIgnoreCase("gungame")) {
                         if (args.length == 2) {
-                            if (args[1].chars().allMatch(Character::isDigit)) {
-                                int number = Integer.parseInt(args[1]);
-                                if (number <= MainConfig.getInt("GunGame.respawn-points")) {
-                                    if (number > 0) {
-                                        plugin.getLocationManager().saveLocation("GunGame" + number, player.getLocation());
-                                        player.sendMessage(Main.PREFIX + "§aGunGame" + number + "-Location was set.");
-                                    } else {
-                                        player.sendMessage(Main.PREFIX + "§cThe number is less than or equal to zero.");
-                                    }
-                                } else {
-                                    player.sendMessage(Main.PREFIX + "§cThe number is higher as the defined number of respawn points. Max value is " + MainConfig.getInt("GunGame.respawn-points") + ".");
-                                }
-                            } else {
-                                player.sendMessage(Main.PREFIX + "§cThe parameter 1-" + MainConfig.getInt("GunGame.respawn-points") + " has to be a number.");
-                            }
+                            loadNumber(player, "GunGame", args[1], MainConfig.getInt("GunGame.respawn-points"));
                         } else {
                             player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup gungame <1-" + MainConfig.getInt("GunGame.respawn-points") + ">");
                         }
@@ -218,21 +191,7 @@ public class SetupCommand implements CommandExecutor {
                         if (args.length >= 2) {
                             if (args[1].equalsIgnoreCase("player")) {
                                 if (args.length == 3) {
-                                    if (args[2].chars().allMatch(Character::isDigit)) {
-                                        int number = Integer.parseInt(args[2]);
-                                        if (number <= Main.MAX_PLAYERS) {
-                                            if (number > 0) {
-                                                plugin.getLocationManager().saveLocation("BreakoutPlayer" + number, player.getLocation());
-                                                player.sendMessage(Main.PREFIX + "§aBreakoutPlayer" + number + "-Location was set.");
-                                            } else {
-                                                player.sendMessage(Main.PREFIX + "§cThe number is less than or equal to zero.");
-                                            }
-                                        } else {
-                                            player.sendMessage(Main.PREFIX + "§cThe number is higher as the defined number of max players. Max value is " + Main.MAX_PLAYERS + ".");
-                                        }
-                                    } else {
-                                        player.sendMessage(Main.PREFIX + "§cThe parameter 1-" + Main.MAX_PLAYERS + " has to be a number.");
-                                    }
+                                    loadNumber(player, "BreakoutPlayer", args[2], Main.MAX_PLAYERS);
                                 } else {
                                     player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup breakout player <1-" + Main.MAX_PLAYERS + ">");
                                 }
@@ -256,21 +215,7 @@ public class SetupCommand implements CommandExecutor {
                         if (args.length >= 2) {
                             if (args[1].equalsIgnoreCase("player")) {
                                 if (args.length == 3) {
-                                    if (args[2].chars().allMatch(Character::isDigit)) {
-                                        int number = Integer.parseInt(args[2]);
-                                        if (number <= Main.MAX_PLAYERS) {
-                                            if (number > 0) {
-                                                plugin.getLocationManager().saveLocation("MasterBuildersPlayer" + number, player.getLocation());
-                                                player.sendMessage(Main.PREFIX + "§aMasterBuildersPlayer" + number + "-Location was set.");
-                                            } else {
-                                                player.sendMessage(Main.PREFIX + "§cThe number is less than or equal to zero.");
-                                            }
-                                        } else {
-                                            player.sendMessage(Main.PREFIX + "§cThe number is higher as the defined number of max players. Max value is " + Main.MAX_PLAYERS + ".");
-                                        }
-                                    } else {
-                                        player.sendMessage(Main.PREFIX + "§cThe parameter 1-" + Main.MAX_PLAYERS + " has to be a number.");
-                                    }
+                                    loadNumber(player, "MasterBuildersPlayer", args[2], Main.MAX_PLAYERS);
                                 } else {
                                     player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup masterbuilders player <1-" + Main.MAX_PLAYERS + ">");
                                 }
@@ -286,6 +231,15 @@ public class SetupCommand implements CommandExecutor {
                             }
                         } else {
                             player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup masterbuilders <player/pictures>");
+                        }
+                    }
+
+                    // king of the hill
+                    else if (args[0].equalsIgnoreCase("kingofthehill")) {
+                        if (args.length == 2) {
+                            loadNumber(player, "KingOfTheHill", args[1], MainConfig.getInt("KingOfTheHill.respawn-points"));
+                        } else {
+                            player.sendMessage(Main.PREFIX + "§cUsage: §6/mpsetup kingofthehill <1-" + MainConfig.getInt("KingOfTheHill.respawn-points") + ">");
                         }
                     }
 
@@ -316,6 +270,24 @@ public class SetupCommand implements CommandExecutor {
 
         return false;
 
+    }
+
+    private void loadNumber(Player player, String game, String arg, int maxNumber) {
+        if (arg.chars().allMatch(Character::isDigit)) {
+            int number = Integer.parseInt(arg);
+            if (number <= maxNumber) {
+                if (number > 0) {
+                    plugin.getLocationManager().saveLocation(game + number, player.getLocation());
+                    player.sendMessage(Main.PREFIX + "§a" + game + number + "-Location was set.");
+                } else {
+                    player.sendMessage(Main.PREFIX + "§cThe number is less than or equal to zero.");
+                }
+            } else {
+                player.sendMessage(Main.PREFIX + "§cThe number is higher as the defined number. Max value is " + maxNumber + ".");
+            }
+        } else {
+            player.sendMessage(Main.PREFIX + "§cThe parameter 1-" + maxNumber + " has to be a number.");
+        }
     }
 
 }

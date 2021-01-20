@@ -141,4 +141,23 @@ WoolBlock:
   min-remove-time: 20
   # Map resetting, set to false if the server gets copied
   reset: true
+
+##
+# King of the hill settings
+##
+KingOfTheHill:
+  # Game duration in seconds
+  time: 90
+  # Material type name, a list of all materials can be found here: https://helpch.at/docs/1.8/org/bukkit/Material.html
+  item: "STICK"
+  # Enchantment type name, a list of all enchantments can be found here: https://helpch.at/docs/1.8/org/bukkit/enchantments/Enchantment.html
+  enchantment: "KNOCKBACK"
+  # Enchantment level
+  enchantment-level: 1
+  # Points on gold block per 2 ticks
+  gold-points: 2
+  # Points on iron block per 2 ticks
+  iron-points: 1
+  # Number of respawn points
+  respawn-points: 8
   

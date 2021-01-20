@@ -5,6 +5,7 @@ import de.groodian.minecraftparty.gamestate.minigame.ColorBattleState;
 import de.groodian.minecraftparty.gamestate.minigame.GunGameState;
 import de.groodian.minecraftparty.gamestate.minigame.HotGroundState;
 import de.groodian.minecraftparty.gamestate.minigame.JumpAndRunState;
+import de.groodian.minecraftparty.gamestate.minigame.KingOfTheHillState;
 import de.groodian.minecraftparty.gamestate.minigame.MasterBuildersState;
 import de.groodian.minecraftparty.gamestate.minigame.TrafficLightRaceState;
 import de.groodian.minecraftparty.gamestate.minigame.WoolBlockState;
@@ -38,6 +39,7 @@ public class GameStateManager {
         gameStates.put(GameStates.COLORBATTLE_STATE, new ColorBattleState("ColorBattle", plugin));
         gameStates.put(GameStates.BREAKOUT_STATE, new BreakoutState("Breakout", plugin));
         gameStates.put(GameStates.MASTERBUILDERS_STATE, new MasterBuildersState("MasterBuilders", plugin));
+        gameStates.put(GameStates.KINGOFTHEHILL_STATE, new KingOfTheHillState("KingOfTheHill", plugin));
         gameStates.put(GameStates.ENDING_STATE, new EndingState(plugin));
     }
 

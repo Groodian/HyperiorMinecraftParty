@@ -159,7 +159,7 @@ public class GunGameListener implements Listener {
             return;
 
         GunGameState state = (GunGameState) plugin.getGameStateManager().getCurrentGameState();
-        Location location = state.getRandomLocation();
+        Location location = plugin.getLocationManager().getRespawnLocation(plugin.getLocationManager().GUNGAME);
         e.setRespawnLocation(location);
 
         new BukkitRunnable() {

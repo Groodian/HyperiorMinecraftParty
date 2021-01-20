@@ -162,6 +162,14 @@ public class StatsGUI {
                     masterbuildersReplaced.add(string);
                 }
                 cache.add(masterbuildersReplaced);
+
+                List<String> kingofthehillLores = Messages.getStringList("Commands.stats.inventory.items.kingofthehill.lores");
+                List<String> kingofthehillReplaced = new ArrayList<>();
+                for (String string : kingofthehillLores) {
+                    string = string.replace("%points%", convert(plugin.getRecord().getRecord(uuid, "kingofthehill")) + "");
+                    kingofthehillReplaced.add(string);
+                }
+                cache.add(kingofthehillReplaced);
             }
 
             @Override
@@ -208,14 +216,15 @@ public class StatsGUI {
                     public void run() {
                         inventory.setItem(12, new ItemBuilder(Material.BOOK_AND_QUILL).setName(Messages.get("Commands.stats.inventory.items.global.name")).setLore(((List<String>) cache.get(1)).toArray(new String[0])).build());
                         inventory.setItem(14, new ItemBuilder(Material.BOOK).setName(Messages.get("Commands.stats.inventory.items.minigames.name")).setLore(((List<String>) cache.get(2)).toArray(new String[0])).build());
-                        inventory.setItem(29, new ItemBuilder(Material.WOOL).setName(Messages.get("Commands.stats.inventory.items.woolblock.name")).setLore(((List<String>) cache.get(3)).toArray(new String[0])).build());
-                        inventory.setItem(30, new ItemBuilder(Material.WOOL, (short) 5).setName(Messages.get("Commands.stats.inventory.items.trafficlightrace.name")).setLore(((List<String>) cache.get(4)).toArray(new String[0])).build());
-                        inventory.setItem(31, new ItemBuilder(Material.WOOD_AXE).setName(Messages.get("Commands.stats.inventory.items.gungame.name")).setLore(((List<String>) cache.get(5)).toArray(new String[0])).build());
+                        inventory.setItem(28, new ItemBuilder(Material.WOOL).setName(Messages.get("Commands.stats.inventory.items.woolblock.name")).setLore(((List<String>) cache.get(3)).toArray(new String[0])).build());
+                        inventory.setItem(29, new ItemBuilder(Material.WOOL, (short) 5).setName(Messages.get("Commands.stats.inventory.items.trafficlightrace.name")).setLore(((List<String>) cache.get(4)).toArray(new String[0])).build());
+                        inventory.setItem(30, new ItemBuilder(Material.WOOD_AXE).setName(Messages.get("Commands.stats.inventory.items.gungame.name")).setLore(((List<String>) cache.get(5)).toArray(new String[0])).build());
                         inventory.setItem(32, new ItemBuilder(Material.FEATHER).setName(Messages.get("Commands.stats.inventory.items.jumpandrun.name")).setLore(((List<String>) cache.get(6)).toArray(new String[0])).build());
                         inventory.setItem(33, new ItemBuilder(Material.NETHERRACK).setName(Messages.get("Commands.stats.inventory.items.hotground.name")).setLore(((List<String>) cache.get(7)).toArray(new String[0])).build());
-                        inventory.setItem(39, new ItemBuilder(Material.BOW).setName(Messages.get("Commands.stats.inventory.items.colorbattle.name")).setLore(((List<String>) cache.get(8)).toArray(new String[0])).build());
-                        inventory.setItem(40, new ItemBuilder(Material.IRON_FENCE).setName(Messages.get("Commands.stats.inventory.items.breakout.name")).setLore(((List<String>) cache.get(9)).toArray(new String[0])).build());
-                        inventory.setItem(41, new ItemBuilder(Material.BRICK).setName(Messages.get("Commands.stats.inventory.items.masterbuilders.name")).setLore(((List<String>) cache.get(10)).toArray(new String[0])).build());
+                        inventory.setItem(34, new ItemBuilder(Material.BOW).setName(Messages.get("Commands.stats.inventory.items.colorbattle.name")).setLore(((List<String>) cache.get(8)).toArray(new String[0])).build());
+                        inventory.setItem(39, new ItemBuilder(Material.IRON_FENCE).setName(Messages.get("Commands.stats.inventory.items.breakout.name")).setLore(((List<String>) cache.get(9)).toArray(new String[0])).build());
+                        inventory.setItem(40, new ItemBuilder(Material.BRICK).setName(Messages.get("Commands.stats.inventory.items.masterbuilders.name")).setLore(((List<String>) cache.get(10)).toArray(new String[0])).build());
+                        inventory.setItem(41, new ItemBuilder(Material.STICK).setName(Messages.get("Commands.stats.inventory.items.kingofthehill.name")).setLore(((List<String>) cache.get(11)).toArray(new String[0])).build());
                     }
                 }.runTaskLater(plugin, 20);
 

@@ -105,8 +105,7 @@ public class TrafficLightRaceState extends MiniGame {
         moveStartListener();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.teleport(start);
-            plugin.getTeleportFix().doFor(player);
+            addPlayerToTeleport(player, start);
         }
     }
 

@@ -120,8 +120,7 @@ public class WoolBlockState extends MiniGame {
     @Override
     protected void beforeCountdownStart() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.teleport(start);
-            plugin.getTeleportFix().doFor(player);
+            addPlayerToTeleport(player, start);
         }
     }
 

@@ -8,6 +8,7 @@ import de.groodian.minecraftparty.gamestate.EndingState;
 import de.groodian.minecraftparty.gamestate.LobbyState;
 import de.groodian.minecraftparty.gamestate.minigame.BreakoutState;
 import de.groodian.minecraftparty.gamestate.minigame.GunGameState;
+import de.groodian.minecraftparty.gamestate.minigame.KingOfTheHillState;
 import de.groodian.minecraftparty.gamestate.minigame.MasterBuildersState;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
@@ -147,6 +148,8 @@ public class MainListener implements Listener {
     public void handlePlayerDeath(PlayerDeathEvent e) {
         if (plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState)
             return;
+        e.setDeathMessage(null);
+        e.getDrops().clear();
         Player player = e.getEntity();
         PacketPlayInClientCommand packet = new PacketPlayInClientCommand(EnumClientCommand.PERFORM_RESPAWN);
         ((CraftPlayer) player).getHandle().playerConnection.a(packet);
@@ -235,18 +238,21 @@ public class MainListener implements Listener {
 
     @EventHandler
     public void handleBowShot(EntityShootBowEvent e) {
-        if (plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState)
-            return;
         if (e.getEntity() instanceof Player) {
-            if (plugin.getBuild().contains(e.getEntity()))
+            Player player = (Player) e.getEntity();
+            if (plugin.getBuild().contains(player))
                 return;
         }
+        if (plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState)
+            return;
         e.setCancelled(true);
     }
 
     @EventHandler
     public void handleEntityDamage(EntityDamageEvent e) {
         if (plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState)
+            return;
+        if (plugin.getGameStateManager().getCurrentGameState() instanceof KingOfTheHillState)
             return;
         e.setCancelled(true);
     }

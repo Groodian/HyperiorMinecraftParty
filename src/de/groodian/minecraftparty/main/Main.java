@@ -13,6 +13,7 @@ import de.groodian.minecraftparty.gamestate.GameStates;
 import de.groodian.minecraftparty.listener.BreakoutListener;
 import de.groodian.minecraftparty.listener.ColorBattleListener;
 import de.groodian.minecraftparty.listener.GunGameListener;
+import de.groodian.minecraftparty.listener.KingOfTheHillListener;
 import de.groodian.minecraftparty.listener.LobbyListener;
 import de.groodian.minecraftparty.listener.MainListener;
 import de.groodian.minecraftparty.listener.MasterBuilderListener;
@@ -47,7 +48,7 @@ public class Main extends JavaPlugin {
 
     public static String PREFIX = null;
     public static String NO_PERMISSION = null;
-    public static final String VERSION = "4.0 BETA";
+    public static final String VERSION = "4.6 BETA";
     public static final String PREFIX_CONSOLE = "§7[§eMinecraftParty§7] §r";
     public static final int MIN_PLAYERS = 2, MAX_PLAYERS = 12;
 
@@ -81,7 +82,7 @@ public class Main extends JavaPlugin {
         MainConfig.loadConfig(this);
         Messages.loadConfigs(this);
 
-        locationManager = new LocationManager();
+        locationManager = new LocationManager(this);
         if (locationManager.allLocationsSet()) {
             Bukkit.getConsoleSender().sendMessage(PREFIX_CONSOLE + "§aAll locations loaded successfully.");
         } else {
@@ -120,6 +121,7 @@ public class Main extends JavaPlugin {
             PreparedStatement ps05 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS colorbattle INT(100)");
             PreparedStatement ps06 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS breakout INT(100)");
             PreparedStatement ps07 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS masterbuilders INT(100)");
+            PreparedStatement ps08 = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS kingofthehill INT(100)");
             ps01.executeUpdate();
             ps01.close();
             ps02.executeUpdate();
@@ -134,6 +136,8 @@ public class Main extends JavaPlugin {
             ps06.close();
             ps07.executeUpdate();
             ps07.close();
+            ps08.executeUpdate();
+            ps08.close();
 
             for (JumpAndRunLocations jumpAndRun : locationManager.JUMPANDRUN_LOCATIONS) {
                 PreparedStatement ps = connection.getConnection().prepareStatement("ALTER TABLE records ADD COLUMN IF NOT EXISTS jumpandrun" + jumpAndRun.getName() + " INT(100)");
@@ -182,6 +186,7 @@ public class Main extends JavaPlugin {
         pluginManager.registerEvents(new ColorBattleListener(this), this);
         pluginManager.registerEvents(new BreakoutListener(this), this);
         pluginManager.registerEvents(new MasterBuilderListener(this), this);
+        pluginManager.registerEvents(new KingOfTheHillListener(this), this);
     }
 
     public void onDisable() {

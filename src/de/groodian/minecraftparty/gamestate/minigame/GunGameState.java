@@ -6,22 +6,17 @@ import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
 import de.groodian.minecraftparty.main.Messages;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class GunGameState extends MiniGame {
 
-    private List<Location> locations;
     private List<ItemStack> items;
 
     private BukkitTask gameTask;
@@ -31,36 +26,8 @@ public class GunGameState extends MiniGame {
         super.timeRecords = true;
         super.lowerIsBetterRecords = true;
         super.setRecords = false;
-        this.locations = plugin.getLocationManager().GUNGAME;
         this.items = MainConfig.getItemWithNameList("GunGame.items");
         this.gameTask = null;
-    }
-
-    public Location getRandomLocation() {
-
-        Collections.shuffle(locations);
-
-        for (Location respawnLoc : locations) {
-
-            List<Double> distance = new ArrayList<>();
-            for (Player player : plugin.getPlayers()) {
-                distance.add(respawnLoc.distance(player.getLocation()));
-            }
-
-            boolean isDistance = true;
-            for (Double current : distance) {
-                if (current < 20) {
-                    isDistance = false;
-                    break;
-                }
-            }
-
-            if (isDistance) {
-                return respawnLoc;
-            }
-        }
-
-        return locations.get(new Random().nextInt(locations.size()));
     }
 
     public void giveWeapon(Player player) {
@@ -89,8 +56,7 @@ public class GunGameState extends MiniGame {
     @Override
     protected void beforeCountdownStart() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.teleport(getRandomLocation());
-            plugin.getTeleportFix().doFor(player);
+            addPlayerToTeleport(player, plugin.getLocationManager().getRespawnLocation(plugin.getLocationManager().GUNGAME));
         }
     }
 

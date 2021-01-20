@@ -29,6 +29,10 @@ public class MainConfig {
         return config.getBoolean(name);
     }
 
+    public static ItemStack getItemWithName(String name) {
+        return new ItemBuilder(Material.valueOf(config.getString(name))).setName(Messages.get(name)).build();
+    }
+
     public static List<String> getStringList(String name) {
         return config.getStringList(name);
     }
