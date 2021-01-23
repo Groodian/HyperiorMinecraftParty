@@ -5,6 +5,7 @@ import de.groodian.hyperiorcore.util.HSound;
 import de.groodian.minecraftparty.gamestate.MiniGame;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.Messages;
+import de.groodian.minecraftparty.playerhider.PlayerHider;
 import de.groodian.minecraftparty.util.JumpAndRunLocations;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,6 +21,7 @@ import java.util.Random;
 public class JumpAndRunState extends MiniGame {
 
     private JumpAndRunLocations locations;
+    private PlayerHider playerHider;
 
     private BukkitTask moveTask;
     private BukkitTask gameTask;
@@ -28,12 +30,13 @@ public class JumpAndRunState extends MiniGame {
 
     public JumpAndRunState(String name, Main plugin) {
         super(name, plugin);
-        this.locations = plugin.getLocationManager().JUMPANDRUN_LOCATIONS.get(new Random().nextInt(plugin.getLocationManager().JUMPANDRUN_LOCATIONS.size()));
         super.timeRecords = true;
         super.lowerIsBetterRecords = true;
         super.lowerIsBetterGame = true;
         super.setRecords = false;
+        this.locations = plugin.getLocationManager().JUMPANDRUN_LOCATIONS.get(new Random().nextInt(plugin.getLocationManager().JUMPANDRUN_LOCATIONS.size()));
         super.mapName = locations.getName();
+        this.playerHider = new PlayerHider(plugin);
         this.moveTask = null;
         this.gameTask = null;
         this.checkpointsReached = new HashMap<>();
@@ -69,7 +72,7 @@ public class JumpAndRunState extends MiniGame {
             addPlayerToTeleport(player, locations.getStart());
         }
         for (Player player : plugin.getPlayers()) {
-            plugin.getPlayerHider().giveHideItem(player);
+            playerHider.giveHideItem(player);
         }
     }
 
@@ -125,6 +128,7 @@ public class JumpAndRunState extends MiniGame {
 
                 if (plugin.getPlayers().size() == winner.size() + 1 || plugin.getPlayers().size() == winner.size() || winner.size() >= 5 || secondsGame <= 0 || plugin.getPlayers().size() == 1) {
                     gameTask.cancel();
+                    playerHider.remove();
                     plugin.getGameStateManager().setRandomGameState();
                 }
 

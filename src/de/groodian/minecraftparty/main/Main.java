@@ -19,7 +19,6 @@ import de.groodian.minecraftparty.listener.MainListener;
 import de.groodian.minecraftparty.listener.MasterBuilderListener;
 import de.groodian.minecraftparty.network.MinecraftPartyClient;
 import de.groodian.minecraftparty.playerhider.PlayerHideListener;
-import de.groodian.minecraftparty.playerhider.PlayerHider;
 import de.groodian.minecraftparty.stats.Record;
 import de.groodian.minecraftparty.stats.Stats;
 import de.groodian.minecraftparty.stats.Top10;
@@ -48,18 +47,17 @@ public class Main extends JavaPlugin {
 
     public static String PREFIX = null;
     public static String NO_PERMISSION = null;
-    public static final String VERSION = "4.6 BETA";
     public static final String PREFIX_CONSOLE = "§7[§eMinecraftParty§7] §r";
     public static final int MIN_PLAYERS = 2, MAX_PLAYERS = 12;
 
     private Main plugin;
+    private String version;
     private BukkitTask stopTask;
     private int stopCounter;
     private LocationManager locationManager;
     private GameStateManager gameStateManager;
     private Record record;
     private Stats stats;
-    private PlayerHider playerHider;
     private GameOverview gameOverview;
     private TeleportFix teleportFix;
     private MinecraftPartyClient client;
@@ -76,6 +74,7 @@ public class Main extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage(PREFIX_CONSOLE + "§aLoading plugin...");
 
         plugin = this;
+        version = plugin.getDescription().getVersion() + " BETA";
 
         boolean setupMode = false;
 
@@ -158,7 +157,6 @@ public class Main extends JavaPlugin {
 
         record = new Record(this);
         stats = new Stats(this);
-        playerHider = new PlayerHider(this);
         gameOverview = new GameOverview(this);
         teleportFix = new TeleportFix(this);
 
@@ -228,6 +226,10 @@ public class Main extends JavaPlugin {
         }.runTaskTimer(this, 10, 5);
     }
 
+    public String getVersion() {
+        return version;
+    }
+
     public LocationManager getLocationManager() {
         return locationManager;
     }
@@ -250,10 +252,6 @@ public class Main extends JavaPlugin {
 
     public MinecraftPartyClient getClient() {
         return client;
-    }
-
-    public PlayerHider getPlayerHider() {
-        return playerHider;
     }
 
     public GameOverview getGameOverview() {

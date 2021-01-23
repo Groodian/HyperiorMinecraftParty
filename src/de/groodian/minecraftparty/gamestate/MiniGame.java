@@ -260,6 +260,7 @@ public abstract class MiniGame implements GameState {
                 if (teleportCounter < players.size()) {
                     Player player = players.get(teleportCounter);
                     player.teleport(playerToTeleport.get(player));
+                    plugin.getTeleportFix().doFor(player);
                     teleportCounter++;
                 } else {
                     teleportTask.cancel();

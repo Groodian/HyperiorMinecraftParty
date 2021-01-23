@@ -11,29 +11,29 @@ import org.bukkit.entity.Player;
 public class SetupCommand implements CommandExecutor {
 
     private Main plugin;
-
-    private String USAGE =
-            "§7§m=============§r §6MinecraftParty §7§m=============§r" +
-                    "\n " +
-                    "\n§6/mpsetup lobby §7- Set the lobby location" +
-                    "\n§6/mpsetup woolblock §7- Setting up wool block" +
-                    "\n§6/mpsetup jumpandrun §7- Setting up jump and run" +
-                    "\n§6/mpsetup trafficlightrace §7- Setting up traffic light race" +
-                    "\n§6/mpsetup hotground §7- Setting up hot ground" +
-                    "\n§6/mpsetup gungame §7- Setting up gun game" +
-                    "\n§6/mpsetup colorbattle §7- Setting up color battle" +
-                    "\n§6/mpsetup breakout §7- Setting up breakout" +
-                    "\n§6/mpsetup masterbuilders §7- Setting up master builders" +
-                    "\n§6/mpsetup kingofthehill §7- Setting up king of the hill" +
-                    "\n§6/mpsetup top10 §7- Set the top ten location" +
-                    "\n " +
-                    "\n§aMinecraftParty by Groodian" +
-                    "\n§aVersion: " + Main.VERSION +
-                    "\n " +
-                    "\n§7§m=============§r §6MinecraftParty §7§m=============§r";
+    private String USAGE;
 
     public SetupCommand(Main plugin) {
         this.plugin = plugin;
+
+        USAGE = "§7§m=============§r §6MinecraftParty §7§m=============§r" +
+                "\n " +
+                "\n§6/mpsetup lobby §7- Set the lobby location" +
+                "\n§6/mpsetup woolblock §7- Setting up wool block" +
+                "\n§6/mpsetup jumpandrun §7- Setting up jump and run" +
+                "\n§6/mpsetup trafficlightrace §7- Setting up traffic light race" +
+                "\n§6/mpsetup hotground §7- Setting up hot ground" +
+                "\n§6/mpsetup gungame §7- Setting up gun game" +
+                "\n§6/mpsetup colorbattle §7- Setting up color battle" +
+                "\n§6/mpsetup breakout §7- Setting up breakout" +
+                "\n§6/mpsetup masterbuilders §7- Setting up master builders" +
+                "\n§6/mpsetup kingofthehill §7- Setting up king of the hill" +
+                "\n§6/mpsetup top10 §7- Set the top ten location" +
+                "\n " +
+                "\n§aMinecraftParty by Groodian" +
+                "\n§aVersion: " + plugin.getVersion() +
+                "\n " +
+                "\n§7§m=============§r §6MinecraftParty §7§m=============§r";
     }
 
     @Override

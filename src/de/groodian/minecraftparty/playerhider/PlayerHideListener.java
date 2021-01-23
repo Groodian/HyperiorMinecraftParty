@@ -11,9 +11,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class PlayerHideListener implements Listener {
 
     private Main plugin;
+    private PlayerHider playerHider;
 
     public PlayerHideListener(Main plugin) {
         this.plugin = plugin;
+        this.playerHider = new PlayerHider(plugin);
     }
 
     @EventHandler
@@ -26,7 +28,7 @@ public class PlayerHideListener implements Listener {
                             for (Player all : plugin.getPlayers()) {
                                 e.getPlayer().hidePlayer(all);
                             }
-                            plugin.getPlayerHider().giveShowItem(e.getPlayer());
+                            playerHider.giveShowItem(e.getPlayer());
                             e.getPlayer().sendMessage(Main.PREFIX + Messages.get("PlayerHider.message-hide"));
                             return;
                         }
@@ -34,7 +36,7 @@ public class PlayerHideListener implements Listener {
                             for (Player all : plugin.getPlayers()) {
                                 e.getPlayer().showPlayer(all);
                             }
-                            plugin.getPlayerHider().giveHideItem(e.getPlayer());
+                            playerHider.giveHideItem(e.getPlayer());
                             e.getPlayer().sendMessage(Main.PREFIX + Messages.get("PlayerHider.message-show"));
                             return;
                         }

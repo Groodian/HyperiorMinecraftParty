@@ -52,7 +52,7 @@ public class KingOfTheHillListener implements Listener {
                 if (e.getDamager() instanceof Player) {
                     Player damager = (Player) e.getDamager();
                     if (plugin.getPlayers().contains(damager)) {
-                        player.setHealth(20);
+                        e.setDamage(0.0D);
                         return;
                     }
                 }
@@ -90,4 +90,5 @@ public class KingOfTheHillListener implements Listener {
         }.runTaskLater(plugin, 20);
 
     }
+
 }

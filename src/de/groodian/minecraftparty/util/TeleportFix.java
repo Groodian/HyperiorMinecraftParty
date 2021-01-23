@@ -7,9 +7,9 @@ import org.bukkit.event.Listener;
 
 public class TeleportFix implements Listener {
 
-    private Main plugin;
+    private static final int TELEPORT_FIX_DELAY = 15;
 
-    private final int TELEPORT_FIX_DELAY = 15;
+    private Main plugin;
 
     public TeleportFix(Main plugin) {
         this.plugin = plugin;
@@ -29,7 +29,9 @@ public class TeleportFix implements Listener {
                     for (Player all : Bukkit.getOnlinePlayers()) {
                         all.showPlayer(player);
                     }
-                }, 1);
+
+                }, 2);
+
             }, TELEPORT_FIX_DELAY);
         }
 

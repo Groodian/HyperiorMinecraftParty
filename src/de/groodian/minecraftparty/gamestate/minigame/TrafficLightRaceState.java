@@ -187,16 +187,23 @@ public class TrafficLightRaceState extends MiniGame {
                                     }
                                 }
 
-                                noMoving = true;
-
                                 new BukkitRunnable() {
                                     @Override
                                     public void run() {
 
-                                        delayIsRunning = false;
+                                        noMoving = true;
+
+                                        new BukkitRunnable() {
+                                            @Override
+                                            public void run() {
+
+                                                delayIsRunning = false;
+
+                                            }
+                                        }.runTaskLater(plugin, 70);
 
                                     }
-                                }.runTaskLater(plugin, 70);
+                                }.runTaskLater(plugin, 5);
 
                             }
 

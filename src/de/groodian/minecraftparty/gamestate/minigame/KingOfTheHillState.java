@@ -5,12 +5,16 @@ import de.groodian.minecraftparty.gamestate.MiniGame;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class KingOfTheHillState extends MiniGame {
 
@@ -55,10 +59,9 @@ public class KingOfTheHillState extends MiniGame {
             public void run() {
 
                 for (Player player : plugin.getPlayers()) {
-                    Material material = player.getLocation().add(0, -1, 0).getBlock().getType();
-                    if (material == Material.GOLD_BLOCK) {
+                    if (standsOnBlockWithTolerance(player, Material.GOLD_BLOCK)) {
                         ranking.put(player, ranking.get(player) + goldPoints);
-                    } else if (material == Material.IRON_BLOCK) {
+                    } else if (standsOnBlockWithTolerance(player, Material.IRON_BLOCK)) {
                         ranking.put(player, ranking.get(player) + ironPoints);
                     }
                 }
@@ -67,8 +70,32 @@ public class KingOfTheHillState extends MiniGame {
                     gameTask.cancel();
                     plugin.getGameStateManager().setRandomGameState();
                 }
+
             }
         }.runTaskTimer(plugin, 0, 2);
+    }
+
+    private boolean standsOnBlockWithTolerance(Player player, Material material) {
+        Location loc = player.getLocation().add(0, -1, 0);
+        List<Material> blocks = new ArrayList<>();
+
+        blocks.add(loc.getBlock().getType());
+        blocks.add(loc.clone().add(0.5, 0, 0).getBlock().getType());
+        blocks.add(loc.clone().add(-0.5, 0, 0).getBlock().getType());
+        blocks.add(loc.clone().add(0, 0, 0.5).getBlock().getType());
+        blocks.add(loc.clone().add(0, 0, -0.5).getBlock().getType());
+        blocks.add(loc.clone().add(0.5, 0, 0.5).getBlock().getType());
+        blocks.add(loc.clone().add(-0.5, 0, -0.5).getBlock().getType());
+        blocks.add(loc.clone().add(-0.5, 0, 0.5).getBlock().getType());
+        blocks.add(loc.clone().add(0.5, 0, -0.5).getBlock().getType());
+
+        for (Material current : blocks) {
+            if (current == material) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean isStarted() {
