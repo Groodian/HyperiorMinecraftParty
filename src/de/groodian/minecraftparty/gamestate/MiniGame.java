@@ -260,6 +260,10 @@ public abstract class MiniGame implements GameState {
                 if (teleportCounter < players.size()) {
                     Player player = players.get(teleportCounter);
                     player.teleport(playerToTeleport.get(player));
+                    player.getInventory().clear();
+                    player.getInventory().setArmorContents(null);
+                    player.setFireTicks(0);
+                    player.setHealth(20);
                     plugin.getTeleportFix().doFor(player);
                     teleportCounter++;
                 } else {
@@ -394,6 +398,8 @@ public abstract class MiniGame implements GameState {
         for (Player player : plugin.getPlayers()) {
             player.getInventory().clear();
             player.getInventory().setArmorContents(null);
+            player.setFireTicks(0);
+            player.setHealth(20);
             plugin.getGameOverview().giveItem(player);
         }
 

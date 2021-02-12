@@ -59,6 +59,10 @@ public class EndingState implements GameState {
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             if (!playersTeleported.contains(player)) {
                                 player.teleport(plugin.getLocationManager().LOBBY);
+                                player.getInventory().clear();
+                                player.getInventory().setArmorContents(null);
+                                player.setFireTicks(0);
+                                player.setHealth(20);
                                 plugin.getTeleportFix().doFor(player);
                                 playersTeleported.add(player);
                                 HyperiorCore.getSB().unregisterScoreboard(player);
