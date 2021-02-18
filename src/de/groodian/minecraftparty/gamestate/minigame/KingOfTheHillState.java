@@ -42,7 +42,7 @@ public class KingOfTheHillState extends MiniGame {
     @Override
     protected void beforeCountdownStart() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            addPlayerToTeleport(player, plugin.getLocationManager().getRespawnLocation(plugin.getLocationManager().KINGOFTHEHILL));
+            teleportManager.addTeleport(player, plugin.getLocationManager().getRespawnLocation(plugin.getLocationManager().KINGOFTHEHILL), null);
         }
     }
 

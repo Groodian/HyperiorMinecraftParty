@@ -63,23 +63,28 @@ public class MasterBuildersState extends MiniGame {
 
     @Override
     protected void beforeCountdownStart() {
-        int count = 0;
-        while (!isPictureEmpty(getPicture(count))) {
-            availablePicturePositions.add(count++);
+        int pictureCount = 0;
+        while (!isPictureEmpty(getPicture(pictureCount))) {
+            availablePicturePositions.add(pictureCount++);
         }
         Collections.shuffle(availablePicturePositions);
 
-        count = 0;
+        pictureCount = 0;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Location loc = plugin.getLocationManager().MASTERBUILDERS_PLAYER.get(count);
-            addPlayerToTeleport(player, loc.clone().add(0, 1, 0));
+            Location pictureLoc = plugin.getLocationManager().MASTERBUILDERS_PLAYER.get(pictureCount);
+            Location playerLoc = pictureLoc.clone().add(0, 1, 0);
+
             if (plugin.getPlayers().contains(player)) {
-                playerPictureLoc.put(player, loc);
-                player.setGameMode(GameMode.CREATIVE);
+                teleportManager.addTeleport(player, playerLoc, () -> player.setGameMode(GameMode.CREATIVE));
+                playerPictureLoc.put(player, pictureLoc);
                 ranking.put(player, 0);
-                count++;
+                pictureCount++;
+            } else {
+                teleportManager.addTeleport(player, playerLoc, null);
             }
+
         }
+
     }
 
     @Override

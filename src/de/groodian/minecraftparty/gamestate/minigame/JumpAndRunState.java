@@ -69,10 +69,11 @@ public class JumpAndRunState extends MiniGame {
         moveListener();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            addPlayerToTeleport(player, locations.getStart());
-        }
-        for (Player player : plugin.getPlayers()) {
-            playerHider.giveHideItem(player);
+            if (plugin.getPlayers().contains(player)) {
+                teleportManager.addTeleport(player, locations.getStart(), () -> playerHider.giveHideItem(player));
+            } else {
+                teleportManager.addTeleport(player, locations.getStart(), null);
+            }
         }
     }
 

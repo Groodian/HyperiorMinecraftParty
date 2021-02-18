@@ -7,6 +7,7 @@ import de.groodian.hyperiorcore.util.HSound;
 import de.groodian.minecraftparty.countdown.EndingCountdown;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.Messages;
+import de.groodian.minecraftparty.util.TeleportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -23,16 +24,17 @@ import java.util.stream.Collectors;
 
 public class EndingState implements GameState {
 
-    private EndingCountdown endingCountdown;
     private Main plugin;
+    private EndingCountdown endingCountdown;
+    private TeleportManager teleportManager;
 
-    private BukkitTask teleportTask = null;
     private BukkitTask soundTask = null;
     private int soundCounter = 0;
 
     public EndingState(Main plugin) {
-        endingCountdown = new EndingCountdown(plugin);
         this.plugin = plugin;
+        this.endingCountdown = new EndingCountdown(plugin);
+        this.teleportManager = new TeleportManager(plugin, this::afterAllTeleported);
     }
 
     @Override
@@ -51,28 +53,11 @@ public class EndingState implements GameState {
                 Bukkit.broadcastMessage(Main.PREFIX + Messages.get("the-winner-are"));
                 new HSound(Sound.FIREWORK_LAUNCH).play();
 
-                List<Player> playersTeleported = new ArrayList<>();
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    teleportManager.addTeleport(player, plugin.getLocationManager().LOBBY, () -> HyperiorCore.getSB().unregisterScoreboard(player));
+                }
 
-                teleportTask = new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        for (Player player : Bukkit.getOnlinePlayers()) {
-                            if (!playersTeleported.contains(player)) {
-                                player.teleport(plugin.getLocationManager().LOBBY);
-                                player.getInventory().clear();
-                                player.getInventory().setArmorContents(null);
-                                player.setFireTicks(0);
-                                player.setHealth(20);
-                                plugin.getTeleportFix().doFor(player);
-                                playersTeleported.add(player);
-                                HyperiorCore.getSB().unregisterScoreboard(player);
-                                return;
-                            }
-                        }
-                        teleportTask.cancel();
-                        afterAllTeleported();
-                    }
-                }.runTaskTimer(plugin, 0, 5);
+                teleportManager.startTeleporting();
 
             }
         }.runTaskLater(plugin, 35);

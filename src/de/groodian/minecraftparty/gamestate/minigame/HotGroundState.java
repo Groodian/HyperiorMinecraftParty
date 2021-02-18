@@ -59,7 +59,7 @@ public class HotGroundState extends MiniGame {
     @Override
     protected void beforeCountdownStart() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            addPlayerToTeleport(player, location.clone().add(0, 3, 0));
+            teleportManager.addTeleport(player, location.clone().add(0, 3, 0), null);
         }
     }
 

@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 
 public class StartCommand implements CommandExecutor {
 
-    private Main plugin;
     private static final int START_SECONDS = 3;
+    private Main plugin;
 
     public StartCommand(Main plugin) {
         this.plugin = plugin;

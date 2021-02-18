@@ -56,7 +56,7 @@ public class GunGameState extends MiniGame {
     @Override
     protected void beforeCountdownStart() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            addPlayerToTeleport(player, plugin.getLocationManager().getRespawnLocation(plugin.getLocationManager().GUNGAME));
+            teleportManager.addTeleport(player, plugin.getLocationManager().getRespawnLocation(plugin.getLocationManager().GUNGAME), null);
         }
     }
 

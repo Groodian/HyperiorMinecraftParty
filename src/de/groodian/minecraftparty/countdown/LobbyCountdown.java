@@ -9,16 +9,13 @@ import org.bukkit.entity.Player;
 
 public class LobbyCountdown extends Countdown {
 
+    private static final int IDLE_TIME = 15, COUNTDOWN_TIME = 60;
     private Main plugin;
-
     private LobbyState lobbyState;
-
     private int seconds;
     private int idleID;
     private boolean isIdling;
     private boolean isRunning;
-
-    private static final int IDLE_TIME = 15, COUNTDOWN_TIME = 60;
 
     public LobbyCountdown(Main plugin, LobbyState lobbyState) {
         this.plugin = plugin;

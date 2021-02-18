@@ -55,14 +55,15 @@ public class BreakoutState extends MiniGame {
 
     @Override
     protected void beforeCountdownStart() {
-        int count = 0;
+        int locationCount = 0;
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (plugin.getPlayers().contains(player)) {
-                count++;
-                addPlayerToTeleport(player, players.get(count).clone().add(0, 2, 0));
-                playersLocation.put(player, players.get(count));
+                Location loc = players.get(locationCount);
+                teleportManager.addTeleport(player, loc.clone().add(0, 2, 0), null);
+                playersLocation.put(player, loc);
+                locationCount++;
             } else {
-                addPlayerToTeleport(player, spectator);
+                teleportManager.addTeleport(player, spectator, null);
             }
         }
     }

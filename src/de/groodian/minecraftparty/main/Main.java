@@ -24,7 +24,6 @@ import de.groodian.minecraftparty.stats.Stats;
 import de.groodian.minecraftparty.stats.Top10;
 import de.groodian.minecraftparty.util.JumpAndRunLocations;
 import de.groodian.minecraftparty.util.LocationManager;
-import de.groodian.minecraftparty.util.TeleportFix;
 import de.groodian.network.DataPackage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -45,11 +44,10 @@ import java.util.Map;
 
 public class Main extends JavaPlugin {
 
-    public static String PREFIX = null;
-    public static String NO_PERMISSION = null;
     public static final String PREFIX_CONSOLE = "§7[§eMinecraftParty§7] §r";
     public static final int MIN_PLAYERS = 2, MAX_PLAYERS = 12;
-
+    public static String PREFIX = null;
+    public static String NO_PERMISSION = null;
     private Main plugin;
     private String version;
     private BukkitTask stopTask;
@@ -59,7 +57,6 @@ public class Main extends JavaPlugin {
     private Record record;
     private Stats stats;
     private GameOverview gameOverview;
-    private TeleportFix teleportFix;
     private MinecraftPartyClient client;
 
     private List<Player> players;
@@ -158,7 +155,6 @@ public class Main extends JavaPlugin {
         record = new Record(this);
         stats = new Stats(this);
         gameOverview = new GameOverview(this);
-        teleportFix = new TeleportFix(this);
 
         Top10 top10 = new Top10(this);
         top10.set();
@@ -244,10 +240,6 @@ public class Main extends JavaPlugin {
 
     public Stats getStats() {
         return stats;
-    }
-
-    public TeleportFix getTeleportFix() {
-        return teleportFix;
     }
 
     public MinecraftPartyClient getClient() {
