@@ -46,12 +46,13 @@ public class Main extends JavaPlugin {
 
     public static final String PREFIX_CONSOLE = "§7[§eMinecraftParty§7] §r";
     public static final int MIN_PLAYERS = 2, MAX_PLAYERS = 12;
+
     public static String PREFIX = null;
     public static String NO_PERMISSION = null;
+
     private Main plugin;
     private String version;
     private BukkitTask stopTask;
-    private int stopCounter;
     private LocationManager locationManager;
     private GameStateManager gameStateManager;
     private Record record;
@@ -103,7 +104,6 @@ public class Main extends JavaPlugin {
         toRemove = new ArrayList<>();
         stars = new HashMap<>();
         stopTask = null;
-        stopCounter = 0;
 
         MySQL minecraftPartyMySQL = HyperiorCore.getMySQLManager().getMinecraftPartyMySQL();
 

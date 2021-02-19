@@ -23,31 +23,41 @@ public class LocationManager {
     // Lobby
     public Location LOBBY;
     public Location TOP10;
+
     // ColorBattle
     public Location COLORBATTLE_START;
     public Location COLORBATTLE_LOCATION_1;
     public Location COLORBATTLE_LOCATION_2;
+
     // GunGame
     public List<Location> GUNGAME;
+
     // HotGround
     public Location HOTGROUND;
+
     // JumpAndRun
     public List<JumpAndRunLocations> JUMPANDRUN_LOCATIONS;
+
     // TrafficLightRace
     public Location TRAFFICLIGHTRACE_START;
     public Location TRAFFICLIGHTRACE_WIN;
+
     // WoolBlock
     public Location WOOLBLOCK_START;
     public Location WOOLBLOCK_SPECTATOR;
     public Location WOOLBLOCK_FIELD;
+
     // Breakout
     public List<Location> BREAKOUT_PLAYERS;
     public Location BREAKOUT_SPECTATOR;
+
     // MasterBuilders
     public List<Location> MASTERBUILDERS_PLAYER;
     public Location MASTERBUILDERS_PICTURES;
+
     // KingOfTheHill
     public List<Location> KINGOFTHEHILL;
+
     private Main plugin;
     private File fileLocations;
     private FileConfiguration configLocations;

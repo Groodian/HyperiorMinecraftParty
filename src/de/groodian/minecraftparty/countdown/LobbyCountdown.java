@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 public class LobbyCountdown extends Countdown {
 
     private static final int IDLE_TIME = 15, COUNTDOWN_TIME = 60;
+
     private Main plugin;
     private LobbyState lobbyState;
     private int seconds;
