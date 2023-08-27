@@ -1,0 +1,20 @@
+name: $name
+version: $version
+main: de.groodian.minecraftparty.main.Main
+description: $description
+load: STARTUP
+authors:
+  - $author
+api-version: $apiVersion
+
+depend: [ HyperiorCore ]
+
+commands:
+  mpsetup:
+    description: Setting up the game
+  start:
+    description: Starting the game
+  build:
+    description: Build mode
+  stats:
+    description: Stats
