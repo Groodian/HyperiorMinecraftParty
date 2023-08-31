@@ -2,14 +2,6 @@ package de.groodian.minecraftparty.util;
 
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +9,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 public class LocationManager {
 
@@ -199,11 +198,11 @@ public class LocationManager {
         }
         for (Map.Entry<String, Object> currentJumpAndRun : jumpandruns.entrySet()) {
             ConfigurationSection currentJumpAndRunSection = (ConfigurationSection) currentJumpAndRun.getValue();
-            Location start = loadLocation("JumpAndRun." + currentJumpAndRun.getKey() + ".start");
-            Location win = loadLocation("JumpAndRun." + currentJumpAndRun.getKey() + ".win");
+            Location start = loadLocation("JumpAndRun." + currentJumpAndRun.getKey() + ".Start");
+            Location win = loadLocation("JumpAndRun." + currentJumpAndRun.getKey() + ".Win");
             List<Location> checkpoints = new ArrayList<>();
             for (int i = 1; i <= currentJumpAndRunSection.getInt("checkpoints"); i++) {
-                checkpoints.add(loadLocation("JumpAndRun." + currentJumpAndRun.getKey() + ".checkpoints." + i));
+                checkpoints.add(loadLocation("JumpAndRun." + currentJumpAndRun.getKey() + ".Checkpoint" + i));
             }
             jumpAndRunsLocations.add(new JumpAndRunLocations(currentJumpAndRun.getKey(), start, win, checkpoints));
         }

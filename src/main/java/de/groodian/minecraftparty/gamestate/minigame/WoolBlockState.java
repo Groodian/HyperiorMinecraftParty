@@ -123,7 +123,7 @@ public class WoolBlockState extends MiniGame {
                         if (player.getLocation().getY() <= field.getY()) {
                             lastPlayerDiePlaceCount = placeCount;
                             addDiePlayer(player);
-                            plugin.getRecord().setRecord(player, "woolblock", placeCount, true);
+                            plugin.getStats().record(player, "woolblock", placeCount, true);
                             player.teleport(spectator);
                             player.setAllowFlight(true);
                             player.setFlying(true);
@@ -139,7 +139,7 @@ public class WoolBlockState extends MiniGame {
 
                     for (Player player : plugin.getPlayers()) {
                         if (!diePlayers.contains(player)) {
-                            plugin.getRecord().setRecord(player, "woolblock", placeCount, true);
+                            plugin.getStats().record(player, "woolblock", placeCount, true);
                         }
                     }
 

@@ -5,10 +5,8 @@ import de.groodian.hyperiorcore.command.HCommand;
 import de.groodian.hyperiorcore.command.HCommandPaper;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
@@ -17,20 +15,20 @@ public class SetupCommand extends HCommandPaper<Player> {
 
     public SetupCommand(Main plugin) {
         super(Player.class, "mpsetup", "Setting up the game", Main.PREFIX, "minecraftparty.setup",
-                List.of(new SetLocation(plugin, "lobby"),
-                        new SetTopLocation(plugin, "woolblock", List.of("start", "field", "spectator")),
-                        new SetTopLocation(plugin, "trafficlightrace", List.of("start", "win"),
-                                "Must be a straight street in negative x direction!", List.of()),
-                        new SetLocation(plugin, "hotground"),
-                        new SetTopLocation(plugin, "colorbattle", List.of("start", "location1", "location2")),
-                        new SetMultipleLocation(plugin, "gungame", MainConfig.getInt("GunGame.respawn-points")),
-                        new SetMultipleLocation(plugin, "kingofthehill", MainConfig.getInt("KingOfTheHill.respawn-points")),
-                        new SetLocation(plugin, "top10"),
-                        new SetTopLocation(plugin, "breakout", List.of("spectator"), "",
-                                List.of(new SetMultipleLocation(plugin, "player", Main.MAX_PLAYERS))),
-                        new SetTopLocation(plugin, "masterbuilders", List.of("pictures"),
+                List.of(new SetLocation(plugin, "Lobby"),
+                        new SetTopLocation(plugin, "WoolBlock", List.of("Start", "Field", "Spectator")),
+                        new SetTopLocation(plugin, "TrafficLightRace", List.of("Start", "Win"),
+                                "Must be a straight street in negative x direction!", new ArrayList<>(List.of())),
+                        new SetLocation(plugin, "HotGround"),
+                        new SetTopLocation(plugin, "ColorBattle", List.of("Start", "Location1", "Location2")),
+                        new SetMultipleLocation(plugin, "GunGame", MainConfig.getInt("GunGame.respawn-points")),
+                        new SetMultipleLocation(plugin, "KingOfTheHill", MainConfig.getInt("KingOfTheHill.respawn-points")),
+                        new SetLocation(plugin, "Top10"),
+                        new SetTopLocation(plugin, "Breakout", List.of("Spectator"), "",
+                                new ArrayList<>(List.of(new SetMultipleLocation(plugin, "BreakoutPlayer", Main.MAX_PLAYERS)))),
+                        new SetTopLocation(plugin, "MasterBuilders", List.of("Pictures"),
                                 "From this point is takes 5x5x1 pictures in positive x and y direction! And multiple pictures in positive z direction with 1 block space between pictures!",
-                                List.of(new SetMultipleLocation(plugin, "player", Main.MAX_PLAYERS))),
+                                new ArrayList<>(List.of(new SetMultipleLocation(plugin, "MasterBuildersPlayer", Main.MAX_PLAYERS)))),
                         new JumpAndRun(plugin)
                 ), List.of());
     }
@@ -66,12 +64,12 @@ public class SetupCommand extends HCommandPaper<Player> {
     private static class SetTopLocation extends HCommandPaper<Player> {
 
         public SetTopLocation(Main plugin, String locationName, List<String> setLocationCommands) {
-            this(plugin, locationName, setLocationCommands, "", List.of());
+            this(plugin, locationName, setLocationCommands, "", new ArrayList<>());
         }
 
         public SetTopLocation(Main plugin, String locationName, List<String> setLocationCommands, String extraDescription,
-                              List<HCommand<Player, de.groodian.hyperiorcore.main.Main>> hSubCommands) {
-            super(Player.class, locationName, "Set the locations for '" + locationName + "' " + extraDescription, Main.PREFIX, null,
+                              ArrayList<HCommand<Player, de.groodian.hyperiorcore.main.Main>> hSubCommands) {
+            super(Player.class, locationName, "Set the locations for '" + locationName + "'. " + extraDescription, Main.PREFIX, null,
                     constructSetLocationCommands(plugin, locationName, hSubCommands, setLocationCommands), List.of());
         }
 
@@ -84,19 +82,17 @@ public class SetupCommand extends HCommandPaper<Player> {
     private static class SetMultipleLocation extends HCommandPaper<Player> {
 
         private final Main plugin;
-        protected int maxNumber;
-        protected String locationName;
+        protected final int maxNumber;
+        protected final String locationName;
 
         public SetMultipleLocation(Main plugin, String locationName, int maxNumber) {
-            this(plugin, locationName, maxNumber, "", List.of());
+            this(plugin, locationName, maxNumber, "");
         }
 
-        public SetMultipleLocation(Main plugin, String locationName, int maxNumber, String extraDescription,
-                                   List<HArgument> extraArguments) {
-            super(Player.class, locationName, "Set the locations 1-" + maxNumber + " for '" + locationName + "' " + extraDescription,
-                    Main.PREFIX, null, List.of(),
-                    Stream.concat(extraArguments.stream(), Arrays.stream(new HArgument[]{new HArgument("1-" + maxNumber)}))
-                            .collect(Collectors.toList()));
+        public SetMultipleLocation(Main plugin, String locationName, int maxNumber, String extraDescription) {
+            super(Player.class, locationName,
+                    "Set the locations 1-" + (maxNumber == 0 ? "?" : maxNumber) + " for '" + locationName + "'. " + extraDescription,
+                    Main.PREFIX, null, List.of(), List.of(new HArgument("1-" + maxNumber)));
             this.plugin = plugin;
             this.maxNumber = maxNumber;
             this.locationName = locationName;
@@ -132,8 +128,8 @@ public class SetupCommand extends HCommandPaper<Player> {
     private static class JumpAndRun extends HCommandPaper<Player> {
 
         public JumpAndRun(Main plugin) {
-            super(Player.class, "jumpandrun", "Setup jump and run", Main.PREFIX, null,
-                    List.of(new Create(plugin), new StartWin(plugin, "start"), new StartWin(plugin, "win"), new Checkpoint(plugin)),
+            super(Player.class, "JumpAndRun", "Setup jump and run", Main.PREFIX, null,
+                    List.of(new Create(plugin), new StartWin(plugin, "Start"), new StartWin(plugin, "Win"), new Checkpoint(plugin)),
                     List.of());
         }
 
@@ -189,18 +185,19 @@ public class SetupCommand extends HCommandPaper<Player> {
                     return;
                 }
 
-                plugin.getLocationManager().saveLocation("jumpandrun." + args[0] + "." + name, player.getLocation());
-                sendMsg(player, "The location 'jumpandrun." + args[0] + "." + name + "' was set.", NamedTextColor.GREEN);
+                plugin.getLocationManager().saveLocation("JumpAndRun." + args[0] + "." + name, player.getLocation());
+                sendMsg(player, "The location 'JumpAndRun." + args[0] + "." + name + "' was set.", NamedTextColor.GREEN);
             }
 
         }
 
-        private static class Checkpoint extends SetMultipleLocation {
+        private static class Checkpoint extends HCommandPaper<Player> {
 
             private final Main plugin;
 
             public Checkpoint(Main plugin) {
-                super(plugin, "checkpoint", 0, "", List.of(new HArgument("name")));
+                super(Player.class, "Checkpoint", "Set the checkpoints for a jump and run", Main.PREFIX, null, List.of(),
+                        List.of(new HArgument("name"), new HArgument("1-?")));
                 this.plugin = plugin;
             }
 
@@ -211,9 +208,30 @@ public class SetupCommand extends HCommandPaper<Player> {
                     return;
                 }
 
-                maxNumber = plugin.getLocationManager().getJumpAndRunCheckpoints(args[0]);
+                int maxNumber = plugin.getLocationManager().getJumpAndRunCheckpoints(args[0]);
 
-                super.onCall(player, args);
+                int number;
+                try {
+                    number = Integer.parseInt(args[1]);
+                } catch (NumberFormatException e) {
+                    sendMsg(player, Component.text("The argument 1-" + maxNumber + " has to be a number.", NamedTextColor.RED));
+                    return;
+                }
+
+                if (number <= 0) {
+                    sendMsg(player, Component.text("The number has to be higher than zero.", NamedTextColor.RED));
+                    return;
+                }
+
+                if (number > maxNumber) {
+                    sendMsg(player,
+                            Component.text("The number is higher as the defined number. Max value is " + maxNumber + ".",
+                                    NamedTextColor.RED));
+                    return;
+                }
+
+                plugin.getLocationManager().saveLocation("JumpAndRun." + args[0] + "." + name + number, player.getLocation());
+                sendMsg(player, "The location 'JumpAndRun." + args[0] + "." + name + number + "' was set.", NamedTextColor.GREEN);
             }
 
         }
@@ -223,7 +241,7 @@ public class SetupCommand extends HCommandPaper<Player> {
     public static List<HCommand<Player, de.groodian.hyperiorcore.main.Main>> constructSetLocationCommands(
             Main plugin,
             String locationName,
-            List<HCommand<Player, de.groodian.hyperiorcore.main.Main>> commands,
+            ArrayList<HCommand<Player, de.groodian.hyperiorcore.main.Main>> commands,
             List<String> setLocationCommands) {
         for (String setLocationCommand : setLocationCommands) {
             commands.add(new SetLocation(plugin, locationName + setLocationCommand));

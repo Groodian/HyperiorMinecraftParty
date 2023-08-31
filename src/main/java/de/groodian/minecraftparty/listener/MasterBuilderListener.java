@@ -22,18 +22,18 @@ public class MasterBuilderListener implements Listener {
 
     @EventHandler
     public void handlePlayerInventoryClick(InventoryClickEvent e) {
-        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof MasterBuildersState))
+        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof MasterBuildersState state))
             return;
-        if (((MasterBuildersState) plugin.getGameStateManager().getCurrentGameState()).isInBuildMode())
+        if (state.isInBuildMode())
             return;
         e.setCancelled(true);
     }
 
     @EventHandler
     public void handleInteract(PlayerInteractEvent e) {
-        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof MasterBuildersState))
+        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof MasterBuildersState state))
             return;
-        if (((MasterBuildersState) plugin.getGameStateManager().getCurrentGameState()).isInBuildMode())
+        if (state.isInBuildMode())
             return;
         e.setCancelled(true);
     }

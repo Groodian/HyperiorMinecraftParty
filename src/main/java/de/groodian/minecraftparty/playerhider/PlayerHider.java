@@ -6,6 +6,7 @@ import de.groodian.minecraftparty.main.Messages;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 public class PlayerHider {
 
@@ -16,12 +17,18 @@ public class PlayerHider {
     }
 
     public void giveHideItem(Player p) {
-        ItemStack item = new ItemBuilder(Material.GLOWSTONE_DUST).setName(Messages.get("PlayerHider.item-hide")).build();
+        ItemStack item = new ItemBuilder(Material.GLOWSTONE_DUST)
+                .setName(Messages.get("PlayerHider.item-hide"))
+                .addCustomData("interact", PersistentDataType.STRING, "PlayerHide")
+                .build();
         p.getInventory().setItem(8, item);
     }
 
     public void giveShowItem(Player p) {
-        ItemStack item = new ItemBuilder(Material.SUGAR).setName(Messages.get("PlayerHider.item-show")).build();
+        ItemStack item = new ItemBuilder(Material.SUGAR)
+                .setName(Messages.get("PlayerHider.item-show"))
+                .addCustomData("interact", PersistentDataType.STRING, "PlayerShow")
+                .build();
         p.getInventory().setItem(8, item);
     }
 

@@ -5,15 +5,14 @@ import de.groodian.minecraftparty.gamestate.MiniGame;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
 import de.groodian.minecraftparty.main.Messages;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-
-import java.util.List;
-import java.util.Map;
 
 public class GunGameState extends MiniGame {
 
@@ -42,7 +41,10 @@ public class GunGameState extends MiniGame {
             }
 
             if (player.getInventory().getItem(0).getType() == Material.BOW) {
-                player.getInventory().setItem(8, new ItemBuilder(Material.ARROW).setAmount(MainConfig.getInt("GunGame.arrow-amount")).setName(Messages.get("GunGame.arrow")).build());
+                player.getInventory()
+                        .setItem(8, new ItemBuilder(Material.ARROW).setAmount(MainConfig.getInt("GunGame.arrow-amount"))
+                                .setName(Messages.get("GunGame.arrow"))
+                                .build());
             }
 
         }
@@ -76,7 +78,7 @@ public class GunGameState extends MiniGame {
 
                     for (Player player : plugin.getPlayers()) {
                         if (ranking.get(player) == 7) {
-                            plugin.getRecord().setRecord(player, "gungame", System.currentTimeMillis() - startTime, false);
+                            plugin.getStats().record(player, "gungame", (int) (System.currentTimeMillis() - startTime), false);
                         }
                     }
 

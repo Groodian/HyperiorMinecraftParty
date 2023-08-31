@@ -1,91 +1,97 @@
 package de.groodian.minecraftparty.stats;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import de.groodian.hyperiorcore.main.HyperiorCore;
-import de.groodian.hyperiorcore.util.MySQLConnection;
-import de.groodian.hyperiorcore.util.UUIDFetcher;
+import de.groodian.hyperiorcore.user.MinecraftPartyStats;
+import de.groodian.hyperiorcore.util.Task;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.Messages;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.SkullType;
+import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import org.bukkit.block.data.Rotatable;
+import org.bukkit.profile.PlayerTextures;
 
 public class Top10 {
 
-    private Main plugin;
-    private Map<Integer, String> top10;
-    private UUIDFetcher uuidFetcher;
-    private Location top10Loc;
-
-    private double x;
-    private double y;
-    private double z;
+    private final Main plugin;
 
     public Top10(Main plugin) {
         this.plugin = plugin;
-        this.top10 = new HashMap<>();
-        this.uuidFetcher = new UUIDFetcher();
     }
 
     public void set() {
-
-        top10Loc = plugin.getLocationManager().TOP10;
-        x = top10Loc.getX();
-        y = top10Loc.getY();
-        z = top10Loc.getZ();
-
-        try {
-            MySQLConnection connection = HyperiorCore.getMySQLManager().getMinecraftPartyMySQL().getMySQLConnection();
-            PreparedStatement ps = connection.getConnection().prepareStatement("SELECT UUID FROM stats ORDER BY points DESC LIMIT 10");
-            ResultSet rs = ps.executeQuery();
-            int rank = 0;
-            while (rs.next()) {
-                rank++;
-                top10.put(rank, rs.getString("UUID"));
+        new Task(plugin) {
+            @Override
+            public void executeAsync() {
+                cache.add(MinecraftPartyStats.getTop10(HyperiorCore.getPaper().getDatabaseManager()));
             }
-            ps.close();
-            connection.finish();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+            @Override
+            public void executeSyncOnFinish() {
+                setBlocks((List<MinecraftPartyStats.Top10>) cache.get(0));
+            }
+        };
+    }
+
+    private void setBlocks(List<MinecraftPartyStats.Top10> top10) {
+        Location top10Loc = plugin.getLocationManager().TOP10;
+        double x = top10Loc.getX();
+        double y = top10Loc.getY();
+        double z = top10Loc.getZ();
 
         for (int i = 0; i < 10; i++) {
+            MinecraftPartyStats.Top10 player = null;
+            if (i < top10.size()) {
+                player = top10.get(i);
+            }
 
             top10Loc.setZ(z - i);
 
-            if (top10Loc.getBlock().getState() instanceof Skull) {
-                Skull skull = (Skull) top10Loc.getBlock().getState();
-                skull.setSkullType(SkullType.PLAYER);
-                if (top10.get(i + 1) != null) {
-                    skull.setOwner(uuidFetcher.getNameFromUUID(top10.get(i + 1)));
+            if (top10Loc.getBlock().getState() instanceof Skull skull) {
+                skull.setType(Material.PLAYER_HEAD);
+                if (player != null) {
+                    skull.setOwningPlayer(Bukkit.getOfflinePlayer(player.uuid()));
                 } else {
-                    skull.setOwner("Steve");
+                    PlayerProfile playerProfile = Bukkit.createProfile(UUID.randomUUID());
+                    PlayerTextures playerTextures = playerProfile.getTextures();
+                    try {
+                        playerTextures.setSkin(
+                                new URL("http://textures.minecraft.net/texture/65b95da1281642daa5d022adbd3e7cb69dc0942c81cd63be9c3857d222e1c8d9"));
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    playerProfile.setTextures(playerTextures);
+                    skull.setPlayerProfile(playerProfile);
                 }
-                skull.setRotation(BlockFace.EAST);
+                Rotatable rotatable = (Rotatable) skull.getBlockData();
+                rotatable.setRotation(BlockFace.WEST);
+                skull.setBlockData(rotatable);
                 skull.update();
             }
 
             top10Loc.setX(x + 1);
             top10Loc.setY(y - 1);
 
-            if (top10Loc.getBlock().getState() instanceof Sign) {
-                Sign sign = (Sign) top10Loc.getBlock().getState();
-                sign.setLine(0, Messages.get("Top10.line-1").replace("%place%", (i + 1) + ""));
-                if (top10.get(i + 1) != null) {
-                    sign.setLine(1, Messages.get("Top10.line-2").replace("%player%", uuidFetcher.getNameFromUUID(top10.get(i + 1))));
-                    sign.setLine(2, Messages.get("Top10.line-3").replace("%points%", plugin.getStats().getPoints(top10.get(i + 1)) + ""));
-                    sign.setLine(3, Messages.get("Top10.line-4").replace("%wins%", plugin.getStats().getGamesFirst(top10.get(i + 1)) + ""));
+            if (top10Loc.getBlock().getState() instanceof Sign sign) {
+                sign.line(0, Messages.getWithReplace("Top10.line-1", Map.of("%place%", (String.valueOf(i + 1)))));
+                if (player != null) {
+                    sign.line(1, Messages.getWithReplace("Top10.line-2", Map.of("%player%", player.name())));
+                    sign.line(2, Messages.getWithReplace("Top10.line-3", Map.of("%points%", String.valueOf(player.points()))));
+                    sign.line(3, Messages.getWithReplace("Top10.line-4", Map.of("%wins%", String.valueOf(player.wins()))));
                 } else {
-                    sign.setLine(1, Messages.get("Top10.no-player"));
-                    sign.setLine(2, "");
-                    sign.setLine(3, "");
+                    sign.line(1, Messages.get("Top10.no-player"));
+                    sign.line(2, Component.empty());
+                    sign.line(3, Component.empty());
                 }
                 sign.update();
             }

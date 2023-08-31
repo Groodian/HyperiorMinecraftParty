@@ -12,12 +12,13 @@ import java.util.stream.Collectors;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
-public class GameOverview extends GUI {
+public class GameOverviewGUI extends GUI {
 
     private final Main plugin;
 
-    public GameOverview(Main plugin) {
+    public GameOverviewGUI(Main plugin) {
         super(Messages.get("player-overview-inventory-name"), 27);
         this.plugin = plugin;
     }
@@ -32,14 +33,14 @@ public class GameOverview extends GUI {
 
         int i = 0;
         for (Map.Entry<Player, Integer> current : sorted.entrySet()) {
-            putItem(craftHead(player, current.getKey()), i);
+            putHead(player, current.getKey(), i);
             i++;
         }
 
         // Adding player with zero points
         for (Player player1 : plugin.getPlayers()) {
             if (!plugin.getStars().containsKey(player1)) {
-                putItem(craftHead(player, player1), i);
+                putHead(player, player1, i);
                 i++;
             }
         }
@@ -49,20 +50,29 @@ public class GameOverview extends GUI {
     public void onUpdate() {
     }
 
-    public void giveItem(Player player) {
-        player.getInventory().setItem(0, new ItemBuilder(Material.COMPASS).setName(Messages.get("player-overview-item-name")).build());
-    }
-
-    private ItemStack craftHead(Player inventoryOwner, Player player) {
+    private void putHead(Player inventoryOwner, Player player, int pos) {
         String isOwn = "";
         if (player.getUniqueId().equals(inventoryOwner.getUniqueId())) {
             isOwn = "§l";
         }
 
-        return new ItemBuilder(Material.PLAYER_HEAD).setName(
+        ItemStack head = new ItemBuilder(Material.PLAYER_HEAD).setName(
                         "§6" + isOwn + player.getName() + "§7: 0" + Messages.get("points"))
                 .setSkullOwner(player.getUniqueId())
                 .build();
+
+        putItem(head, pos, () -> {
+            if (!plugin.getPlayers().contains(inventoryOwner)) {
+                player.teleport(player);
+            }
+        });
+    }
+
+    public static void giveItem(Player player) {
+        player.getInventory().setItem(0, new ItemBuilder(Material.COMPASS)
+                .setName(Messages.get("player-overview-item-name"))
+                .addCustomData("interact", PersistentDataType.STRING, "Overview")
+                .build());
     }
 
 }

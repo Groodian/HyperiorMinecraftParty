@@ -5,13 +5,10 @@ import de.groodian.minecraftparty.gamestate.minigame.GunGameState;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
 import de.groodian.minecraftparty.main.Messages;
-import net.minecraft.server.v1_8_R3.PacketPlayInClientCommand;
-import net.minecraft.server.v1_8_R3.PacketPlayInClientCommand.EnumClientCommand;
-import org.bukkit.Bukkit;
+import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,7 +37,7 @@ public class GunGameListener implements Listener {
         if (e.getAction() == Action.LEFT_CLICK_AIR)
             return;
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if (e.getPlayer().getItemInHand().getType() == Material.BOW) {
+            if (e.getPlayer().getInventory().getItemInMainHand().getType() == Material.BOW) {
                 return;
             }
         }
@@ -49,14 +46,13 @@ public class GunGameListener implements Listener {
 
     @EventHandler
     public void handleBowShot(EntityShootBowEvent e) {
-        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState))
+        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState gunGameState))
             return;
 
-        if (!(e.getEntity() instanceof Player))
+        if (!(e.getEntity() instanceof Player player))
             return;
 
-        if (((GunGameState) plugin.getGameStateManager().getCurrentGameState()).isStarted()) {
-            Player player = (Player) e.getEntity();
+        if (gunGameState.isStarted()) {
             if (plugin.getPlayers().contains(player)) {
                 return;
             }
@@ -68,14 +64,13 @@ public class GunGameListener implements Listener {
 
     @EventHandler
     public void handleEntityDamage(EntityDamageEvent e) {
-        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState))
+        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState gunGameState))
             return;
 
-        if (!(e.getEntity() instanceof Player))
+        if (!(e.getEntity() instanceof Player player))
             return;
 
-        if (((GunGameState) plugin.getGameStateManager().getCurrentGameState()).isStarted()) {
-            Player player = (Player) e.getEntity();
+        if (gunGameState.isStarted()) {
             if (plugin.getPlayers().contains(player)) {
                 return;
             }
@@ -87,17 +82,15 @@ public class GunGameListener implements Listener {
 
     @EventHandler
     public void handleEntityDamageByEntity(EntityDamageByEntityEvent e) {
-        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState))
+        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState gunGameState))
             return;
 
-        if (!(e.getEntity() instanceof Player))
+        if (!(e.getEntity() instanceof Player player))
             return;
 
-        if (((GunGameState) plugin.getGameStateManager().getCurrentGameState()).isStarted()) {
-            Player player = (Player) e.getEntity();
+        if (gunGameState.isStarted()) {
             if (plugin.getPlayers().contains(player)) {
-                if (e.getDamager() instanceof Player) {
-                    Player damager = (Player) e.getDamager();
+                if (e.getDamager() instanceof Player damager) {
                     if (plugin.getPlayers().contains(damager)) {
                         return;
                     }
@@ -120,7 +113,9 @@ public class GunGameListener implements Listener {
         Player killer = e.getEntity().getKiller();
 
         if (killer != null) {
-            e.setDeathMessage(Main.PREFIX + Messages.get("GunGame.death-message-killed").replace("%killed%", killed.getName()).replace("%killer%", killer.getName()));
+            e.deathMessage(Main.PREFIX.append(Messages.getWithReplace("GunGame.death-message-killed", Map.of(
+                    "%killed%", killed.getName(),
+                    "%killer%", killer.getName()))));
             state.getRanking().put(killer, state.getRanking().get(killer) + 1);
             state.getRanking().put(killed, (state.getRanking().get(killed) == 0) ? 0 : state.getRanking().get(killed) - 1);
             killer.getInventory().clear();
@@ -136,20 +131,21 @@ public class GunGameListener implements Listener {
                 public void run() {
                     if (state.isStarted()) {
                         if (state.getRanking().get(killer) == state.getItems().size() - 1) {
-                            Bukkit.broadcastMessage(Main.PREFIX + Messages.get("GunGame.almost-won").replace("%player%", killer.getName()));
+                            plugin.getServer()
+                                    .broadcast(Main.PREFIX.append(
+                                            Messages.getWithReplace("GunGame.almost-won", Map.of("%player%", killer.getName()))));
                         }
                     }
                 }
             }.runTaskLater(plugin, 2);
 
         } else {
-            e.setDeathMessage(Main.PREFIX + Messages.get("GunGame.death-message-died").replace("%killed%", killed.getName()));
+            e.deathMessage(Main.PREFIX.append(Messages.getWithReplace("GunGame.death-message-died", Map.of("%killed%", killed.getName()))));
             state.getRanking().put(killed, (state.getRanking().get(killed) == 0) ? 0 : state.getRanking().get(killed) - 1);
         }
 
         e.getDrops().clear();
-        PacketPlayInClientCommand packet = new PacketPlayInClientCommand(EnumClientCommand.PERFORM_RESPAWN);
-        ((CraftPlayer) killed).getHandle().playerConnection.a(packet);
+        killed.spigot().respawn();
     }
 
     @EventHandler
@@ -180,10 +176,10 @@ public class GunGameListener implements Listener {
 
     @EventHandler
     public void handlePlayerMove(PlayerMoveEvent e) {
-        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState))
+        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof GunGameState gunGameState))
             return;
 
-        if (((GunGameState) plugin.getGameStateManager().getCurrentGameState()).isStarted()) {
+        if (gunGameState.isStarted()) {
             if (e.getTo().getBlock().isLiquid()) {
                 if (plugin.getPlayers().contains(e.getPlayer())) {
                     e.getPlayer().damage(100000);

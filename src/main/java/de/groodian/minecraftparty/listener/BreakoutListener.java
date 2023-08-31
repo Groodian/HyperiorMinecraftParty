@@ -30,10 +30,10 @@ public class BreakoutListener implements Listener {
 
     @EventHandler
     public void handlePlayerBreak(BlockBreakEvent e) {
-        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof BreakoutState))
+        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof BreakoutState state))
             return;
 
-        if (((BreakoutState) plugin.getGameStateManager().getCurrentGameState()).isStarted()) {
+        if (state.isStarted()) {
             if (plugin.getPlayers().contains(e.getPlayer())) {
                 int xBlock = (int) e.getBlock().getLocation().getX();
                 int yBlock = (int) e.getBlock().getLocation().getY();

@@ -21,14 +21,13 @@ public class KingOfTheHillListener implements Listener {
 
     @EventHandler
     public void handleEntityDamage(EntityDamageEvent e) {
-        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof KingOfTheHillState))
+        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof KingOfTheHillState state))
             return;
 
-        if (!(e.getEntity() instanceof Player))
+        if (!(e.getEntity() instanceof Player player))
             return;
 
-        if (((KingOfTheHillState) plugin.getGameStateManager().getCurrentGameState()).isStarted()) {
-            Player player = (Player) e.getEntity();
+        if (state.isStarted()) {
             if (plugin.getPlayers().contains(player)) {
                 return;
             }
@@ -40,14 +39,13 @@ public class KingOfTheHillListener implements Listener {
 
     @EventHandler
     public void handleEntityDamageByEntity(EntityDamageByEntityEvent e) {
-        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof KingOfTheHillState))
+        if (!(plugin.getGameStateManager().getCurrentGameState() instanceof KingOfTheHillState state))
             return;
 
-        if (!(e.getEntity() instanceof Player))
+        if (!(e.getEntity() instanceof Player player))
             return;
 
-        if (((KingOfTheHillState) plugin.getGameStateManager().getCurrentGameState()).isStarted()) {
-            Player player = (Player) e.getEntity();
+        if (state.isStarted()) {
             if (plugin.getPlayers().contains(player)) {
                 if (e.getDamager() instanceof Player damager) {
                     if (plugin.getPlayers().contains(damager)) {

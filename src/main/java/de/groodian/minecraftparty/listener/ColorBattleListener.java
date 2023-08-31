@@ -1,12 +1,16 @@
 package de.groodian.minecraftparty.listener;
 
 import de.groodian.hyperiorcore.util.HSound;
+import de.groodian.hyperiorcore.util.ItemBuilder;
 import de.groodian.minecraftparty.gamestate.minigame.ColorBattleState;
 import de.groodian.minecraftparty.main.Main;
-import de.groodian.minecraftparty.main.Messages;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -16,11 +20,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class ColorBattleListener implements Listener {
 
@@ -40,21 +42,19 @@ public class ColorBattleListener implements Listener {
 
         if (state.isStarted()) {
             if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                if (e.getPlayer().getItemInHand() != null) {
-                    if (e.getPlayer().getItemInHand().getItemMeta() != null) {
-                        if (e.getPlayer().getItemInHand().getItemMeta().getDisplayName() != null) {
-                            if (e.getPlayer().getItemInHand().getItemMeta().getDisplayName().equals(Messages.get("ColorBattle.color-gun-name"))) {
-                                if (!delay.contains(e.getPlayer())) {
-                                    e.getPlayer().launchProjectile(Snowball.class);
-                                    new HSound(Sound.EXPLODE, 0.1f, 3.0f).playFor(e.getPlayer());
-                                    delay.add(e.getPlayer());
-                                    new BukkitRunnable() {
-                                        public void run() {
-                                            delay.remove(e.getPlayer());
-                                        }
-                                    }.runTaskLater(plugin, 5L);
+                ItemStack itemInMainHand = e.getPlayer().getInventory().getItemInMainHand();
+                String interact = ItemBuilder.getCustomData(itemInMainHand, "interact", PersistentDataType.STRING);
+                if (interact != null) {
+                    if (interact.equals("ColorBattleGun")) {
+                        if (!delay.contains(e.getPlayer())) {
+                            e.getPlayer().launchProjectile(Snowball.class);
+                            new HSound(Sound.ENTITY_GENERIC_EXPLODE, 0.1f, 3.0f).playFor(e.getPlayer());
+                            delay.add(e.getPlayer());
+                            new BukkitRunnable() {
+                                public void run() {
+                                    delay.remove(e.getPlayer());
                                 }
-                            }
+                            }.runTaskLater(plugin, 5L);
                         }
                     }
                 }
@@ -90,15 +90,15 @@ public class ColorBattleListener implements Listener {
                 if (e.getEntity().getShooter() instanceof Player player) {
                     if (e.getEntity() instanceof Snowball) {
                         for (Block block : getNearbyBlocks(e.getEntity().getLocation())) {
-                            if (block.getType() == Material.STAINED_CLAY) {
+                            if (Tag.TERRACOTTA.isTagged(block.getType())) {
 
-                                byte data = block.getData();
-                                block.setData(state.getColors().get(player));
+                                Material previousMaterial = block.getType();
+                                block.setType(state.getColors().get(player));
                                 state.getRanking().put(player, state.getRanking().get(player) + 1);
 
-                                if (data != 0) {
-                                    for (Map.Entry<Player, Byte> current : state.getColors().entrySet()) {
-                                        if (current.getValue() == data) {
+                                if (previousMaterial != Material.TERRACOTTA) {
+                                    for (Map.Entry<Player, Material> current : state.getColors().entrySet()) {
+                                        if (current.getValue() == previousMaterial) {
                                             Player temp = current.getKey();
                                             state.getRanking().put(temp, state.getRanking().get(temp) - 1);
                                             break;

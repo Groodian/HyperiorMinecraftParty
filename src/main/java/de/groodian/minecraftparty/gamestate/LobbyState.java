@@ -3,6 +3,7 @@ package de.groodian.minecraftparty.gamestate;
 import de.groodian.hyperiorcore.boards.HScoreboard;
 import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.minecraftparty.countdown.LobbyCountdown;
+import de.groodian.minecraftparty.gui.GameOverviewGUI;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.Messages;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class LobbyState implements GameState {
     public LobbyState(Main plugin) {
         this.plugin = plugin;
         countdown = new LobbyCountdown(plugin, this);
-        sb = HyperiorCore.getSB();
+        sb = HyperiorCore.getPaper().getScoreboard();
     }
 
     @Override
@@ -35,8 +36,8 @@ public class LobbyState implements GameState {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.getInventory().clear();
             player.getOpenInventory().close();
-            plugin.getGameOverview().giveItem(player);
-            HyperiorCore.getSB().unregisterScoreboard(player);
+            GameOverviewGUI.giveItem(player);
+            sb.unregisterScoreboard(player);
         }
         countdown.stop();
 

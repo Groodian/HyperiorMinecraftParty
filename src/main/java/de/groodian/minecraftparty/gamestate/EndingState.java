@@ -55,7 +55,7 @@ public class EndingState implements GameState {
 
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     teleportManager.addTeleport(player, plugin.getLocationManager().LOBBY,
-                            () -> HyperiorCore.getSB().unregisterScoreboard(player));
+                            () -> HyperiorCore.getPaper().getScoreboard().unregisterScoreboard(player));
                 }
 
                 teleportManager.startTeleporting();

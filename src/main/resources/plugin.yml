@@ -16,5 +16,3 @@ commands:
     description: Starting the game
   build:
     description: Build mode
-  stats:
-    description: Stats

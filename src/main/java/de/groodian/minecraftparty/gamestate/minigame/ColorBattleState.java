@@ -7,9 +7,11 @@ import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
 import de.groodian.minecraftparty.main.Messages;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,15 +19,15 @@ import org.bukkit.Particle;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 public class ColorBattleState extends MiniGame {
 
     private final Location start;
-
     private final List<Snowball> snowballs;
-    private final Map<Player, Byte> colors;
+    private final Map<Player, Material> colors;
 
     private BukkitTask gameTask;
 
@@ -98,14 +100,22 @@ public class ColorBattleState extends MiniGame {
 
     @Override
     protected void startMiniGame() {
-        byte data = 0;
+        List<Material> terracotta = Tag.TERRACOTTA.getValues()
+                .stream()
+                .filter(material -> material != Material.TERRACOTTA)
+                .collect(Collectors.toList());
+        Collections.shuffle(terracotta);
+
+        int terracottaPos = 0;
         for (Player player : plugin.getPlayers()) {
             player.getInventory()
-                    .setItem(0, new ItemBuilder(Material.valueOf(MainConfig.getString("ColorBattle.color-gun-material"))).setName(
-                            Messages.get("ColorBattle.color-gun-name")).build());
-            data++;
-            colors.put(player, data);
+                    .setItem(0, new ItemBuilder(Material.valueOf(MainConfig.getString("ColorBattle.color-gun-material")))
+                            .setName(Messages.get("ColorBattle.color-gun-name"))
+                            .addCustomData("interact", PersistentDataType.STRING, "ColorBattleGun")
+                            .build());
+            colors.put(player, terracotta.get(terracottaPos));
             ranking.put(player, 0);
+            terracottaPos++;
         }
 
         gameTask = new BukkitRunnable() {
@@ -132,7 +142,7 @@ public class ColorBattleState extends MiniGame {
         return snowballs;
     }
 
-    public Map<Player, Byte> getColors() {
+    public Map<Player, Material> getColors() {
         return colors;
     }
 

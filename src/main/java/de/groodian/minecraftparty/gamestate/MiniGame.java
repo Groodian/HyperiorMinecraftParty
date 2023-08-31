@@ -3,8 +3,10 @@ package de.groodian.minecraftparty.gamestate;
 import de.groodian.hyperiorcore.boards.HScoreboard;
 import de.groodian.hyperiorcore.boards.HTitle;
 import de.groodian.hyperiorcore.main.HyperiorCore;
+import de.groodian.hyperiorcore.user.MinecraftPartyStats;
 import de.groodian.hyperiorcore.util.HSound;
 import de.groodian.hyperiorcore.util.Task;
+import de.groodian.minecraftparty.gui.GameOverviewGUI;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
 import de.groodian.minecraftparty.main.Messages;
@@ -81,7 +83,7 @@ public abstract class MiniGame implements GameState {
         this.countdownTask = null;
         this.secondsCountdown = 6;
         this.scoreboardGameTask = null;
-        this.sb = HyperiorCore.getSB();
+        this.sb = HyperiorCore.getPaper().getScoreboard();
     }
 
     protected abstract void prepare();
@@ -158,14 +160,20 @@ public abstract class MiniGame implements GameState {
     }
 
     private void loadRecords() {
-        if (mapName == null) {
-            for (Player all : plugin.getPlayers()) {
-                records.put(all, plugin.getRecord().getRecord(all.getUniqueId().toString().replaceAll("-", ""), name));
+        String recordName = name;
+        if (mapName != null) {
+            recordName += mapName;
+        }
+
+        for (Player all : plugin.getPlayers()) {
+            int recordValue = -1;
+            for (MinecraftPartyStats.Record record : plugin.getStats().get(all).records()) {
+                if (record.name().equals(recordName)) {
+                    recordValue = record.record();
+                    break;
+                }
             }
-        } else {
-            for (Player all : plugin.getPlayers()) {
-                records.put(all, plugin.getRecord().getRecord(all.getUniqueId().toString().replaceAll("-", ""), name + mapName));
-            }
+            records.put(all, recordValue);
         }
     }
 
@@ -397,7 +405,7 @@ public abstract class MiniGame implements GameState {
             player.getInventory().setArmorContents(null);
             player.setFireTicks(0);
             player.setHealth(20);
-            plugin.getGameOverview().giveItem(player);
+            GameOverviewGUI.giveItem(player);
         }
 
         Bukkit.getConsoleSender().sendMessage(Main.PREFIX_CONSOLE + "§c" + name.toUpperCase() + " STATE STOPPED!");
@@ -435,9 +443,9 @@ public abstract class MiniGame implements GameState {
 
                     if (setRecords) {
                         if (mapName == null) {
-                            plugin.getRecord().setRecord(current.getKey(), name, current.getValue(), !lowerIsBetterGame);
+                            plugin.getStats().record(current.getKey(), name, current.getValue(), !lowerIsBetterGame);
                         } else {
-                            plugin.getRecord().setRecord(current.getKey(), name + mapName, current.getValue(), !lowerIsBetterGame);
+                            plugin.getStats().record(current.getKey(), name + mapName, current.getValue(), !lowerIsBetterGame);
                         }
                     }
 
@@ -505,9 +513,9 @@ public abstract class MiniGame implements GameState {
 
             if (setRecordsInAddWinner) {
                 if (mapName == null) {
-                    plugin.getRecord().setRecord(player, name, System.currentTimeMillis() - startTime, false);
+                    plugin.getStats().record(player, name, (int) (System.currentTimeMillis() - startTime), false);
                 } else {
-                    plugin.getRecord().setRecord(player, name + mapName, System.currentTimeMillis() - startTime, false);
+                    plugin.getStats().record(player, name + mapName, (int) (System.currentTimeMillis() - startTime), false);
                 }
             }
 

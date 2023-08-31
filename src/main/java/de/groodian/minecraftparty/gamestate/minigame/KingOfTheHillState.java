@@ -4,6 +4,8 @@ import de.groodian.hyperiorcore.util.ItemBuilder;
 import de.groodian.minecraftparty.gamestate.MiniGame;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,9 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class KingOfTheHillState extends MiniGame {
 
@@ -26,7 +25,9 @@ public class KingOfTheHillState extends MiniGame {
 
     public KingOfTheHillState(String name, Main plugin) {
         super(name, plugin);
-        item = new ItemBuilder(MainConfig.getItemWithName("KingOfTheHill.item")).addEnchantment(Enchantment.getByName(MainConfig.getString("KingOfTheHill.enchantment")), MainConfig.getInt("KingOfTheHill.enchantment-level")).build();
+        item = new ItemBuilder(MainConfig.getItemWithName("KingOfTheHill.item")).addEnchantment(
+                Enchantment.getByName(MainConfig.getString("KingOfTheHill.enchantment")),
+                MainConfig.getInt("KingOfTheHill.enchantment-level")).build();
         goldPoints = MainConfig.getInt("KingOfTheHill.gold-points");
         ironPoints = MainConfig.getInt("KingOfTheHill.iron-points");
     }
@@ -42,7 +43,8 @@ public class KingOfTheHillState extends MiniGame {
     @Override
     protected void beforeCountdownStart() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            teleportManager.addTeleport(player, plugin.getLocationManager().getRespawnLocation(plugin.getLocationManager().KINGOFTHEHILL), null);
+            teleportManager.addTeleport(player, plugin.getLocationManager().getRespawnLocation(plugin.getLocationManager().KINGOFTHEHILL),
+                    null);
         }
     }
 

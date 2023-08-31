@@ -101,7 +101,7 @@ public class HotGroundState extends MiniGame {
 
                         if (player.getLocation().getY() < (location.getY() - 43)) {
                             addDiePlayer(player);
-                            plugin.getRecord().setRecord(player, "hotground", System.currentTimeMillis() - startTime, true);
+                            plugin.getStats().record(player, "hotground", (int) (System.currentTimeMillis() - startTime), true);
                             player.teleport(location);
                             player.setAllowFlight(true);
                             player.setFlying(true);
@@ -129,7 +129,7 @@ public class HotGroundState extends MiniGame {
                     diePlayers.size() == plugin.getPlayers().size()) {
                     for (Player player : plugin.getPlayers()) {
                         if (!diePlayers.contains(player)) {
-                            plugin.getRecord().setRecord(player, "hotground", (System.currentTimeMillis() - startTime) + 1000, true);
+                            plugin.getStats().record(player, "hotground", (int) ((System.currentTimeMillis() - startTime) + 1000), true);
                             ranking.put(player, (int) ((System.currentTimeMillis() - startTime) + 1000) / 1000);
                         }
                     }

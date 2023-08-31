@@ -57,11 +57,11 @@ GunGame:
     # Material type name, a list of all materials can be found here: https://helpch.at/docs/1.8/org/bukkit/Material.html
     - "STONE_SWORD"
     - "IRON_AXE"
-    - "WOOD_SWORD"
-    - "GOLD_SWORD"
+    - "WOODEN_SWORD"
+    - "GOLDEN_SWORD"
     - "STONE_AXE"
     - "BOW"
-    - "WOOD_AXE"
+    - "WOODEN_AXE"
   # If the material is a bow you get this amount of arrows
   arrow-amount: 12
   # Health you get after a kill. Set to 0 to disable or 20 for full live
@@ -95,11 +95,11 @@ Breakout:
     # Material type name, a list of all materials can be found here: https://helpch.at/docs/1.8/org/bukkit/Material.html
     - "STONE"
     - "DIRT"
-    - "WOOD"
+    - "OAK_PLANKS"
   tools:
     # Material type name, a list of all materials can be found here: https://helpch.at/docs/1.8/org/bukkit/Material.html
     - "STONE_PICKAXE"
-    - "STONE_SPADE"
+    - "STONE_SHOVEL"
     - "STONE_AXE"
 
 ##

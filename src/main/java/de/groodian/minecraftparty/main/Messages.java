@@ -73,6 +73,20 @@ public class Messages {
         }
     }
 
+    public static Component getWithReplaceComp(String name, Map<String, Component> replacements) {
+        String msg = config.getString(name);
+        if (msg == null) {
+            return Component.text(name, NamedTextColor.DARK_RED);
+        } else {
+            Component component = LegacyComponentSerializer.legacyAmpersand().deserialize(msg);
+            for (Map.Entry<String, Component> replacement : replacements.entrySet()) {
+                component = component.replaceText(
+                        builder -> builder.matchLiteral(replacement.getKey()).replacement(replacement.getValue()));
+            }
+            return component;
+        }
+    }
+
     public static List<Component> getStringList(String name) {
         List<String> list = config.getStringList(name);
         List<Component> listReplaced = new ArrayList<>();
