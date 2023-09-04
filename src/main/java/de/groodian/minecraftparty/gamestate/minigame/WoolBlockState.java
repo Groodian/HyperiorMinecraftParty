@@ -29,6 +29,9 @@ public class WoolBlockState extends MiniGame {
     private final Location spectator;
     private final Map<Material, Component> wools;
     private final Random random;
+    private final int x;
+    private final int y;
+    private final int z;
 
     private int mode;
     private int currentTime;
@@ -62,6 +65,9 @@ public class WoolBlockState extends MiniGame {
         this.wools = new HashMap<>();
         this.random = new Random();
         this.gameTask = null;
+        this.x = (int) field.getX();
+        this.y = (int) field.getY();
+        this.z = (int) field.getZ();
 
         wools.put(Material.ORANGE_WOOL, Messages.get("WoolBlock.orange"));
         wools.put(Material.LIGHT_BLUE_WOOL, Messages.get("WoolBlock.light-blue"));
@@ -123,7 +129,7 @@ public class WoolBlockState extends MiniGame {
                         if (player.getLocation().getY() <= field.getY()) {
                             lastPlayerDiePlaceCount = placeCount;
                             addDiePlayer(player);
-                            plugin.getStats().record(player, "woolblock", placeCount, true);
+                            plugin.getStats().record(player, "WoolBlock", placeCount, true);
                             player.teleport(spectator);
                             player.setAllowFlight(true);
                             player.setFlying(true);
@@ -139,7 +145,7 @@ public class WoolBlockState extends MiniGame {
 
                     for (Player player : plugin.getPlayers()) {
                         if (!diePlayers.contains(player)) {
-                            plugin.getStats().record(player, "woolblock", placeCount, true);
+                            plugin.getStats().record(player, "WoolBlock", placeCount, true);
                         }
                     }
 
@@ -193,7 +199,7 @@ public class WoolBlockState extends MiniGame {
 
                         for (int i = 0; i < 30; i++) {
                             for (int j = 0; j < 30; j++) {
-                                Block block = field.getWorld().getBlockAt(field.getBlockX() + i, field.getBlockY(), field.getBlockZ() + j);
+                                Block block = field.getWorld().getBlockAt(x + i, y, z + j);
                                 if (block.getType() != currentWool.getKey()) {
                                     block.setType(Material.WATER);
                                 }
@@ -238,7 +244,7 @@ public class WoolBlockState extends MiniGame {
 
             for (int i = 0; i < 30; i++) {
                 for (int j = 0; j < 30; j++) {
-                    if (field.getWorld().getBlockAt(field.getBlockX() + i, field.getBlockY(), field.getBlockZ() + j).getType() ==
+                    if (field.getWorld().getBlockAt(x + i, y, z + j).getType() ==
                         material) {
                         count++;
                     }
@@ -255,7 +261,7 @@ public class WoolBlockState extends MiniGame {
         for (int i = 0; i < 30; i++) {
             for (int j = 0; j < 30; j++) {
                 Material wool = getRandomWool().getKey();
-                setBlock(field.getWorld(), field.getBlockX() + i, field.getBlockY(), field.getBlockZ() + j, wool);
+                setBlock(field.getWorld(), x + i, y, z + j, wool);
             }
         }
 
@@ -270,7 +276,7 @@ public class WoolBlockState extends MiniGame {
                 if (count == 1) {
                     wool = getRandomWool().getKey();
                 }
-                setBlock(field.getWorld(), field.getBlockX() + i, field.getBlockY(), field.getBlockZ() + j, wool);
+                setBlock(field.getWorld(), x + i, y, z + j, wool);
                 if (count >= 30) {
                     count = 0;
                 }
@@ -286,7 +292,7 @@ public class WoolBlockState extends MiniGame {
                 Material wool = getRandomWool().getKey();
                 for (int o = 0; o < 3; o++) {
                     for (int m = 0; m < 3; m++) {
-                        setBlock(field.getWorld(), o + j * 3 + field.getBlockX(), field.getBlockY(), m + i * 3 + field.getBlockZ(), wool);
+                        setBlock(field.getWorld(), o + j * 3 + x, y, m + i * 3 + z, wool);
                     }
                 }
             }
@@ -300,7 +306,7 @@ public class WoolBlockState extends MiniGame {
                 Material wool = getRandomWool().getKey();
                 for (int o = 0; o < 2; o++) {
                     for (int m = 0; m < 2; m++) {
-                        setBlock(field.getWorld(), o + j * 2 + field.getBlockX(), field.getBlockY(), m + i * 2 + field.getBlockZ(), wool);
+                        setBlock(field.getWorld(), o + j * 2 + x, y, m + i * 2 + z, wool);
                     }
                 }
             }

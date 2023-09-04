@@ -9,6 +9,7 @@ import de.groodian.minecraftparty.gamestate.LobbyState;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
 import de.groodian.minecraftparty.main.Messages;
+import de.groodian.minecraftparty.stats.Top10;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -74,6 +75,13 @@ public class LobbyListener implements Listener {
         if (!(plugin.getGameStateManager().getCurrentGameState() instanceof LobbyState lobbyState))
             return;
         Player player = e.getPlayer();
+
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - plugin.getLastJoin() > Main.TOP10_RELOAD) {
+            plugin.setLastJoin(currentTime);
+            Top10 top10 = new Top10(plugin);
+            top10.set();
+        }
 
         plugin.getPlayers().add(player);
         player.setExp(0);

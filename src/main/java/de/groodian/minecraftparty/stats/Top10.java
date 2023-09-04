@@ -44,7 +44,7 @@ public class Top10 {
     }
 
     private void setBlocks(List<MinecraftPartyStats.Top10> top10) {
-        Location top10Loc = plugin.getLocationManager().TOP10;
+        Location top10Loc = plugin.getLocationManager().TOP10.clone();
         double x = top10Loc.getX();
         double y = top10Loc.getY();
         double z = top10Loc.getZ();

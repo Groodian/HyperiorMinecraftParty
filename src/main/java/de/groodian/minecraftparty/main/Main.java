@@ -42,6 +42,7 @@ public class Main extends JavaPlugin {
 
     public static final String PREFIX_CONSOLE = "§7[§eMinecraftParty§7] §r";
     public static final int MIN_PLAYERS = 2, MAX_PLAYERS = 12;
+    public static final long TOP10_RELOAD = 5 * 60 * 1000;
 
     public static Component PREFIX = null;
     public static Component NO_PERMISSION = null;
@@ -59,6 +60,7 @@ public class Main extends JavaPlugin {
     private List<Player> toRemove;
     private Map<Player, Integer> stars;
 
+    private long lastJoin = 0;
     private long startTime = 0;
 
     @Override
@@ -112,13 +114,9 @@ public class Main extends JavaPlugin {
             return;
         }
 
-
         gameOverviewGUIManager = new GUIManager(GameOverviewGUI.class, this);
 
         Bukkit.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-
-        gameStateManager = new GameStateManager(this);
-        gameStateManager.setGameState(GameStates.LOBBY_STATE);
 
         stats = new Stats(this);
 
@@ -130,8 +128,10 @@ public class Main extends JavaPlugin {
         commandManager.registerCommand(this, new StartCommand(this));
         commandManager.registerCommand(this, new BuildCommand(this));
 
-        client = new MinecraftPartyClient(this, "localhost", 4444, new DataPackage("LOGIN", "MinecraftParty", groupNumber));
+        gameStateManager = new GameStateManager(this);
+        gameStateManager.setGameState(GameStates.LOBBY_STATE);
 
+        client = new MinecraftPartyClient(this, "localhost", 4444, new DataPackage("LOGIN", "MinecraftParty", groupNumber));
 
         Bukkit.getConsoleSender().sendMessage(PREFIX_CONSOLE + "§aLoaded!");
     }
@@ -198,6 +198,14 @@ public class Main extends JavaPlugin {
 
     public GUIManager getGameOverviewGUIManager() {
         return gameOverviewGUIManager;
+    }
+
+    public long getLastJoin() {
+        return lastJoin;
+    }
+
+    public void setLastJoin(long lastJoin) {
+        this.lastJoin = lastJoin;
     }
 
     public void setStartTime(long startTime) {

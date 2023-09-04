@@ -78,7 +78,7 @@ public class GunGameState extends MiniGame {
 
                     for (Player player : plugin.getPlayers()) {
                         if (ranking.get(player) == 7) {
-                            plugin.getStats().record(player, "gungame", (int) (System.currentTimeMillis() - startTime), false);
+                            plugin.getStats().record(player, "GunGame", (int) (System.currentTimeMillis() - startTime), false);
                         }
                     }
 

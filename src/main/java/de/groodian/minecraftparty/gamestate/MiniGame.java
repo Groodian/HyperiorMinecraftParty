@@ -5,7 +5,6 @@ import de.groodian.hyperiorcore.boards.HTitle;
 import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.hyperiorcore.user.MinecraftPartyStats;
 import de.groodian.hyperiorcore.util.HSound;
-import de.groodian.hyperiorcore.util.Task;
 import de.groodian.minecraftparty.gui.GameOverviewGUI;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
@@ -20,6 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
@@ -126,34 +129,24 @@ public abstract class MiniGame implements GameState {
         new BukkitRunnable() {
             @Override
             public void run() {
+                loadRecords();
+                records = sortMapByValue(records, lowerIsBetterRecords);
 
-                new Task(plugin) {
-                    @Override
-                    public void executeAsync() {
-                        loadRecords();
-                        records = sortMapByValue(records, lowerIsBetterRecords);
-                    }
-
-                    @Override
-                    public void executeSyncOnFinish() {
-                        plugin.getServer().broadcast(Main.PREFIX.append(Messages.get("Minigame.teleport-player")));
-                        beforeCountdownStart();
-                        if (firstMiniGame) {
-                            for (Player player : Bukkit.getOnlinePlayers()) {
-                                if (MainConfig.getBoolean("Scoreboard.animation")) {
-                                    sb.registerScoreboard(player, Messages.get("Scoreboard.title"), 15,
-                                            MainConfig.getInt("Scoreboard.delay"), MainConfig.getInt("Scoreboard.delay-between-animation"));
-                                } else {
-                                    sb.registerScoreboard(player, Messages.get("Scoreboard.title"), 15);
-                                }
-                            }
-                            firstMiniGame = false;
+                plugin.getServer().broadcast(Main.PREFIX.append(Messages.get("Minigame.teleport-player")));
+                beforeCountdownStart();
+                if (firstMiniGame) {
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (MainConfig.getBoolean("Scoreboard.animation")) {
+                            sb.registerScoreboard(player, Messages.get("Scoreboard.title"), 15,
+                                    MainConfig.getInt("Scoreboard.delay"), MainConfig.getInt("Scoreboard.delay-between-animation"));
+                        } else {
+                            sb.registerScoreboard(player, Messages.get("Scoreboard.title"), 15);
                         }
-                        scoreboardRecords();
-                        teleportManager.startTeleporting();
                     }
-                };
-
+                    firstMiniGame = false;
+                }
+                scoreboardRecords();
+                teleportManager.startTeleporting();
             }
         }.runTaskLater(plugin, 105);
 
@@ -167,12 +160,17 @@ public abstract class MiniGame implements GameState {
 
         for (Player all : plugin.getPlayers()) {
             int recordValue = -1;
-            for (MinecraftPartyStats.Record record : plugin.getStats().get(all).records()) {
-                if (record.name().equals(recordName)) {
-                    recordValue = record.record();
-                    break;
+
+            MinecraftPartyStats.Player stats = plugin.getStats().get(all);
+            if (stats != null) {
+                for (MinecraftPartyStats.Record record : stats.records()) {
+                    if (record.name().equals(recordName)) {
+                        recordValue = record.record();
+                        break;
+                    }
                 }
             }
+
             records.put(all, recordValue);
         }
     }
@@ -412,18 +410,16 @@ public abstract class MiniGame implements GameState {
     }
 
     private void winner() {
-
         int place = 1;
         int previous = -1;
 
-        String preOutput = "";
-        String row = "";
-
         Map<Player, Integer> forDatabase = new HashMap<>();
+        List<List<Player>> winnerLocal = new ArrayList<>();
 
         for (Player player : winner) {
-            preOutput += "§a§l" + place + "§a# §7§l>> " + getColor(place) + winner.get(place - 1).getName() + "§e +" + (6 - place) +
-                         Messages.get("points") + "\n";
+            List<Player> playersAtTheSamePlace = new ArrayList<>();
+            playersAtTheSamePlace.add(player);
+            winnerLocal.add(playersAtTheSamePlace);
 
             addStars(player, place);
             forDatabase.put(player, place);
@@ -432,10 +428,10 @@ public abstract class MiniGame implements GameState {
             if (place == 6) {
                 break;
             }
-
         }
 
         if (place <= 5) {
+            List<Player> playersAtTheSamePlace = new ArrayList<>();
 
             if (!ranking.isEmpty()) {
 
@@ -450,8 +446,8 @@ public abstract class MiniGame implements GameState {
                     }
 
                     if (previous != -1 && previous != current.getValue()) {
-                        preOutput += "§a§l" + place + "§a# §7§l>> " + row + "§e +" + (6 - place) + Messages.get("points") + "\n";
-                        row = "";
+                        winnerLocal.add(playersAtTheSamePlace);
+                        playersAtTheSamePlace = new ArrayList<>();
 
                         place++;
                         if (place == 6) {
@@ -460,11 +456,7 @@ public abstract class MiniGame implements GameState {
 
                     }
 
-                    if (row.equals("")) {
-                        row = getColor(place) + current.getKey().getName();
-                    } else {
-                        row += "§7, " + getColor(place) + current.getKey().getName();
-                    }
+                    playersAtTheSamePlace.add(current.getKey());
 
                     addStars(current.getKey(), place);
                     forDatabase.put(current.getKey(), place);
@@ -473,26 +465,59 @@ public abstract class MiniGame implements GameState {
                 }
 
                 if (place <= 5) {
-                    preOutput += "§a§l" + place + "§a# §7§l>> " + row + "§e +" + (6 - place) + Messages.get("points") + "\n";
+                    winnerLocal.add(playersAtTheSamePlace);
                 }
 
             }
 
         }
 
+        TextComponent.Builder winnerOutput = Component.empty().toBuilder();
+        place = 1;
+
+        for (List<Player> current : winnerLocal) {
+            winnerOutput
+                    .append(Component.text(place, NamedTextColor.GREEN)).decorate(TextDecoration.BOLD)
+                    .append(Component.text("# ", NamedTextColor.GREEN).decoration(TextDecoration.BOLD, false))
+                    .append(Component.text(">> ", NamedTextColor.GRAY)).decorate(TextDecoration.BOLD);
+
+            boolean first = true;
+            for (Player player : current) {
+                if (!first) {
+                    winnerOutput.append(Component.text(", ", NamedTextColor.GRAY).decoration(TextDecoration.BOLD, false));
+                }
+                winnerOutput.append(Component.text(player.getName(), getColor(place)).decoration(TextDecoration.BOLD, false));
+                first = false;
+            }
+
+            winnerOutput
+                    .append(Component.text(" +" + (6 - place), NamedTextColor.YELLOW).decoration(TextDecoration.BOLD, false))
+                    .append(Messages.get("points").decoration(TextDecoration.BOLD, false))
+                    .append(Component.newline());
+
+            place++;
+        }
+
+        TextComponent.Builder output = Component.empty().toBuilder();
+        output
+                .append(Component.text("--------------------------------", NamedTextColor.GRAY).decorate(TextDecoration.STRIKETHROUGH))
+                .append(Component.newline())
+                .append(Component.newline())
+                .append(winnerOutput.build())
+                .append(Component.newline())
+                .append(Component.text("--------------------------------", NamedTextColor.GRAY).decorate(TextDecoration.STRIKETHROUGH));
+
+        plugin.getServer().broadcast(output.build());
+
         plugin.getStats().miniGameFinished(forDatabase);
-
         new HSound(Sound.ENTITY_PLAYER_LEVELUP).play();
-        String outPut = "§7§m--------------------------------§r\n \n" + preOutput + "\n \n§7§m--------------------------------§r";
-        plugin.getServer().broadcast(LegacyComponentSerializer.legacySection().deserialize(outPut));
-
     }
 
-    private String getColor(int place) {
+    private TextColor getColor(int place) {
         return switch (place) {
-            case 1 -> "§6";
-            case 2 -> "§7";
-            default -> "§c";
+            case 1 -> NamedTextColor.GOLD;
+            case 2 -> NamedTextColor.GRAY;
+            default -> NamedTextColor.RED;
         };
     }
 

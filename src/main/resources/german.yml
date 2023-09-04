@@ -62,7 +62,7 @@ Commands:
             - "&8\u00BB &7Punkte: &a%points%"
             - "&8\u00BB &7Spielzeit: &a%play-time%"
             - "&8\u00BB &7Gespielte Spiele: &a%games-played%"
-            - "&8\u00BB &7Bendete Spiele: &a%games-played-till-end%"
+            - "&8\u00BB &7Beendete Spiele: &a%games-played-till-end%"
             - ""
             - "&8\u00BB &7Erster: &a%times-first%"
             - "&8\u00BB &7Zweiter: &a%times-second%"

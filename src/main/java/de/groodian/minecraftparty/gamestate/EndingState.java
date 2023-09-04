@@ -3,6 +3,7 @@ package de.groodian.minecraftparty.gamestate;
 import de.groodian.hyperiorcore.boards.HTitle;
 import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.hyperiorcore.util.HSound;
+import de.groodian.hyperiorcosmetics.HyperiorCosmetic;
 import de.groodian.minecraftparty.countdown.EndingCountdown;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.Messages;
@@ -15,7 +16,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -66,7 +71,7 @@ public class EndingState implements GameState {
     }
 
     private void afterAllTeleported() {
-        //HyperiorCosmetic.enable();
+        HyperiorCosmetic.enable();
 
         playSound();
 
@@ -101,51 +106,66 @@ public class EndingState implements GameState {
         // TITLE START
         if (winner.size() > 0) {
             List<Player> firstPlace = winner.get(0);
-            StringBuilder title = new StringBuilder();
+            TextComponent.Builder title = Component.empty().toBuilder();
 
+            boolean first = true;
             for (Player player : firstPlace) {
-                if (title.length() == 0) {
-                    title.append("§a").append(player.getName());
-                } else {
-                    title.append("§7, §a").append(player.getName());
+                if (!first) {
+                    title.append(Component.text(", ", NamedTextColor.GRAY));
                 }
+                title.append(Component.text(player.getName(), NamedTextColor.GREEN));
+                first = false;
             }
 
             if (firstPlace.size() == 1) {
-                new HTitle(Duration.ofMillis(1000), Duration.ofMillis(3000), Duration.ofMillis(1000),
-                        LegacyComponentSerializer.legacySection().deserialize(title.toString()),
+                new HTitle(Duration.ofMillis(1000), Duration.ofMillis(3000), Duration.ofMillis(1000), title.build(),
                         Messages.get("one-winner-subtitle")).send();
             } else {
-                new HTitle(Duration.ofMillis(1000), Duration.ofMillis(3000), Duration.ofMillis(1000),
-                        LegacyComponentSerializer.legacySection().deserialize(title.toString()),
+                new HTitle(Duration.ofMillis(1000), Duration.ofMillis(3000), Duration.ofMillis(1000), title.build(),
                         Messages.get("multiple-winner-subtitle")).send();
             }
         }
         // TITLE END
 
         // MESSAGE START
-        StringBuilder preOutput = new StringBuilder();
+        TextComponent.Builder winnerOutput = Component.empty().toBuilder();
 
         place = 1;
-
         for (List<Player> current : winner) {
-            StringBuilder row = new StringBuilder();
+            winnerOutput
+                    .append(Component.text(place, NamedTextColor.GREEN)).decorate(TextDecoration.BOLD)
+                    .append(Component.text("# ", NamedTextColor.GREEN).decoration(TextDecoration.BOLD, false))
+                    .append(Component.text(">> ", NamedTextColor.GRAY)).decorate(TextDecoration.BOLD);
+
+            boolean first = true;
             for (Player player : current) {
-                if (row.length() == 0) {
-                    row.append("§a§l").append(place).append("§a# §7§l>> ").append(getColor(place)).append(player.getName());
-                } else {
-                    row.append("§7, ").append(getColor(place)).append(player.getName());
+                if (!first) {
+                    winnerOutput.append(Component.text(", ", NamedTextColor.GRAY).decoration(TextDecoration.BOLD, false));
                 }
+                winnerOutput.append(Component.text(player.getName(), getColor(place)).decoration(TextDecoration.BOLD, false));
+                first = false;
             }
-            row.append(" §7- §e").append(plugin.getStars().get(current.get(0))).append(Messages.get("points"));
-            preOutput.append(row).append("\n");
+
+            winnerOutput
+                    .append(Component.text(" - ", NamedTextColor.GRAY).decoration(TextDecoration.BOLD, false))
+                    .append(Component.text(plugin.getStars().get(current.get(0)), NamedTextColor.YELLOW)
+                            .decoration(TextDecoration.BOLD, false))
+                    .append(Messages.get("points").decoration(TextDecoration.BOLD, false))
+                    .append(Component.newline());
+
             place++;
         }
 
-        plugin.getServer()
-                .broadcast(LegacyComponentSerializer.legacySection()
-                        .deserialize(
-                                "§7§m--------------------------------§r\n \n" + preOutput + "\n \n§7§m--------------------------------§r"));
+        TextComponent.Builder output = Component.empty().toBuilder();
+        output
+                .append(Component.text("--------------------------------", NamedTextColor.GRAY).decorate(TextDecoration.STRIKETHROUGH))
+                .append(Component.newline())
+                .append(Component.newline())
+                .append(winnerOutput.build())
+                .append(Component.newline())
+                .append(Component.text("--------------------------------", NamedTextColor.GRAY).decorate(TextDecoration.STRIKETHROUGH));
+
+        plugin.getServer().broadcast(output.build());
         // MESSAGE END
 
         plugin.getStats().gameFinished(forDatabase);
@@ -175,11 +195,11 @@ public class EndingState implements GameState {
         Bukkit.getConsoleSender().sendMessage(Main.PREFIX_CONSOLE + "§cENDING STATE STOPPED!");
     }
 
-    private String getColor(int place) {
+    private TextColor getColor(int place) {
         return switch (place) {
-            case 1 -> "§6";
-            case 2 -> "§7";
-            default -> "§c";
+            case 1 -> NamedTextColor.GOLD;
+            case 2 -> NamedTextColor.GRAY;
+            default -> NamedTextColor.RED;
         };
     }
 

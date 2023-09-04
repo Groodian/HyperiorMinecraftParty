@@ -117,7 +117,7 @@ public class JumpAndRunState extends MiniGame {
                             checkpointsReached.put(player, checkpointsReached.get(player) + 1);
                             Component msg = Messages.getWithReplace("JumpAndRun.checkpoint-reached", Map.of("%checkpoint%",
                                     String.valueOf(count + 1), "%max-checkpoints%", String.valueOf(locations.getCheckpoints().size())));
-                            player.sendMessage(msg);
+                            player.sendMessage(Main.PREFIX.append(msg));
                             new HTitle(Duration.ofMillis(500), Duration.ofMillis(1000), Duration.ofMillis(500), Component.empty(),
                                     msg).sendTo(player);
                             new HSound(Sound.ENTITY_PLAYER_LEVELUP).playFor(player);

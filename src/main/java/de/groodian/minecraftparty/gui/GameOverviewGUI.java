@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -33,14 +36,14 @@ public class GameOverviewGUI extends GUI {
 
         int i = 0;
         for (Map.Entry<Player, Integer> current : sorted.entrySet()) {
-            putHead(player, current.getKey(), i);
+            putHead(player, current.getKey(), i, current.getValue());
             i++;
         }
 
         // Adding player with zero points
         for (Player player1 : plugin.getPlayers()) {
             if (!plugin.getStars().containsKey(player1)) {
-                putHead(player, player1, i);
+                putHead(player, player1, i, 0);
                 i++;
             }
         }
@@ -50,20 +53,20 @@ public class GameOverviewGUI extends GUI {
     public void onUpdate() {
     }
 
-    private void putHead(Player inventoryOwner, Player player, int pos) {
-        String isOwn = "";
+    private void putHead(Player inventoryOwner, Player player, int pos, int points) {
+        Component component = Component.text(player.getName(), NamedTextColor.GOLD);
         if (player.getUniqueId().equals(inventoryOwner.getUniqueId())) {
-            isOwn = "§l";
+            component = component.decoration(TextDecoration.BOLD, true);
         }
 
-        ItemStack head = new ItemBuilder(Material.PLAYER_HEAD).setName(
-                        "§6" + isOwn + player.getName() + "§7: 0" + Messages.get("points"))
+        ItemStack head = new ItemBuilder(Material.PLAYER_HEAD)
+                .setName(component.append(Component.text(": " + points, NamedTextColor.GRAY)).append(Messages.get("points")))
                 .setSkullOwner(player.getUniqueId())
                 .build();
 
         putItem(head, pos, () -> {
             if (!plugin.getPlayers().contains(inventoryOwner)) {
-                player.teleport(player);
+                inventoryOwner.teleport(player);
             }
         });
     }

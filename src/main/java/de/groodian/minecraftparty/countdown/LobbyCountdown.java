@@ -81,13 +81,15 @@ public class LobbyCountdown extends Countdown {
     public void startIdle() {
         isIdling = true;
         idleID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-            int playersNeed = (Main.MIN_PLAYERS - plugin.getPlayers().size());
-            if (playersNeed == 1) {
-                plugin.getServer().broadcast(Main.PREFIX.append(Messages.get("game-start-one-player-needed")));
-            } else {
-                plugin.getServer()
-                        .broadcast(Main.PREFIX.append(Messages.getWithReplace("game-start-player-needed", Map.of("%players-needed%",
-                                String.valueOf(playersNeed)))));
+            if (plugin.getPlayers().size() > 0) {
+                int playersNeed = (Main.MIN_PLAYERS - plugin.getPlayers().size());
+                if (playersNeed == 1) {
+                    plugin.getServer().broadcast(Main.PREFIX.append(Messages.get("game-start-one-player-needed")));
+                } else {
+                    plugin.getServer()
+                            .broadcast(Main.PREFIX.append(Messages.getWithReplace("game-start-player-needed", Map.of("%players-needed%",
+                                    String.valueOf(playersNeed)))));
+                }
             }
         }, 0, IDLE_TIME * 20);
     }

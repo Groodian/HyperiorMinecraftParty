@@ -2,6 +2,7 @@ package de.groodian.minecraftparty.gamestate;
 
 import de.groodian.hyperiorcore.boards.HScoreboard;
 import de.groodian.hyperiorcore.main.HyperiorCore;
+import de.groodian.hyperiorcosmetics.HyperiorCosmetic;
 import de.groodian.minecraftparty.countdown.LobbyCountdown;
 import de.groodian.minecraftparty.gui.GameOverviewGUI;
 import de.groodian.minecraftparty.main.Main;
@@ -31,7 +32,7 @@ public class LobbyState implements GameState {
 
     @Override
     public void stop() {
-        //HyperiorCosmetic.disable();
+        HyperiorCosmetic.disable();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.getInventory().clear();

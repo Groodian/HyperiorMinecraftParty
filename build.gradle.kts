@@ -26,6 +26,7 @@ dependencies {
     // paperweight.foliaDevBundle("1.19.4-R0.1-SNAPSHOT")
     // paperweight.devBundle("com.example.paperfork", "1.19.4-R0.1-SNAPSHOT")
     implementation(files("../HyperiorCore/build/libs/HyperiorCore-5.0.0-SNAPSHOT.jar"))
+    implementation(files("../HyperiorCosmetics/build/libs/HyperiorCosmetics-5.0.0-SNAPSHOT.jar"))
 }
 
 repositories {

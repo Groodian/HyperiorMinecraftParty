@@ -43,8 +43,9 @@ public class Stats {
 
     public void record(Player player, String game, int record, boolean mustBeHigher) {
         MinecraftPartyStats.Player playerStats = stats.get(player);
+        boolean updateRecord = false;
         if (playerStats != null) {
-            boolean updateRecord = false;
+            boolean found = false;
             for (MinecraftPartyStats.Record currentRecord : playerStats.records()) {
                 if (game.equals(currentRecord.name())) {
                     if (mustBeHigher) {
@@ -56,18 +57,26 @@ public class Stats {
                             updateRecord = true;
                         }
                     }
+                    found = true;
                     break;
                 }
             }
 
-            if (updateRecord) {
-                playerStats.records().add(new MinecraftPartyStats.Record(game, record, OffsetDateTime.now()));
-                player.sendMessage(Main.PREFIX.append(Messages.get("new-record-message")));
-                new HSound(Sound.ENTITY_WITHER_DEATH).playFor(player);
-                new HTitle(Duration.ofMillis(250), Duration.ofMillis(2000), Duration.ofMillis(250), Messages.get("new-record-title"),
-                        Component.empty()).sendTo(player);
+            if (!found) {
+                updateRecord = true;
             }
 
+        } else {
+            updateRecord = true;
+        }
+
+        if (updateRecord) {
+            getStats(player).records.add(
+                    new MinecraftPartyStats.PlayerFinishedGameRecord(game, record, OffsetDateTime.now(), mustBeHigher));
+            player.sendMessage(Main.PREFIX.append(Messages.get("new-record-message")));
+            new HSound(Sound.ENTITY_WITHER_DEATH).playFor(player);
+            new HTitle(Duration.ofMillis(250), Duration.ofMillis(2000), Duration.ofMillis(250), Messages.get("new-record-title"),
+                    Component.empty()).sendTo(player);
         }
     }
 
@@ -151,7 +160,8 @@ public class Stats {
                     success -> {
                         if (success) {
                             current.getKey().sendMessage(
-                                    Messages.getWithReplace("points-summary", Map.of("%points%", current.getValue().toString())));
+                                    Messages.getWithReplace("points-summary",
+                                            Map.of("%points%", String.valueOf(current.getValue().points))));
                         }
                     }
             );
@@ -162,7 +172,9 @@ public class Stats {
         if (currentGame.containsKey(player)) {
             return currentGame.get(player);
         } else {
-            return currentGame.put(player, new MinecraftPartyStats.PlayerFinishedGame(player.getUniqueId()));
+            MinecraftPartyStats.PlayerFinishedGame stats = new MinecraftPartyStats.PlayerFinishedGame(player.getUniqueId());
+            currentGame.put(player, stats);
+            return stats;
         }
     }
 

@@ -82,7 +82,7 @@ public class ColorBattleState extends MiniGame {
             if (snowball.isOnGround() || snowball.isDead()) {
                 toRemove.add(snowball);
             } else {
-                new HParticle(Particle.FLAME).send(snowball.getLocation());
+                new HParticle(Particle.FLAME, 0, null).send(snowball.getLocation());
             }
         }
 

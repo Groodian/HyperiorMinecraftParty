@@ -177,10 +177,15 @@ public class MasterBuildersState extends MiniGame {
                 return true;
             } else if (Tag.DOORS.isTagged(display.getType())) {
                 return true;
+            } else if (Tag.FENCES.isTagged(display.getType())) {
+                return true;
+            } else if (Tag.REDSTONE_ORES.isTagged(display.getType())) {
+                return true;
             } else {
-                return display.getBlockData() == replica.getBlockData();
+                return display.getBlockData().equals(replica.getBlockData());
             }
         }
+
         return false;
     }
 
