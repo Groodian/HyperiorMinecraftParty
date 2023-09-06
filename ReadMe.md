@@ -4,7 +4,7 @@ It is not meant to be run without the required dependencies of other plugins in 
 
 This repository contains the code and default configurations of the mini-game `Hyperior Minecraft Party`.
 
-This plugin was developed for Paper Version 1.19.4 and may not work on other versions.
+This plugin was developed for Paper Version 1.20.1 and may not work on other versions.
 
 ## About Hyperior
 Hyperior is a Minecraft Server Network developed by Groodian, 

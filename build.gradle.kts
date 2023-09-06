@@ -13,7 +13,7 @@ val props = mapOf(
         "version" to project.version,
         "description" to project.description,
         "author" to "Groodian",
-        "apiVersion" to "1.19"
+        "apiVersion" to "1.20"
 )
 
 java {
@@ -22,7 +22,7 @@ java {
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
     // paperweight.foliaDevBundle("1.19.4-R0.1-SNAPSHOT")
     // paperweight.devBundle("com.example.paperfork", "1.19.4-R0.1-SNAPSHOT")
     implementation(files("../HyperiorCore/build/libs/HyperiorCore-5.0.0-SNAPSHOT.jar"))
