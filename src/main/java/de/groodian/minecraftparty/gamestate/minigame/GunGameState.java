@@ -83,7 +83,11 @@ public class GunGameState extends MiniGame {
                     }
 
                     gameTask.cancel();
-                    plugin.getGameStateManager().setRandomGameState();
+
+                    // Make sure the last player has respawned
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                        plugin.getGameStateManager().setRandomGameState();
+                    }, 20);
                 }
             }
         }.runTaskTimer(plugin, 0, 5);

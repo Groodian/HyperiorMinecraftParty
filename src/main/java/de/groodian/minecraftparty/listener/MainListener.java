@@ -6,6 +6,7 @@ import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.hyperiorcore.user.MinecraftPartyStats;
 import de.groodian.hyperiorcore.user.User;
 import de.groodian.hyperiorcore.util.ItemBuilder;
+import de.groodian.hyperiorcore.util.RespawnPlayer;
 import de.groodian.hyperiorcore.util.Task;
 import de.groodian.minecraftparty.gamestate.EndingState;
 import de.groodian.minecraftparty.gamestate.LobbyState;
@@ -169,7 +170,7 @@ public class MainListener implements Listener {
         e.deathMessage(null);
         e.getDrops().clear();
         Player player = e.getEntity();
-        player.spigot().respawn();
+        RespawnPlayer.respawn(player);
     }
 
     @EventHandler

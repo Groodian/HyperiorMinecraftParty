@@ -157,6 +157,7 @@ public class WoolBlockState extends MiniGame {
 
                     for (Player player : plugin.getPlayers()) {
                         player.setExp(0.0f);
+                        player.setLevel(0);
                         player.setAllowFlight(false);
                         player.setFlying(false);
                     }

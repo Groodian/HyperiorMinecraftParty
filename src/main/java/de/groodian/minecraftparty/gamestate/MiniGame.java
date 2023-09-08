@@ -232,6 +232,11 @@ public abstract class MiniGame implements GameState {
     }
 
     private void countdown() {
+        // clear player after teleport
+        for (Player player : plugin.getPlayers()) {
+            clearPlayer(player);
+        }
+
         countdownTask = new BukkitRunnable() {
 
             @Override
@@ -399,14 +404,21 @@ public abstract class MiniGame implements GameState {
         updateScoreboardGame();
 
         for (Player player : plugin.getPlayers()) {
-            player.getInventory().clear();
-            player.getInventory().setArmorContents(null);
-            player.setFireTicks(0);
-            player.setHealth(20);
+            clearPlayer(player);
             GameOverviewGUI.giveItem(player);
         }
 
         Bukkit.getConsoleSender().sendMessage(Main.PREFIX_CONSOLE + "§c" + name.toUpperCase() + " STATE STOPPED!");
+    }
+
+    private void clearPlayer(Player player) {
+        player.setExp(0);
+        player.setLevel(0);
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(null);
+        player.setHealth(20);
+        player.setFoodLevel(20);
+        player.setFireTicks(0);
     }
 
     private void winner() {

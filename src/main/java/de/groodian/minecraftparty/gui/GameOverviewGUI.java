@@ -60,7 +60,9 @@ public class GameOverviewGUI extends GUI {
         }
 
         ItemStack head = new ItemBuilder(Material.PLAYER_HEAD)
-                .setName(component.append(Component.text(": " + points, NamedTextColor.GRAY)).append(Messages.get("points")))
+                .setName(component
+                        .append(Component.text(": " + points, NamedTextColor.GRAY).decoration(TextDecoration.BOLD, false))
+                        .append(Messages.get("points").decoration(TextDecoration.BOLD, false)))
                 .setSkullOwner(player.getUniqueId())
                 .build();
 

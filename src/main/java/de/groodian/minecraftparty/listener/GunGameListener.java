@@ -1,6 +1,7 @@
 package de.groodian.minecraftparty.listener;
 
 import de.groodian.hyperiorcore.util.HSound;
+import de.groodian.hyperiorcore.util.RespawnPlayer;
 import de.groodian.minecraftparty.gamestate.minigame.GunGameState;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
@@ -145,7 +146,7 @@ public class GunGameListener implements Listener {
         }
 
         e.getDrops().clear();
-        killed.spigot().respawn();
+        RespawnPlayer.respawn(killed);
     }
 
     @EventHandler
