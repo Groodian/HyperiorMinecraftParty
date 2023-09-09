@@ -124,7 +124,7 @@ public class WoolBlockState extends MiniGame {
 
                 for (Player player : plugin.getPlayers()) {
                     player.setExp(exp);
-                    player.setLevel(placeCount);
+                    player.setLevel(placeCount == -1 ? 0 : placeCount);
                     if (!diePlayers.contains(player)) {
                         ranking.put(player, placeCount);
                         if (player.getLocation().getY() <= field.getY()) {
