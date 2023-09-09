@@ -232,11 +232,6 @@ public abstract class MiniGame implements GameState {
     }
 
     private void countdown() {
-        // clear player after teleport
-        for (Player player : plugin.getPlayers()) {
-            clearPlayer(player);
-        }
-
         countdownTask = new BukkitRunnable() {
 
             @Override

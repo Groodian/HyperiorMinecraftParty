@@ -34,10 +34,13 @@ public class TeleportManager {
                     player.teleport(teleportData.location);
 
                     if (plugin.getPlayers().contains(player)) {
+                        player.setExp(0);
+                        player.setLevel(0);
                         player.getInventory().clear();
                         player.getInventory().setArmorContents(null);
-                        player.setFireTicks(0);
                         player.setHealth(20);
+                        player.setFoodLevel(20);
+                        player.setFireTicks(0);
                         teleportFix(player);
                     }
 

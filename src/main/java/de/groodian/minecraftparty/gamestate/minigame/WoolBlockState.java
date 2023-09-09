@@ -112,8 +112,8 @@ public class WoolBlockState extends MiniGame {
                 levelCounter++;
                 float exp = (1.0f / currentTime) * levelCounter;
 
-                if (exp > 1f) {
-                    exp = 1f;
+                if (exp >= 1.0f) {
+                    exp = 0.999f;
                 }
 
                 if (!delayIsRunning) {
@@ -124,6 +124,7 @@ public class WoolBlockState extends MiniGame {
 
                 for (Player player : plugin.getPlayers()) {
                     player.setExp(exp);
+                    player.setLevel(placeCount);
                     if (!diePlayers.contains(player)) {
                         ranking.put(player, placeCount);
                         if (player.getLocation().getY() <= field.getY()) {

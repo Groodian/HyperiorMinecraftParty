@@ -1,5 +1,6 @@
 package de.groodian.minecraftparty.gamestate.minigame;
 
+import de.groodian.hyperiorcore.main.HyperiorCore;
 import de.groodian.minecraftparty.gamestate.MiniGame;
 import de.groodian.minecraftparty.main.Main;
 import de.groodian.minecraftparty.main.MainConfig;
@@ -58,7 +59,9 @@ public class BreakoutState extends MiniGame {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (plugin.getPlayers().contains(player)) {
                 Location loc = players.get(locationCount);
-                teleportManager.addTeleport(player, loc.clone().add(0, 2, 0), null);
+                teleportManager.addTeleport(player, loc.clone().add(0, 2, 0), () -> {
+                    HyperiorCore.getPaper().getGlowingBlock().send(player, loc.clone().add(0, -1, 0), 200);
+                });
                 playersLocation.put(player, loc);
                 locationCount++;
             } else {

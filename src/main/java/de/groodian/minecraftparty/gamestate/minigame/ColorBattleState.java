@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -100,10 +99,8 @@ public class ColorBattleState extends MiniGame {
 
     @Override
     protected void startMiniGame() {
-        List<Material> terracotta = Tag.TERRACOTTA.getValues()
-                .stream()
-                .filter(material -> material != Material.TERRACOTTA)
-                .collect(Collectors.toList());
+        List<Material> terracotta = new ArrayList<>(Tag.TERRACOTTA.getValues());
+        terracotta.remove(Material.TERRACOTTA);
         Collections.shuffle(terracotta);
 
         int terracottaPos = 0;
