@@ -60,7 +60,7 @@ public class BreakoutState extends MiniGame {
             if (plugin.getPlayers().contains(player)) {
                 Location loc = players.get(locationCount);
                 teleportManager.addTeleport(player, loc.clone().add(0, 2, 0), () -> {
-                    HyperiorCore.getPaper().getGlowingBlock().send(player, loc.clone().add(0, -1, 0), 200);
+                    HyperiorCore.getPaper().getGlowingBlock().send(player, loc.clone().add(0, -1, 0), 400);
                 });
                 playersLocation.put(player, loc);
                 locationCount++;

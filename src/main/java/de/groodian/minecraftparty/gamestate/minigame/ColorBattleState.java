@@ -101,6 +101,7 @@ public class ColorBattleState extends MiniGame {
     protected void startMiniGame() {
         List<Material> terracotta = new ArrayList<>(Tag.TERRACOTTA.getValues());
         terracotta.remove(Material.TERRACOTTA);
+        terracotta.remove(Material.WHITE_TERRACOTTA);
         Collections.shuffle(terracotta);
 
         int terracottaPos = 0;
